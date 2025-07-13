@@ -1,0 +1,21 @@
+#version 460 core
+
+layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+layout(r11f_g11f_b10f,binding=0) uniform image2D screen;
+layout(r11f_g11f_b10f,binding=1) uniform image2D halfScreen;
+
+
+void main() {
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+	vec4 pix1 = imageLoad(halfScreen,pixelCoords);
+	vec4 pix2 = imageLoad(halfScreen,pixelCoords+ivec2(1,0));
+	vec4 pix3 = imageLoad(halfScreen,pixelCoords+ivec2(0,1));
+	vec4 pix4 = imageLoad(halfScreen,pixelCoords+ivec2(1,1));
+
+	
+	imageStore(screen,2*pixelCoords,pix1);
+	imageStore(screen,2*pixelCoords+ivec2(1,0),mix(pix1,pix2,.5f));
+	imageStore(screen,2*pixelCoords+ivec2(0,1),mix(pix1,pix3,.5f));
+	imageStore(screen,2*pixelCoords+ivec2(1,1),mix(mix(pix1,pix2,.5f),mix(pix3,pix4,.5f),.5f));
+}

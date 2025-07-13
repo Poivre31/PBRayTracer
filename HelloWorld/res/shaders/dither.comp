@@ -1,0 +1,34 @@
+#version 460 core
+layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+
+layout(rgba16f) uniform image2D image;
+
+uniform float ditherStrength;
+uniform int noiseSteps;
+
+unsigned int hashFunction(unsigned int seed) {
+	unsigned int state = seed*747796405u + 2891336453u;
+	unsigned int word = ((state >> ((state>>28u)+4u))^state)*277803737;
+	return (word>>22u)^word;
+}
+
+float randFloat(unsigned int seed, float a, float b) {
+	return a+(b-a)*float(hashFunction(seed))/(-1u);
+}
+
+ivec2 getCoords(ivec2 pixelCoords, int i, int j) {
+	return clamp(pixelCoords+ivec2(i,j),ivec2(0,0),imageSize(image)-1);
+}
+
+void main() {
+	ivec2 pixelID = ivec2(gl_GlobalInvocationID.xy);
+
+	vec3 color = imageLoad(image,getCoords(pixelID,0,0)).xyz;
+	int seed = pixelID.x+100000*pixelID.y;
+	//color+=((noiseSteps-1)+.5)/(noiseSteps-1);
+	float r = randFloat(seed + 0, (1-ditherStrength) * color.x, (1+ditherStrength) * color.x);
+	float g = randFloat(seed + 747, (1-ditherStrength) * color.y, (1+ditherStrength) * color.y);
+	float b = randFloat(seed + 1221, (1-ditherStrength) * color.z, (1+ditherStrength) * color.z);
+
+	imageStore(image,pixelID,vec4(r,g,b,1));
+}
