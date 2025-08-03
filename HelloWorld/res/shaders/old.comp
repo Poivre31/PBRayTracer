@@ -1,0 +1,148 @@
+#version 460 core
+#define M_PI 3.1415926535897932384626433832795
+
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
+layout(rgba16f) uniform image2D image;
+
+layout(std430, binding = 0) readonly restrict buffer ObjectBuffer
+{
+    float _position[4096][3];
+	float _radius[4096];
+	float _color[4096][3];
+};
+
+layout(std430, binding = 1) readonly restrict buffer CameraBuffer
+{
+    float position[3];
+	float direction[3];
+	float vFov;
+} mainCamera;
+
+uniform int nSphere;
+uniform int AAsamples;
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Sphere {
+	vec3 position;
+	float radius;
+	vec3 color;
+};
+
+shared vec4 transforms[256];
+
+unsigned int hashFunction(unsigned int seed) {
+	unsigned int state = seed*747796405u + 2891336453u;
+	unsigned int word = ((state >> ((state>>28u)+4u))^state)*277803737;
+	return (word>>22u)^word;
+}
+
+float randFloat(unsigned int seed, float a, float b) {
+	return a+(b-a)*float(hashFunction(seed))/(-1u);
+}
+
+vec2 randFloat2(ivec2 state, float a, float b) {
+	vec2 result;
+	result.x = randFloat(state.x*11+172*state.y,a,b);
+	result.y = randFloat(state.x*45+710*state.y+37,a,b);
+	return result;
+}
+
+bool hitSphere(Ray ray, Sphere sphere) {
+	float dotP = dot(sphere.position-ray.origin, ray.direction);
+	float d2 = dot(sphere.position-ray.origin,sphere.position-ray.origin);
+	
+	return dotP*dotP>=d2-sphere.radius*sphere.radius;
+}
+
+float intersectSphere(Ray ray, vec4 transform) {
+	float h = dot(transform.xyz-ray.origin, ray.direction);
+	float d2 = dot(transform.xyz-ray.origin,transform.xyz-ray.origin)-transform.w*transform.w;
+	
+	float delta = h*h-d2;
+	return delta >= 0 ? h-sqrt(delta) : -1;
+}
+
+vec3 normalSphere(vec4 transform, Ray ray, float dist) {
+	vec3 intersectPosition = ray.origin + dist*ray.direction;
+	return normalize(transform.xyz-intersectPosition);
+}
+
+vec3 BRDF(vec3 color, vec3 normal, vec3 lightDirection) {
+	return color*max(5*dot(normal,lightDirection),0);
+}
+
+vec3 cvtFloat3(float vector[3]) {
+	return vec3(vector[0],vector[1],vector[2]);
+}
+
+void main()
+{
+	vec3 mainDirection = vec3(1,0,0);
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+	float aspect = float(imageSize(image).x)/float(imageSize(image).y);
+	vec2 screenPos = vec2(pixelCoords)/imageSize(image) * 2.0 - 1.0;
+	ivec2 localID = ivec2(gl_LocalInvocationID.xy);
+
+	float scale = tan(mainCamera.vFov * M_PI / 180 / 2.0);
+	float x = screenPos.x * aspect * scale;
+	float y = screenPos.y * scale;
+
+	Ray ray;
+	ray.origin = cvtFloat3(mainCamera.position);
+	ray.direction = normalize(vec3(1.0, y, x));
+	float rotX = cos(mainCamera.direction[2]) * ray.direction.x - sin(mainCamera.direction[2]) * ray.direction.y;
+	float rotY = sin(mainCamera.direction[2]) * ray.direction.x + cos(mainCamera.direction[2]) * ray.direction.y;
+	ray.direction.x = rotX;
+	ray.direction.y = rotY;
+	rotX = cos(mainCamera.direction[1]) * ray.direction.x + sin(mainCamera.direction[1]) * ray.direction.z;
+	float rotZ = -sin(mainCamera.direction[1]) * ray.direction.x + cos(mainCamera.direction[1]) * ray.direction.z;
+	ray.direction.x = rotX;
+	ray.direction.z = rotZ;
+
+	vec3 lightDirection = normalize(vec3(1,0,0));
+
+	float depth = 1000.f;
+	int hitIndex=-1;
+	int index = localID.x+16*localID.y;
+	vec3 pixelColor = vec3(0);
+	for(int k = 0; k < nSphere/256; k++) {
+		transforms[index].xyz =  cvtFloat3(_position[index+k*256]);
+		transforms[index].w =  _radius[index+k*256];
+		memoryBarrierShared();
+		barrier();
+
+		for(int i = 0; i<=256; i++) {
+			float dist = intersectSphere(ray, transforms[i]);
+			if(dist > 0 && dist < depth) {
+				depth = dist;
+				hitIndex = i + k * 256;
+			}
+		}
+
+		memoryBarrierShared();
+		barrier();
+	}
+
+	transforms[index].xyz =  cvtFloat3(_position[index+nSphere/256*256]);
+	transforms[index].w =  _radius[index+nSphere/256*256];
+	memoryBarrierShared();
+	barrier();
+
+	for(int i = 0; i<=nSphere%256; i++) {
+		float dist = intersectSphere(ray, transforms[i]);
+		if(dist > 0 && dist < depth) {
+			depth = dist;
+			hitIndex = i + nSphere/256 * 256;
+		}
+	}
+
+	if(hitIndex!=-1) {
+		pixelColor = BRDF(cvtFloat3(_color[hitIndex]), normalSphere(vec4(cvtFloat3(_position[hitIndex]),_radius[hitIndex]),ray,depth), lightDirection);
+	}
+
+	imageStore(image, pixelCoords, vec4(pixelColor,1));
+}

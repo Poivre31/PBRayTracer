@@ -1,0 +1,23 @@
+vec3 rotateSpherical(vec3 v, float theta, float phi);
+vec3 rotateSphericalInv(vec3 v, float theta, float phi);
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+Ray transformRay(Ray ray, Transform transform) {
+	ray.origin -= transform.position;
+	ray.origin = rotateSphericalInv(ray.origin, transform.rotation.x, transform.rotation.y);
+	ray.direction = rotateSphericalInv(ray.direction, transform.rotation.x, transform.rotation.y);
+	ray.direction/=transform.scale;
+	ray.origin/=transform.scale;
+
+	return ray;
+}

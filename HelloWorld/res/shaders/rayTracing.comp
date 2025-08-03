@@ -1,0 +1,108 @@
+#version 460 core
+#define M_PI 3.14159265358979
+
+// STRUCTS
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+uniform struct Camera {
+	vec3 position;
+	vec2 direction;
+	float vFov;
+} mainCamera;
+
+uniform struct Count {
+	int sphere;
+	int cube;
+	int plane;
+	int circle;
+	int cylinder;
+	int cone;
+	int pyramid;
+} count;
+
+struct Hit {
+	float depth;
+	int index;
+	int type;
+};
+
+// INPUTS
+layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+layout(rgba16f, binding = 0) uniform image2D image;
+
+layout(std430, binding = 2) readonly restrict buffer ColorBuffer {
+	vec4 _color_roughness[1024];
+};
+
+// FUNCTIONS
+vec3 skyColor(vec3 rayDirection);
+
+Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera);
+Ray transformRay(Ray ray, Transform transform);
+Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit initialHit);
+vec3 computeNormal(Hit hit, Ray ray);
+
+struct Light {
+	vec3 direction;
+	vec3 color;
+	float radius;
+};
+
+vec3 BRDF(Light light, vec3 normal, vec3 color) {
+	return light.color * light.radius * light.radius * M_PI * color * max(dot(normal,-light.direction),0) + .4 * color;
+}
+
+
+// MAIN LOOP
+void main()
+{
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+	Ray ray = generateRay(pixelCoords, imageSize(image), mainCamera);
+	Light mainLight;
+	mainLight.direction = normalize(vec3(1,.5,.3));
+	mainLight.color = vec3(1,.95,.9)*600;
+	mainLight.radius = 0.02;
+
+	vec3 pixelColor = skyColor(ray.direction);
+	if(dot(ray.direction,-mainLight.direction)>cos(mainLight.radius)) {
+		pixelColor = mainLight.color;
+	}
+
+	Hit hit;
+	hit.depth = 1000;
+	hit.index = -1;
+	hit.type = -1;
+	int i = 0;
+	hit = intersect(ray, i, count.sphere, 0, hit);
+	i+=count.sphere;
+	hit = intersect(ray, i, count.cube, 1, hit);
+	i+=count.cube;
+	hit = intersect(ray, i, count.plane, 2, hit);
+	i+=count.plane;
+	hit = intersect(ray, i, count.circle, 3, hit);
+	i+=count.circle;
+	hit = intersect(ray, i, count.cylinder, 4, hit);
+	i+=count.cylinder;
+	hit = intersect(ray, i, count.cone, 5, hit);
+	i+=count.cone;
+	hit = intersect(ray, i, count.pyramid, 6, hit);
+
+	barrier();
+
+	if(hit.index!=-1) {
+		vec3 normal =  computeNormal(hit, ray);
+		pixelColor = BRDF(mainLight, normal, _color_roughness[hit.index].xyz);
+	}
+
+	imageStore(image, pixelCoords, vec4(pixelColor,1));
+}

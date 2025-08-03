@@ -5,6 +5,7 @@ layout(rgba16f) uniform image2D image;
 
 uniform float ditherStrength;
 uniform int noiseSteps;
+uniform int baseSeed;
 
 unsigned int hashFunction(unsigned int seed) {
 	unsigned int state = seed*747796405u + 2891336453u;
@@ -24,7 +25,7 @@ void main() {
 	ivec2 pixelID = ivec2(gl_GlobalInvocationID.xy);
 
 	vec3 color = imageLoad(image,getCoords(pixelID,0,0)).xyz;
-	int seed = pixelID.x+100000*pixelID.y;
+	int seed = pixelID.x+(100000+baseSeed)*pixelID.y + int(baseSeed);
 	//color+=((noiseSteps-1)+.5)/(noiseSteps-1);
 	float r = randFloat(seed + 0, (1-ditherStrength) * color.x, (1+ditherStrength) * color.x);
 	float g = randFloat(seed + 747, (1-ditherStrength) * color.y, (1+ditherStrength) * color.y);

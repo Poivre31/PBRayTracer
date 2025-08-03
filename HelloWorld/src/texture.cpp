@@ -1,4 +1,4 @@
-#pragma once
+#include "texture.h"
 #include "GL/glew.h"
 
 void setTexture(unsigned int& texture, int dataType, unsigned int width, unsigned int height) {

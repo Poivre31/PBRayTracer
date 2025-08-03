@@ -1,7 +1,7 @@
 #pragma once
 #include <algorithm>
 
-constexpr float PI = 3.141592653589793;
+constexpr float M_PI = 3.141592653589793f;
 
 inline float randF(float a, float b) {
 	float out = a + (b - a) / RAND_MAX * rand();

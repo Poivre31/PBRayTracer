@@ -16,37 +16,9 @@ public:
 	ImGuiStyle* style;
 	bool vsync;
 
-	Renderer(const char* windowName, size_t width, size_t height, bool vsync = true) : width(width), height(height), vsync(vsync), io(0), style(0) {
-		if (!glfwInit()) exit(-1);
+	Renderer(const char* windowName, size_t width, size_t height, bool vsync = true);
 
-		window = glfwCreateWindow(width, height, windowName, nullptr, nullptr);
+	void Setup();
 
-		assert(("Window creation failed for: ", window));
-
-		glfwMakeContextCurrent(window);
-		glfwSwapInterval(vsync);
-	}
-
-	void Setup() {
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		io = &ImGui::GetIO(); (void)io;
-		io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
-		ImGui::StyleColorsDark();
-
-		style = &ImGui::GetStyle();
-
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init("#version 460");
-	}
-
-	void Update() const {
-		glfwPollEvents();
-		glfwSwapInterval(vsync);
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-	}
+	void Update() const;
 };

@@ -1,0 +1,55 @@
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+vec3 rotateSpherical(vec3 v, float theta, float phi);
+vec3 rotateSphericalInv(vec3 v, float theta, float phi);
+Ray transformRay(Ray ray, Transform transform);
+
+float intersectPyramid(Ray ray, Transform object) {
+	float dirDotPos = dot(ray.direction, object.position - ray.origin);
+	float d2 = dot(object.position - ray.origin,object.position - ray.origin);
+	float r2 = dot(object.scale,object.scale);
+	if(dirDotPos * dirDotPos <= d2 - r2) return -1.;
+	ray = transformRay(ray,object);
+
+// ### MAX DEPTH ###
+	float dist = 1000;
+	vec3 intersect;
+	float t1 = (1 - ray.origin.z - 2 * ray.origin.x)/(ray.direction.z + 2 * ray.direction.x);
+	float t2 = (ray.origin.z - 1 - 2 * ray.origin.x)/(-ray.direction.z + 2 * ray.direction.x);
+	intersect = ray.origin + t1 * ray.direction;
+	if(abs(intersect.z) <= 1 && abs(intersect.y) <= abs(intersect.x)) dist = min(dist,t1);
+	intersect = ray.origin + t2 * ray.direction;
+	if(abs(intersect.z) <= 1 && abs(intersect.y) <= abs(intersect.x)) dist = min(dist,t2);
+
+	t1 = (1 - ray.origin.z - 2 * ray.origin.y)/(ray.direction.z + 2 * ray.direction.y);
+	t2 = (ray.origin.z - 1 - 2 * ray.origin.y)/(-ray.direction.z + 2 * ray.direction.y);
+	intersect = ray.origin + t1 * ray.direction;
+	if(abs(intersect.z) <= 1 && abs(intersect.x) <= abs(intersect.y)) dist = min(dist,t1);
+	intersect = ray.origin + t2 * ray.direction;
+	if(abs(intersect.z) <= 1 && abs(intersect.x) <= abs(intersect.y)) dist = min(dist,t2);
+
+	if(dist>999) dist = -1;
+	return dist;
+}
+
+vec3 normalPyramid(Ray ray, float intersectDistance, Transform transform) {
+	vec3 intersect =  ray.origin + intersectDistance * ray.direction - transform.position;
+	intersect = rotateSphericalInv(intersect, transform.rotation.x, transform.rotation.y)/transform.scale;
+
+	vec3 normal;
+	if(abs(intersect.x) >= abs(intersect.y)) normal = vec3(sign(intersect.x) * 2,0,1);
+	if(abs(intersect.y) >= abs(intersect.x)) normal = vec3(0,sign(intersect.y) * 2,1);
+
+	normal = rotateSpherical(normal, transform.rotation.x, transform.rotation.y);
+
+	return normalize(normal);
+}

@@ -1,29 +1,46 @@
 #pragma once
 #include <vector>
+#include "log.h"
+#include "mathHelper.h"
+#include "floats.h"
 
-struct Sphere {
-	float position[3];
-	float radius;
-	float color[3];
+struct ColorBuffer {
+	float4 color_roughness[1024];
 };
 
-struct SphereBuffer {
-	float position[256][3];
-	float radius[256];
-	float color[256][3];
-};
+//MaterialsBuffer parseMaterials(std::vector<Material>& materials) {
+//	if (materials.size() > 16) Log::Error("Max number of materials: 16");
+//	MaterialsBuffer buffer;
+//	for (size_t i = 0; i < materials.size(); i++)
+//	{
+//		buffer.materials[i] = materials[i];
+//	}
+//	return buffer;
+//}
 
-SphereBuffer parseSpheres(std::vector<Sphere>& spheres) {
-	SphereBuffer buffer{};
-	for (size_t i = 0; i < spheres.size(); i++)
+ColorBuffer parseColors(std::vector<Color>& colors) {
+	ColorBuffer buffer{};
+	int n = colors.size();
+
+	for (size_t i = 0; i < n; i++)
 	{
-		buffer.position[i][0] = spheres[i].position[0];
-		buffer.position[i][1] = spheres[i].position[1];
-		buffer.position[i][2] = spheres[i].position[2];
-		buffer.radius[i] = spheres[i].radius;
-		buffer.color[i][0] = spheres[i].color[0];
-		buffer.color[i][1] = spheres[i].color[1];
-		buffer.color[i][2] = spheres[i].color[2];
+		buffer.color_roughness[i].x = colors[i].r;
+		buffer.color_roughness[i].y = colors[i].g;
+		buffer.color_roughness[i].z = colors[i].b;
+		buffer.color_roughness[i].w = .5;
+	}
+	return buffer;
+}
+
+ColorBuffer randomColors(int n) {
+	ColorBuffer buffer{};
+
+	for (size_t i = 0; i < n; i++)
+	{
+		buffer.color_roughness[i].x = randF(0, 1);
+		buffer.color_roughness[i].y = randF(0, 1);
+		buffer.color_roughness[i].z = randF(0, 1);
+		buffer.color_roughness[i].w = randF(0, 1);
 	}
 	return buffer;
 }
