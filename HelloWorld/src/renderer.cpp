@@ -26,11 +26,27 @@ void Renderer::Setup() {
 	ImGui_ImplOpenGL3_Init("#version 460");
 }
 
-void Renderer::Update() const {
+void Renderer::Close() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+}
+
+void Renderer::Update(int& imageWidth, int& imageHeight) {
+	width = imageWidth;
+	height = imageHeight;
 	glfwPollEvents();
 	glfwSwapInterval(vsync);
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
+	glfwGetFramebufferSize(window, &imageWidth, &imageHeight);
+	glViewport(0, 0, imageWidth, imageHeight);
+	glClearColor(1, 0, 1, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
 }

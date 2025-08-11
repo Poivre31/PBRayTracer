@@ -31,3 +31,34 @@ Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera) {
 
 	return ray;
 }
+
+vec2 inversePoint(vec3 point, ivec2 imSize, Camera camera) {
+	vec3 rayDir = point - camera.position;
+	rayDir = rotateZ(rayDir, - camera.direction.y);
+	rayDir = rotateY(rayDir, - camera.direction.x);
+	rayDir /= rayDir.z;
+
+	float scale = tan(camera.vFov * M_PI / 360);
+	vec2 screenPos = -rayDir.yx / scale;
+	screenPos.x *= float(imSize.y)/imSize.x;
+
+	vec2 pixelCoords = .5 * (1 + screenPos) * imSize;
+
+	return pixelCoords;
+}
+
+Ray findPoint(vec2 pixelPos, ivec2 imSize, Camera camera) {
+	vec2 screenPos = vec2(pixelPos)/imSize * 2.0 - 1.0;
+
+	float scale = tan(camera.vFov * M_PI / 360);
+	float x = -screenPos.y * scale;
+	float y = -screenPos.x * scale * float(imSize.x)/imSize.y;
+
+	Ray ray;
+	ray.origin = camera.position;
+	ray.direction = normalize(vec3(x, y, 1.f));
+	ray.direction = rotateY(ray.direction, camera.direction.x);
+	ray.direction = rotateZ(ray.direction, camera.direction.y);
+
+	return ray;
+}

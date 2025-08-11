@@ -3,84 +3,15 @@
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 
 #include "mainheader.h"
+#include "findIntersect.h"
 
 #define M_PI 3.1415926535897932384626433832795
 
-struct Camera {
-	Vec3 position{ 0.f,0.f,0.f };
-	Vec3 direction{ 1.f,M_PI / 2.f,0.f };
-	float vFov{ 35 };
-} mainCamera;
-
-static float fov = 35;
-static int kernelRadius = 0;
-static bool Vsync = true;
-static bool downsampleBlur = false;
-static bool showDemo = false;
-static float ditherStrength = 0.007f;
-static int noiseSteps = 10;
+static Camera mainCamera;
 static int nSphere = 1;
 static Scene scene;
-static ColorBuffer colorsBuffer{};
-static unsigned int colorsSSBO = 0;
-static bool doRender = true;
-static int AAsamples = 1;
-static bool AA = false;
-static float AAStrength = 1;
-static float AAThreshold = 1;
-
-static void randomSpheres(int nSpheres) {
-	scene.RandomScene(nSpheres);
-	colorsBuffer = randomColors(nSpheres);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(ColorBuffer), &colorsBuffer);
-}
-
-static void Overlay()
-{
-	static int location = 0;
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuiWindowFlags winFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
-	{
-		const float PAD = 10.0f;
-		const ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImVec2 workPos = viewport->WorkPos;
-		ImVec2 winPos;
-		winPos.x = (workPos.x + PAD);
-		winPos.y = (workPos.y + PAD);
-		ImGui::SetNextWindowPos(winPos, ImGuiCond_Always, ImVec2(0,0));
-		winFlags |= ImGuiWindowFlags_NoMove;
-	}
-	ImGui::SetNextWindowBgAlpha(0.3f);
-	ImGui::Begin("Camera data");
-	{
-		ImGui::Text("Vertical FOV: %.1f",mainCamera.vFov);
-		ImGui::Separator();
-		ImGui::Text("Position: x=%.1f, y=%.1f, z=%.1f", mainCamera.position.x, mainCamera.position.y, mainCamera.position.z);
-		ImGui::Separator();
-		Vec3 dir = sph2cart(mainCamera.direction);
-		ImGui::Text("Direction: x=%.1f, y=%.1f, z=%.1f", dir.x, dir.y, dir.z);
-	}
-	ImGui::End();
-}
-static void UIRender(Renderer& renderer) {
-	if (showDemo)
-		ImGui::ShowDemoWindow(&showDemo);
-
-	ImGui::Begin("Debug");
-	if (ImGui::SliderInt("Number of spheres", &nSphere, 1, 1024)) randomSpheres(nSphere); 	scene.ParseTransforms();
-	ImGui::Checkbox("Show demo", &showDemo);
-	ImGui::Checkbox("Vsync", &renderer.vsync);
-	ImGui::Checkbox("Render", &doRender);
-	if (!doRender) renderer.vsync = true;
-	ImGui::SliderFloat("Dither strength", &ditherStrength, 0, .1);
-	ImGui::Text("Render time: %.3f ms/frame (%.1f FPS)", 1000.0f / renderer.io->Framerate, renderer.io->Framerate);
-	ImGui::End();
-
-	Overlay();
-
-	ImGui::Render();
-}
+static int offsetX = 0;
+static int offsetY = 0;
 
 int main(int, char**)
 {
@@ -106,8 +37,9 @@ int main(int, char**)
 		"res/shaders/pyramid.comp",
 		"res/shaders/plane.comp",
 		"res/shaders/circle.comp",
-		"res/shaders/intersectPrimitives.comp" , 
+		"res/shaders/intersectPrimitives.comp" ,
 		"res/shaders/primitiveNormals.comp" ,
+		"res/shaders/buildingTools.comp" ,
 		});
 	Shader shader = Shader("res/shaders/fullScreenQuad.vert", "res/shaders/fullScreenQuad.frag");
 
@@ -117,7 +49,6 @@ int main(int, char**)
 	scene = Scene(computeShader);
 
 	scene.ConnectGPU();
-	scene.RandomScene(1);
 	scene.ParseTransforms();
 
 	glGenBuffers(1, &colorsSSBO);
@@ -125,12 +56,8 @@ int main(int, char**)
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(ColorBuffer), &colorsBuffer, GL_DYNAMIC_READ);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, colorsSSBO);
 
-	Vec3 speed{ 0,0,0 };
-	float speedTheta = 0;
-	float speedPhi = 0;
-	Vec3 dir{ 1,M_PI/2,0 };
-	float scalarSpeed = 10;
-	float speedDecay = 10;
+	Vec3 dir{ 1,M_PI / 2,0 };
+	Vec3 speed{ 0 };
 	while (!glfwWindowShouldClose(UI.window))
 	{
 		// Poll and handle events (inputs, window resize, etc.)
@@ -140,75 +67,37 @@ int main(int, char**)
 		// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
 
 		glfwMakeContextCurrent(UI.window);
-		glGetString(GL_VERSION);
-		{
-			if (ImGui::IsKeyPressed(ImGuiKey_R, false)) {
-				postProcess.ReloadShaders();
-				computeShader.Reload();
-				screenQuad.Reload();
-				std::cout << "Reloaded RayTracing shader" << std::endl;
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_Space, false)) {
-				doRender = 1 - doRender;
-			}
-			if (ImGui::IsKeyDown(ImGuiKey_KeypadAdd)) mainCamera.vFov *= 1.01f;
-			if (ImGui::IsKeyDown(ImGuiKey_KeypadSubtract)) mainCamera.vFov *= .99f;
 
-			static bool cursorLocked = false;
-			if (ImGui::IsKeyDown(ImGuiKey_MouseRight)) {
-				glfwSetInputMode(UI.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-				if (cursorLocked) {
-					speedTheta = UI.io->MouseDelta.y / 1000;
-					speedPhi = -UI.io->MouseDelta.x / 1000;
-					dir.y += speedTheta;
-					dir.y = fmod(dir.y, 2 * M_PI);
-					dir.z += speedPhi;
-					dir.z = fmod(dir.z, 2 * M_PI);
-				}
-				else cursorLocked = true;
-			}
-			else {
-				glfwSetInputMode(UI.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-				cursorLocked = false;
-			}
-			mainCamera.direction = dir;
+		if (ImGui::IsKeyDown(ImGuiKey_ModCtrl) && ImGui::IsKeyPressed(ImGuiKey_R, false)) {
+			postProcess.ReloadShaders();
+			computeShader.Reload();
+			screenQuad.Reload();
+			std::cout << "Reloaded RayTracing shader" << std::endl;
+		}
+		if (ImGui::IsKeyPressed(ImGuiKey_Space, false)) UI.doRender = 1 - UI.doRender;
+		if (ImGui::IsKeyPressed(ImGuiKey_G, false)) scene.SetEditMode(0);
+		if (ImGui::IsKeyPressed(ImGuiKey_T, false)) scene.SetEditMode(1);
+		if (ImGui::IsKeyPressed(ImGuiKey_R, false)) scene.SetEditMode(2);
 
-			Vec3 forward = sph2cart(mainCamera.direction);
-			Vec3 up = sph2cart(mainCamera.direction + Vec3(0, -M_PI / 2, 0));
-			Vec3 left = forward ^ up;
-			speed = exp(-speedDecay * UI.io->DeltaTime) * speed;
-			static float lerpX = 0;
-			static float lerpY = 0;
-			static float lerpZ = 0;
-			if (ImGui::IsKeyPressed(ImGuiKey_Z, false) || ImGui::IsKeyPressed(ImGuiKey_S, false)) lerpX = 0.1f;
-			else lerpX += .1f;
-			if (ImGui::IsKeyPressed(ImGuiKey_Q, false) || ImGui::IsKeyPressed(ImGuiKey_D, false)) lerpY = 0.1f;
-			else lerpY += .1f;
-			if (ImGui::IsKeyPressed(ImGuiKey_ModShift, false) || ImGui::IsKeyPressed(ImGuiKey_ModCtrl, false)) lerpZ = 0.1f;
-			else lerpZ += .1f;
-			if (ImGui::IsKeyDown(ImGuiKey_Z)) speed += (1 - exp(-lerpX)) * scalarSpeed * UI.io->DeltaTime * forward;
-			else if (ImGui::IsKeyDown(ImGuiKey_S)) speed -= (1 - exp(-lerpX)) * scalarSpeed * UI.io->DeltaTime * forward;
-			if (ImGui::IsKeyDown(ImGuiKey_Q)) speed -= (1 - exp(-lerpY)) * scalarSpeed * UI.io->DeltaTime * left;
-			else if (ImGui::IsKeyDown(ImGuiKey_D)) speed += (1 - exp(-lerpY)) * scalarSpeed * UI.io->DeltaTime * left;
-			if (ImGui::IsKeyDown(ImGuiKey_ModShift)) speed += (1 - exp(-lerpZ)) * scalarSpeed * UI.io->DeltaTime * up;
-			else if (ImGui::IsKeyDown(ImGuiKey_ModCtrl)) speed -= (1 - exp(-lerpZ)) * scalarSpeed * UI.io->DeltaTime * up;
-			mainCamera.position += speed * UI.io->DeltaTime;
+		if (ImGui::IsMouseClicked(0) && scene.editAxis == Axis::none) {
+			auto [hit, type] = findHitObject(scene, mainCamera, UI);
+			if (hit == scene.selectedIndex) {
+				scene.selectedIndex = -1;
+				scene.selectedType = -1;
+			}
+			if (hit != -1) {
+				scene.selectedIndex = hit;
+				scene.selectedType = type;
+			}
 		}
 
-		computeShader.SetFloat3("mainCamera.position", mainCamera.position.x, mainCamera.position.y, mainCamera.position.z);
-		computeShader.SetFloat2("mainCamera.direction", mainCamera.direction.y, mainCamera.direction.z);
-		computeShader.SetFloat("mainCamera.vFov", mainCamera.vFov);
+		updateCamera(mainCamera, UI, dir, speed, computeShader);
 		computeShader.SetInt("nSphere", nSphere);
 
-		UI.Update();
-
-		UIRender(UI);
-
 		static int imageWidth, imageHeight;
-		glfwGetFramebufferSize(UI.window, &imageWidth, &imageHeight);
-		glViewport(0, 0, imageWidth, imageHeight);
-		glClearColor(1, 0, 1, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		UI.Update(imageWidth, imageHeight);
+
+		UIRender(UI, scene, mainCamera);
 
 		static int lastW = 1920, lastH = 1080;
 		if (imageWidth != lastW || imageHeight != lastH) {
@@ -218,31 +107,119 @@ int main(int, char**)
 			image.Update(imageWidth, imageHeight);
 		}
 
-		if (doRender && glfwGetWindowAttrib(UI.window, GLFW_FOCUSED)) {
+		if (UI.doRender && glfwGetWindowAttrib(UI.window, GLFW_FOCUSED)) {
 			image.BindImage(0, GL_READ_WRITE);
 			computeShader.Use();
-
+			computeShader.SetInt("selectedIndex", scene.selectedIndex);
+			computeShader.SetInt2("mousePos", UI.io->MousePos.x, UI.height - UI.io->MousePos.y);
 			computeShader.Dispatch(imageWidth, imageHeight, 32, 32);
+
+			if (ImGui::IsKeyDown(ImGuiKey_MouseLeft) && scene.selectedIndex != -1) {
+				if (ImGui::IsKeyPressed(ImGuiKey_MouseLeft, false) && scene.editAxis == Axis::none) {
+					if (scene.editMode == EditMode::rotation) {
+						scene.editAxis = findSelectedPlane(scene, UI, mainCamera);
+					}
+					else {
+						scene.editAxis = findSelectedAxis(scene, UI, mainCamera);
+					}
+
+					Transform* object = scene.FindTransform(scene.selectedIndex, scene.selectedType);
+					scene.startPos = { object->position.x, object->position.y, object->position.z };
+					scene.startScale = { object->scale.x, object->scale.y, object->scale.z };
+					scene.startRot = { object->rotation.x, object->rotation.y, 0 };
+					scene.startOffset = computeOffset(scene.startPos, UI, mainCamera, scene.editAxis);
+					scene.startAngle = findAngle(scene.startPos, UI, mainCamera, scene.editAxis);
+				}
+
+				if (scene.editAxis != Axis::none) {
+					Transform* object = scene.FindTransform(scene.selectedIndex, scene.selectedType);
+
+					if (scene.editMode == EditMode::translation) {
+						Vec3 intersect = projectAxis(scene.startPos, UI, mainCamera, scene.editAxis) - scene.startOffset;
+
+						if (ImGui::IsKeyDown(ImGuiKey_ModCtrl)) {
+							float factor = ImGui::IsKeyDown(ImGuiKey_ModShift) ? 4 : 1;
+							switch (scene.editAxis) {
+							case(Axis::x):
+								intersect.x = roundf(factor * intersect.x) / factor; break;
+							case(Axis::y):
+								intersect.y = roundf(factor * intersect.y) / factor; break;
+							case(Axis::z):
+								intersect.z = roundf(factor * intersect.z) / factor; break;
+							}
+						}
+
+						object->position = float4{ intersect.x, intersect.y, intersect.z, 0 };
+						scene.ParseTransforms();
+					}
+
+					else if (scene.editMode == EditMode::scaling) {
+						Vec3 scale = { 1,1,1 };
+						Vec3 proj = (projectAxis(scene.startPos, UI, mainCamera, scene.editAxis) - scene.startPos) / scene.startOffset;
+						switch (scene.editAxis) {
+						case(Axis::x):
+							scale.x = max(abs(proj.x), .001); break;
+						case(Axis::y):
+							scale.y = max(abs(proj.y), .001); break;
+						case(Axis::z):
+							scale.z = max(abs(proj.z), .001); break;
+						}
+
+						scale *= scene.startScale;
+
+						if (ImGui::IsKeyDown(ImGuiKey_ModCtrl)) {
+							float factor = ImGui::IsKeyDown(ImGuiKey_ModShift) ? 4 : 1;
+							switch (scene.editAxis) {
+							case(Axis::x):
+								scale.x = ceil(factor * scale.x) / factor;
+								if (scale.x == 0) scale.x = scene.startScale.x;
+								break;
+							case(Axis::y):
+								scale.y = ceil(factor * scale.y) / factor;
+								if (scale.y == 0) scale.y = scene.startScale.y;
+								break;
+							case(Axis::z):
+								scale.z = ceil(factor * scale.z) / factor;
+								if (scale.z == 0) scale.z = scene.startScale.z;
+								break;
+							}
+						}
+
+						object->scale = float4{ scale.x, scale.y, scale.z, 0 };
+						scene.ParseTransforms();
+					}
+
+					else if (scene.editMode = EditMode::rotation) {
+						float angle = findAngle(scene.startPos, UI, mainCamera, scene.editAxis) - scene.startAngle;
+
+						Vec3 rotation = scene.startRot;
+						if (scene.editAxis == Axis::y) {
+							rotation.x += angle;
+						}
+						else if (scene.editAxis == Axis::z) {
+							rotation.y += angle;
+						}
+
+						object->rotation = float4{ rotation.x, rotation.y, 0, 0 };
+						scene.ParseTransforms();
+					}
+				}
+			}
+
+			if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
+				scene.editAxis = Axis::none;
+			}
 
 			//image.BindImage(0, GL_READ_ONLY);
 			//screen.BindImage(1, GL_WRITE_ONLY);
 			//postProcess.BoxBlur(image, screen, kernelRadius);
 
-			postProcess.Dither(image, ditherStrength, noiseSteps, ImGui::GetFrameCount());
+			postProcess.Dither(image, UI.ditherStrength, 0, ImGui::GetFrameCount());
 		}
 
 		image.BindTexture(0);
-		screenQuad.Draw(0);
-
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glfwSwapBuffers(UI.window);
-		glFinish();
+		screenQuad.Draw(UI, 0);
 	}
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
-	glfwDestroyWindow(UI.window);
-	glfwTerminate();
+	UI.Close();
 }

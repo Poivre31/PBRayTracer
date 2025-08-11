@@ -14,11 +14,16 @@ public:
 	GLFWwindow* window;
 	ImGuiIO* io;
 	ImGuiStyle* style;
-	bool vsync;
+	bool vsync = true;
+	bool showDemo = false;
+	float ditherStrength = 0.007f;
+	bool doRender = true;
 
 	Renderer(const char* windowName, size_t width, size_t height, bool vsync = true);
 
 	void Setup();
 
-	void Update() const;
+	void Update(int& imageWidth, int& imageHeight);
+
+	void Close();
 };

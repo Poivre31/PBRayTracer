@@ -46,6 +46,9 @@
     <Filter Include="res\shaders\RayTracing\IntersectShaders">
       <UniqueIdentifier>{9f61106c-cbf4-44d9-b132-b69487e3c1f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Intersection">
+      <UniqueIdentifier>{4070d043-82bf-4157-a3c8-c451f32050d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sphere.h">
@@ -123,6 +126,18 @@
     <ClInclude Include="src\floats.h">
       <Filter>src\DataTypes</Filter>
     </ClInclude>
+    <ClInclude Include="src\camera.h">
+      <Filter>src\General</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI.h">
+      <Filter>src\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\intersectionTest.h">
+      <Filter>src\Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\findIntersect.h">
+      <Filter>src\Intersection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -175,6 +190,12 @@
     </ClCompile>
     <ClCompile Include="src\shader.cpp">
       <Filter>src\ShaderManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\intersectionTest.cpp">
+      <Filter>src\Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene.cpp">
+      <Filter>src\General</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +264,9 @@
     </None>
     <None Include="res\shaders\primitiveNormals.comp">
       <Filter>res\shaders\RayTracing</Filter>
+    </None>
+    <None Include="res\shaders\buildingTools.comp">
+      <Filter>res\shaders\PostProcessing</Filter>
     </None>
   </ItemGroup>
 </Project>

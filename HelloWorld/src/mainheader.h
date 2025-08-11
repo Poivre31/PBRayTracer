@@ -15,3 +15,5 @@
 #include "mathHelper.h"
 #include "vec3.h"
 #include "scene.h"
+#include "camera.h"
+#include "UI.h"

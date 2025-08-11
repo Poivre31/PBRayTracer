@@ -1,4 +1,7 @@
 #include "screenQuad.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 ScreenQuad::ScreenQuad(Shader* screenShader) : screenShader(screenShader) {
 	glGenBuffers(1, &vertexBuffer);
@@ -14,11 +17,15 @@ ScreenQuad::ScreenQuad(Shader* screenShader) : screenShader(screenShader) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ScreenQuad::Draw(unsigned int textureIndex) const {
+void ScreenQuad::Draw(Renderer& UI, unsigned int textureIndex) const {
 	screenShader->Use();
 	screenShader->SetInt("screenTexture", textureIndex);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	glfwSwapBuffers(UI.window);
+	glFinish();
 }
 
 void ScreenQuad::Reload() {

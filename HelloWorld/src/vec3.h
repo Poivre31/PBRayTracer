@@ -41,10 +41,33 @@ struct Vec3 {
 		return out;
 	}
 
+	friend Vec3 operator*(const Vec3& v, const Vec3& u) {
+		Vec3 out;
+		out.x = v.x * u.x;
+		out.y = v.y * u.y;
+		out.z = v.z * u.z;
+		return out;
+	}
+
 	Vec3& operator*=(const Vec3& v) {
 		this->x *= v.x;
 		this->y *= v.y;
 		this->z *= v.z;
+		return *this;
+	}
+
+	friend Vec3 operator/(const Vec3& v, const Vec3& u) {
+		Vec3 out;
+		out.x = v.x / u.x;
+		out.y = v.y / u.y;
+		out.z = v.z / u.z;
+		return out;
+	}
+
+	Vec3& operator/=(const Vec3& v) {
+		this->x /= v.x;
+		this->y /= v.y;
+		this->z /= v.z;
 		return *this;
 	}
 

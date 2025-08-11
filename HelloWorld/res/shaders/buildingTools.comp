@@ -1,0 +1,283 @@
+#version 460 core
+#define M_PI 3.14159265358979
+
+// STRUCTS
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+uniform struct Camera {
+	vec3 position;
+	vec2 direction;
+	float vFov;
+} mainCamera;
+
+layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+
+layout(rgba16f) uniform image2D image;
+layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
+{
+	vec4 _position[1024];
+	vec4 _scale[1024];
+	vec4 _rotation[1024];
+};
+
+uniform int selectedIndex;
+uniform int editMode;
+
+float intersectSphere(Ray ray, Transform object);
+float intersectCube(Ray ray, Transform object);
+float intersectPlane(Ray ray, Transform object);
+float intersectCircle(Ray ray, Transform object);
+float intersectCylinder(Ray ray, Transform object);
+float intersectCone(Ray ray, Transform object);
+float intersectPyramid(Ray ray, Transform object);
+vec3 rotateSpherical(vec3 vec, float theta, float phi);
+
+vec3 drawPos(Ray ray, vec3 originalColor) {
+	float depth = 1000;
+	vec3 pixelColor = originalColor;
+	vec4 result;
+
+	Transform object;
+	object.position = _position[selectedIndex].xyz;
+	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
+	object.scale = vec3(.02) * objDist;
+	float dist = intersectSphere(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// RED X CYLINDER
+	object.position = _position[selectedIndex].xyz + 0.08 * vec3(objDist,0,0);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, 0);
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// RED X CONE
+	object.position = _position[selectedIndex].xyz + 0.16 * vec3(objDist,0,0);
+	object.scale = vec3(.02) * objDist;
+	object.scale.z *= 1;
+	object.rotation = vec2(M_PI/2, 0);
+	dist = intersectCone(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	
+	// GREEN Y CYLINDER
+	object.position = _position[selectedIndex].xyz + 0.08 * vec3(0,objDist,0);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, M_PI/2);
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// GREEN Y CONE
+	object.position = _position[selectedIndex].xyz + 0.16 * vec3(0,objDist,0);
+	object.scale = vec3(.02) * objDist;
+	object.scale.z *= 1;
+	object.rotation = vec2(M_PI/2, M_PI/2);
+	dist = intersectCone(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// BLUE Z CYLINDER
+	object.position = _position[selectedIndex].xyz + 0.08 * vec3(0,0,objDist);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(0, 0);
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+	// BLUE Z CONE
+	object.position = _position[selectedIndex].xyz + 0.16 * vec3(0,0,objDist);
+	object.scale = vec3(.02) * objDist;
+	object.scale.z *= 1;
+	object.rotation = vec2(0, 0);
+	dist = intersectCone(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	return pixelColor;
+}
+
+vec3 drawScale(Ray ray, vec3 originalColor) {
+	float depth = 1000;
+	vec3 pixelColor = originalColor;
+
+	vec2 baseRotation = vec2(_rotation[selectedIndex].xy);
+	baseRotation = vec2(0);
+
+	Transform object;
+	object.position = _position[selectedIndex].xyz;
+	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
+	object.scale = vec3(.02) * objDist;
+	float dist = intersectSphere(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// RED X CYLINDER
+	object.position = _position[selectedIndex].xyz + rotateSpherical(0.08 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, 0) + baseRotation;
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// RED X CUBE
+	object.position = _position[selectedIndex].xyz + rotateSpherical(0.16 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.016) * objDist;
+	object.rotation = vec2(M_PI/2, 0) + baseRotation;
+	dist = intersectCube(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	
+	// GREEN Y CYLINDER
+	object.position = _position[selectedIndex].xyz + rotateSpherical(0.08 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, M_PI/2) + baseRotation;
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// GREEN Y CONE
+	object.position = _position[selectedIndex].xyz + rotateSpherical(0.16 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.016) * objDist;
+	object.rotation = vec2(M_PI/2, M_PI/2) + baseRotation;
+	dist = intersectCube(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// BLUE Z CYLINDER
+	object.position = _position[selectedIndex].xyz + rotateSpherical(0.08 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(0, 0) + baseRotation;
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+	// BLUE Z CONE
+	object.position = _position[selectedIndex].xyz + rotateSpherical(0.16 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.016) * objDist;
+	object.rotation = vec2(0, 0) + baseRotation;
+	dist = intersectCube(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	return pixelColor;
+}
+
+vec3 drawRot(Ray ray, vec3 originalColor) {
+	float depth = 1000;
+	vec3 pixelColor = originalColor;
+
+	// CENTER SPHERE
+	Transform object;
+	object.position = _position[selectedIndex].xyz;
+	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
+	object.scale = vec3(.02) * objDist;
+	float dist = intersectSphere(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+//	// OUTER CYLIDNER RED
+//	object.position = _position[selectedIndex].xyz;
+//	object.scale = vec3(.12) * objDist;
+//	object.scale.z = .01 * objDist;
+//	object.rotation = vec2(0, 0);
+//	dist = intersectCylinder(ray, object);
+//	if(dist>0 && dist <depth) {
+//		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+//		depth = dist;
+//	}
+//
+//	// INNER CYLINDER RED
+//	object.position = _position[selectedIndex].xyz;
+//	object.scale = vec3(.10) * objDist;
+//	object.scale.z = .01 * objDist;
+//	object.rotation = vec2(0, 0);
+//	dist = intersectCylinder(ray, object);
+//	if(dist>0 && dist <depth) {
+//		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+//		depth = dist;
+//	}
+
+	// TOP FILLING RED
+	object.position = _position[selectedIndex].xyz;
+	object.scale = vec3(.12) * objDist;
+	object.scale.z = .01 * objDist;
+	object.rotation = vec2(0, 0);
+	dist = intersectCircle(ray, object);
+	if(dist>0 && dist <depth) {
+		vec3 inter = ray.origin + dist * ray.direction - object.position;
+		if(dot(inter.xy, inter.xy) > .10*.10*objDist*objDist) {
+			pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+			depth = dist;
+		}
+	}
+
+	// TOP FILLING BLUE
+	object.position = _position[selectedIndex].xyz;
+	object.scale = vec3(.12) * objDist;
+	object.scale.z = .01 * objDist;
+	object.rotation = vec2(M_PI/2, M_PI/2);
+	dist = intersectCircle(ray, object);
+	if(dist>0 && dist <depth) {
+		vec3 inter = ray.origin + dist * ray.direction - object.position;
+		if(dot(inter.xz, inter.xz) > .10*.10*objDist*objDist) {
+			pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+			depth = dist;
+		}
+	}
+
+	return pixelColor;
+}
+
+vec3 drawTools(Ray ray, vec3 pixelColor) {
+	switch(editMode) {
+	case(0):
+		pixelColor = drawPos(ray, pixelColor); break;
+	case(1):
+		pixelColor = drawScale(ray, pixelColor); break;
+	case(2):
+		pixelColor = drawRot(ray, pixelColor); break;
+	}
+	return pixelColor;
+}

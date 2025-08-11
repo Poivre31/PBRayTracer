@@ -47,9 +47,12 @@ layout(std430, binding = 2) readonly restrict buffer ColorBuffer {
 vec3 skyColor(vec3 rayDirection);
 
 Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera);
+vec2 inversePoint(vec3 point, ivec2 imSize, Camera camera);
+Ray findPoint(vec2 pixelPos, ivec2 imSize, Camera camera);
 Ray transformRay(Ray ray, Transform transform);
 Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit initialHit);
 vec3 computeNormal(Hit hit, Ray ray);
+vec3 drawTools(Ray ray, vec3 pixelColor);
 
 struct Light {
 	vec3 direction;
@@ -58,10 +61,38 @@ struct Light {
 };
 
 vec3 BRDF(Light light, vec3 normal, vec3 color) {
-	return light.color * light.radius * light.radius * M_PI * color * max(dot(normal,-light.direction),0) + .4 * color;
+	return light.color * light.radius * light.radius * M_PI * color * max(dot(normal,-light.direction),0) + .25 * color;
 }
 
+uniform int selectedIndex;
+uniform ivec2 mousePos;
 
+void drawAxis(vec3 p, vec3 color, ivec2 pixelCoords) {
+	vec2 p0 = inversePoint(vec3(0), imageSize(image), mainCamera);
+	vec2 p1 = inversePoint(p, imageSize(image), mainCamera);
+
+	vec2 d = p1 - p0;
+
+	float a = d.y / d.x;
+	float b = p0.y - p0.x * d.y / d.x;
+
+	float x = (pixelCoords.x + pixelCoords.y * a - a * b) / (1 + a * a);
+	float y = a * x + b;
+
+	float dist = distance(vec2(x,y), pixelCoords);
+
+	if(dist < 2) imageStore(image, pixelCoords, vec4(.2));
+
+	x = (mousePos.x + mousePos.y * a - a * b) / (1 + a * a);
+	y = a * x + b;
+
+	dist = distance(vec2(x,y), pixelCoords);
+
+	Ray ray = findPoint(vec2(x,y), imageSize(image), mainCamera);
+
+	float lambda = -ray.origin.z / ray.direction.z;
+	if(dist < 16) imageStore(image, pixelCoords, vec4(lambda));
+}
 // MAIN LOOP
 void main()
 {
@@ -101,8 +132,20 @@ void main()
 
 	if(hit.index!=-1) {
 		vec3 normal =  computeNormal(hit, ray);
-		pixelColor = BRDF(mainLight, normal, _color_roughness[hit.index].xyz);
+		pixelColor = BRDF(mainLight, normal, vec3(1));
+		if(hit.index == selectedIndex) pixelColor *= vec3(1,.8,.8);
 	}
 
+	if(selectedIndex!= -1) {
+		pixelColor = drawTools(ray, pixelColor);
+	}
+	
 	imageStore(image, pixelCoords, vec4(pixelColor,1));
+
+//	drawAxis(vec3(1,0,0), vec3(1,0,0), pixelCoords);
+//	drawAxis(vec3(0,1,0), vec3(0,1,0), pixelCoords);
+//	drawAxis(vec3(0,0,1), vec3(0,0,1), pixelCoords);
+
+
 }
+
