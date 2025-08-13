@@ -1,4 +1,4 @@
-project "HelloWorld"
+project "PBRT"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++23"

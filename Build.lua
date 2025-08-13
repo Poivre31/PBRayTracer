@@ -1,7 +1,7 @@
-workspace "HelloWorld"
+workspace "PBRT"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject "HelloWorld"
+   startproject "PBRT"
 
    -- Workspace-wide build options for MSVC
    filter "system:windows"
@@ -9,4 +9,4 @@ workspace "HelloWorld"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-include "HelloWorld/Build-HelloWorld.lua"
+include "PBRT/Build-PBRT.lua"

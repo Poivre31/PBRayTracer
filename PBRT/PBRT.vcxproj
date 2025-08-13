@@ -15,10 +15,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4179687C-2D31-AAC9-9638-8325820F45BA}</ProjectGuid>
+    <ProjectGuid>{7D118A7C-6948-8B0D-1235-7110FE4A070F}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HelloWorld</RootNamespace>
+    <RootNamespace>PBRT</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -55,23 +55,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Debug-windows-x86_64\HelloWorld\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Debug-windows-x86_64\HelloWorld\</IntDir>
-    <TargetName>HelloWorld</TargetName>
+    <OutDir>$(ProjectDir)..\bin\Debug-windows-x86_64\PBRT\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Debug-windows-x86_64\PBRT\</IntDir>
+    <TargetName>PBRT</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Release-windows-x86_64\HelloWorld\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Release-windows-x86_64\HelloWorld\</IntDir>
-    <TargetName>HelloWorld</TargetName>
+    <OutDir>$(ProjectDir)..\bin\Release-windows-x86_64\PBRT\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Release-windows-x86_64\PBRT\</IntDir>
+    <TargetName>PBRT</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Dist-windows-x86_64\HelloWorld\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Dist-windows-x86_64\HelloWorld\</IntDir>
-    <TargetName>HelloWorld</TargetName>
+    <OutDir>$(ProjectDir)..\bin\Dist-windows-x86_64\PBRT\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Dist-windows-x86_64\PBRT\</IntDir>
+    <TargetName>PBRT</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -94,7 +94,7 @@
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Debug-windows-x86_64\HelloWorld\res"</Command>
+      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Debug-windows-x86_64\PBRT\res"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,7 +123,7 @@
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Release-windows-x86_64\HelloWorld\res"</Command>
+      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Release-windows-x86_64\PBRT\res"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -152,7 +152,7 @@
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist-windows-x86_64\HelloWorld\res"</Command>
+      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist-windows-x86_64\PBRT\res"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
