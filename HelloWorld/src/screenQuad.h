@@ -22,4 +22,5 @@ private:
 	};
 
 	unsigned int vertexBuffer;
+	unsigned int vao;
 };

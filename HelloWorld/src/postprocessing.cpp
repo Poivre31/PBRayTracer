@@ -55,7 +55,7 @@ void PostProcessor::Dither(Texture& image, float ditherStrength, int noiseSteps,
 	ditherShader.SetInt("imageIn", image.imageUnit);
 	ditherShader.SetInt("imageOut", image.imageUnit);
 
-	ditherShader.Dispatch(image.width, image.height, 32, 32);
+	ditherShader.Dispatch(image.width, image.height, 16, 16);
 }
 
 void PostProcessor::ReloadShaders() {

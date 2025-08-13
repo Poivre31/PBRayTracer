@@ -44,12 +44,6 @@ struct Transform {
 	float4 rotation;
 };
 
-struct TransformBuffer {
-	float4 position[1024];
-	float4 scale[1024];
-	float4 rotation[1024];
-};
-
 class Scene {
 public:
 	std::vector<Transform> spheres;
@@ -59,7 +53,8 @@ public:
 	std::vector<Transform> cylinders;
 	std::vector<Transform> cones;
 	std::vector<Transform> pyramids;
-	TransformBuffer transformBuffer{};
+	Transform transforms[4096]{};
+	float4 colors[4096]{};
 	ObjectCount count{};
 	int selectedIndex = -1;
 	int selectedType = -1;
@@ -69,7 +64,11 @@ public:
 	Vec3 startPos{};
 	Vec3 startScale{};
 	Vec3 startRot{};
-	float startAngle;
+	float startAngle = 0;
+	int AAsamples = 0;
+	float lightDir[3]{0,0,-1};
+	float lightColor[3]{1,1,1};
+	float lightRadius{.5};
 
 	Scene() {};
 	Scene(ComputeShader& mainShader);
@@ -77,11 +76,11 @@ public:
 	void ConnectGPU();
 
 	void RandomScene(int nObjects);
-	void AddObject(Transform object, int objectType);
+	void AddObject(Transform object, int objectType, float4 color);
 	void RemoveObject(int index, int objectType);
 	void Clear();
 
-	void ParseTransforms();
+	void ParseObjects();
 
 	int FindSubIndex(int globalIndex);
 	Transform* FindTransform(int globalIndex, int type);
@@ -90,5 +89,6 @@ public:
 	
 private:
 	unsigned int transformsSSBO = 0;
+	unsigned int colorsSSBO = 0;
 	ComputeShader* rtShader = nullptr;
 };

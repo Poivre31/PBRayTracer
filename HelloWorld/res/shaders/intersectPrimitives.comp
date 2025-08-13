@@ -19,16 +19,23 @@ struct Hit {
 	int type;
 };
 
+uniform struct Count {
+	int sphere;
+	int cube;
+	int plane;
+	int circle;
+	int cylinder;
+	int cone;
+	int pyramid;
+} count;
+
+
 // INPUTS
-layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
 layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
 {
-	vec4 _position[1024];
-	vec4 _scale[1024];
-	vec4 _rotation[1024];
+	Transform _transforms[];
 };
-
-shared Transform transforms[1024];
 
 // FUNCTIONS
 vec3 skyColor(vec3 rayDirection);
@@ -43,25 +50,13 @@ float intersectCylinder(Ray ray, Transform object);
 float intersectCone(Ray ray, Transform object);
 float intersectPyramid(Ray ray, Transform object);
 
-Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit hit)
+
+Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit hit, int originIndex)
 {
-	nObject = nObject % 1025;
-	uint index = gl_LocalInvocationID.x + gl_WorkGroupSize.x * gl_LocalInvocationID.y;
-	if(index<nObject) {
-		transforms[index].position = _position[index+startIndex].xyz;
-		transforms[index].scale = _scale[index+startIndex].xyz;
-		transforms[index].rotation = _rotation[index+startIndex].xy;
-	}
-
-	memoryBarrierShared();
-	barrier();
-
-	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-
-	Transform object;
 	for(int i = 0; i < nObject; i++) {
-		object = transforms[i];
-		float objectDistance;
+		if(i + startIndex == originIndex) continue;
+		Transform object = _transforms[i+startIndex];
+		float objectDistance = 0;
 		switch(objectType) {
 			case 0: {
 				objectDistance = intersectSphere(ray, object); break;
@@ -92,117 +87,28 @@ Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit hit)
 		}
 	}
 
-	memoryBarrierShared();
-	barrier();
-
 	return hit;
 }
 
-Hit intersect2(Ray ray, int startIndex, int nObject, int objectType, Hit hit)
-{
-	nObject = nObject % 1025;
-	uint index = gl_LocalInvocationID.x + gl_WorkGroupSize.x * gl_LocalInvocationID.y;
-	if(index<nObject) {
-		transforms[index].position = _position[index+startIndex].xyz;
-		transforms[index].scale = _scale[index+startIndex].xyz;
-		transforms[index].rotation = _rotation[index+startIndex].xy;
-	}
-
-	memoryBarrierShared();
-	barrier();
-
-	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-
-	Transform object;
-
-	switch(objectType) {
-		case 0: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectSphere(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-			break;
-		}
-		case 1: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectCube(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-			break;
-		}
-		case 2: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectPlane(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-			break;
-		}
-		case 3: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectCircle(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-			break;
-		}
-		case 4: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectCylinder(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-			break;
-		}
-		case 5: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectCone(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-			break;
-		}
-		case 6: {
-			for(int i = 0; i < nObject; i++) {
-				object = transforms[i];
-				float objectDistance = intersectPyramid(ray, object);
-				if(objectDistance < hit.depth && objectDistance > 0) {
-					hit.depth = objectDistance;
-					hit.index = startIndex + i;
-					hit.type = objectType;
-				}
-			}
-		}
-	}
-
-	memoryBarrierShared();
-	barrier();
+Hit launchRay(Ray ray, int originIndex) {
+	Hit hit;
+	hit.depth = 1000;
+	hit.index = -1;
+	hit.type = -1;
+	int i = 0;
+	hit = intersect(ray, i, count.sphere, 0, hit, originIndex);
+	i+=count.sphere;
+	hit = intersect(ray, i, count.cube, 1, hit, originIndex);
+	i+=count.cube;
+	hit = intersect(ray, i, count.plane, 2, hit, originIndex);
+	i+=count.plane;
+	hit = intersect(ray, i, count.circle, 3, hit, originIndex);
+	i+=count.circle;
+	hit = intersect(ray, i, count.cylinder, 4, hit, originIndex);
+	i+=count.cylinder;
+	hit = intersect(ray, i, count.cone, 5, hit, originIndex);
+	i+=count.cone;
+	hit = intersect(ray, i, count.pyramid, 6, hit, originIndex);
 
 	return hit;
 }

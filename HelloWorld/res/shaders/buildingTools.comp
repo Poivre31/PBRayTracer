@@ -19,14 +19,12 @@ uniform struct Camera {
 	float vFov;
 } mainCamera;
 
-layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
 
 layout(rgba16f) uniform image2D image;
 layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
 {
-	vec4 _position[1024];
-	vec4 _scale[1024];
-	vec4 _rotation[1024];
+	Transform _transforms[];
 };
 
 uniform int selectedIndex;
@@ -47,7 +45,8 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 	vec4 result;
 
 	Transform object;
-	object.position = _position[selectedIndex].xyz;
+	vec3 position = _transforms[selectedIndex].position.xyz;
+	object.position = position;
 	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
 	object.scale = vec3(.02) * objDist;
 	float dist = intersectSphere(ray, object);
@@ -57,7 +56,7 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 	}
 
 	// RED X CYLINDER
-	object.position = _position[selectedIndex].xyz + 0.08 * vec3(objDist,0,0);
+	object.position = position + 0.08 * vec3(objDist,0,0);
 	object.scale = vec3(.01) * objDist;
 	object.scale.z *= 8;
 	object.rotation = vec2(M_PI/2, 0);
@@ -67,7 +66,7 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 		depth = dist;
 	}
 	// RED X CONE
-	object.position = _position[selectedIndex].xyz + 0.16 * vec3(objDist,0,0);
+	object.position = position + 0.16 * vec3(objDist,0,0);
 	object.scale = vec3(.02) * objDist;
 	object.scale.z *= 1;
 	object.rotation = vec2(M_PI/2, 0);
@@ -78,7 +77,7 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 	}
 	
 	// GREEN Y CYLINDER
-	object.position = _position[selectedIndex].xyz + 0.08 * vec3(0,objDist,0);
+	object.position = position + 0.08 * vec3(0,objDist,0);
 	object.scale = vec3(.01) * objDist;
 	object.scale.z *= 8;
 	object.rotation = vec2(M_PI/2, M_PI/2);
@@ -88,7 +87,7 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 		depth = dist;
 	}
 	// GREEN Y CONE
-	object.position = _position[selectedIndex].xyz + 0.16 * vec3(0,objDist,0);
+	object.position = position + 0.16 * vec3(0,objDist,0);
 	object.scale = vec3(.02) * objDist;
 	object.scale.z *= 1;
 	object.rotation = vec2(M_PI/2, M_PI/2);
@@ -99,7 +98,7 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 	}
 
 	// BLUE Z CYLINDER
-	object.position = _position[selectedIndex].xyz + 0.08 * vec3(0,0,objDist);
+	object.position = position + 0.08 * vec3(0,0,objDist);
 	object.scale = vec3(.01) * objDist;
 	object.scale.z *= 8;
 	object.rotation = vec2(0, 0);
@@ -109,7 +108,7 @@ vec3 drawPos(Ray ray, vec3 originalColor) {
 		depth = dist;
 	}
 	// BLUE Z CONE
-	object.position = _position[selectedIndex].xyz + 0.16 * vec3(0,0,objDist);
+	object.position = position + 0.16 * vec3(0,0,objDist);
 	object.scale = vec3(.02) * objDist;
 	object.scale.z *= 1;
 	object.rotation = vec2(0, 0);
@@ -126,11 +125,12 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 	float depth = 1000;
 	vec3 pixelColor = originalColor;
 
-	vec2 baseRotation = vec2(_rotation[selectedIndex].xy);
+	vec2 baseRotation = vec2(_transforms[selectedIndex].rotation.xy);
 	baseRotation = vec2(0);
 
 	Transform object;
-	object.position = _position[selectedIndex].xyz;
+	vec3 position = _transforms[selectedIndex].position.xyz;
+	object.position = position;
 	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
 	object.scale = vec3(.02) * objDist;
 	float dist = intersectSphere(ray, object);
@@ -140,7 +140,7 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 	}
 
 	// RED X CYLINDER
-	object.position = _position[selectedIndex].xyz + rotateSpherical(0.08 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
+	object.position = position + rotateSpherical(0.08 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
 	object.scale = vec3(.01) * objDist;
 	object.scale.z *= 8;
 	object.rotation = vec2(M_PI/2, 0) + baseRotation;
@@ -150,7 +150,7 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 		depth = dist;
 	}
 	// RED X CUBE
-	object.position = _position[selectedIndex].xyz + rotateSpherical(0.16 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
+	object.position = position + rotateSpherical(0.16 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
 	object.scale = vec3(.016) * objDist;
 	object.rotation = vec2(M_PI/2, 0) + baseRotation;
 	dist = intersectCube(ray, object);
@@ -160,7 +160,7 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 	}
 	
 	// GREEN Y CYLINDER
-	object.position = _position[selectedIndex].xyz + rotateSpherical(0.08 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
+	object.position = position + rotateSpherical(0.08 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
 	object.scale = vec3(.01) * objDist;
 	object.scale.z *= 8;
 	object.rotation = vec2(M_PI/2, M_PI/2) + baseRotation;
@@ -170,7 +170,7 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 		depth = dist;
 	}
 	// GREEN Y CONE
-	object.position = _position[selectedIndex].xyz + rotateSpherical(0.16 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
+	object.position = position + rotateSpherical(0.16 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
 	object.scale = vec3(.016) * objDist;
 	object.rotation = vec2(M_PI/2, M_PI/2) + baseRotation;
 	dist = intersectCube(ray, object);
@@ -180,7 +180,7 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 	}
 
 	// BLUE Z CYLINDER
-	object.position = _position[selectedIndex].xyz + rotateSpherical(0.08 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
+	object.position = position + rotateSpherical(0.08 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
 	object.scale = vec3(.01) * objDist;
 	object.scale.z *= 8;
 	object.rotation = vec2(0, 0) + baseRotation;
@@ -190,7 +190,7 @@ vec3 drawScale(Ray ray, vec3 originalColor) {
 		depth = dist;
 	}
 	// BLUE Z CONE
-	object.position = _position[selectedIndex].xyz + rotateSpherical(0.16 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
+	object.position = position + rotateSpherical(0.16 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
 	object.scale = vec3(.016) * objDist;
 	object.rotation = vec2(0, 0) + baseRotation;
 	dist = intersectCube(ray, object);
@@ -208,7 +208,8 @@ vec3 drawRot(Ray ray, vec3 originalColor) {
 
 	// CENTER SPHERE
 	Transform object;
-	object.position = _position[selectedIndex].xyz;
+	vec3 position = _transforms[selectedIndex].position.xyz;
+	object.position = position;
 	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
 	object.scale = vec3(.02) * objDist;
 	float dist = intersectSphere(ray, object);
@@ -240,7 +241,7 @@ vec3 drawRot(Ray ray, vec3 originalColor) {
 //	}
 
 	// TOP FILLING RED
-	object.position = _position[selectedIndex].xyz;
+	object.position = position;
 	object.scale = vec3(.12) * objDist;
 	object.scale.z = .01 * objDist;
 	object.rotation = vec2(0, 0);
@@ -254,7 +255,7 @@ vec3 drawRot(Ray ray, vec3 originalColor) {
 	}
 
 	// TOP FILLING BLUE
-	object.position = _position[selectedIndex].xyz;
+	object.position = position;
 	object.scale = vec3(.12) * objDist;
 	object.scale.z = .01 * objDist;
 	object.rotation = vec2(M_PI/2, M_PI/2);
@@ -281,3 +282,30 @@ vec3 drawTools(Ray ray, vec3 pixelColor) {
 	}
 	return pixelColor;
 }
+
+//void drawAxis(vec3 p, vec3 color, ivec2 pixelCoords) {
+//	vec2 p0 = inversePoint(vec3(0), imageSize(image), mainCamera);
+//	vec2 p1 = inversePoint(p, imageSize(image), mainCamera);
+//
+//	vec2 d = p1 - p0;
+//
+//	float a = d.y / d.x;
+//	float b = p0.y - p0.x * d.y / d.x;
+//
+//	float x = (pixelCoords.x + pixelCoords.y * a - a * b) / (1 + a * a);
+//	float y = a * x + b;
+//
+//	float dist = distance(vec2(x,y), pixelCoords);
+//
+//	if(dist < 2) imageStore(image, pixelCoords, vec4(.2));
+//
+//	x = (mousePos.x + mousePos.y * a - a * b) / (1 + a * a);
+//	y = a * x + b;
+//
+//	dist = distance(vec2(x,y), pixelCoords);
+//
+//	Ray ray = findPoint(vec2(x,y), imageSize(image), mainCamera);
+//
+//	float lambda = -ray.origin.z / ray.direction.z;
+//	if(dist < 16) imageStore(image, pixelCoords, vec4(lambda));
+//}

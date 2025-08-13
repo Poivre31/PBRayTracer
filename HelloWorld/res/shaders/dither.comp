@@ -1,5 +1,5 @@
 #version 460 core
-layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
 
 layout(rgba16f) uniform image2D image;
 
@@ -7,13 +7,13 @@ uniform float ditherStrength;
 uniform int noiseSteps;
 uniform int baseSeed;
 
-unsigned int hashFunction(unsigned int seed) {
-	unsigned int state = seed*747796405u + 2891336453u;
-	unsigned int word = ((state >> ((state>>28u)+4u))^state)*277803737;
+uint hashFunction(uint seed) {
+	uint state = seed*747796405u + 2891336453u;
+	uint word = ((state >> ((state>>28u)+4u))^state)*277803737;
 	return (word>>22u)^word;
 }
 
-float randFloat(unsigned int seed, float a, float b) {
+float randFloat(uint seed, float a, float b) {
 	return a+(b-a)*float(hashFunction(seed))/(-1u);
 }
 

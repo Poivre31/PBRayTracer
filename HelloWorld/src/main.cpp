@@ -49,7 +49,7 @@ int main(int, char**)
 	scene = Scene(computeShader);
 
 	scene.ConnectGPU();
-	scene.ParseTransforms();
+	scene.ParseObjects();
 
 	glGenBuffers(1, &colorsSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
@@ -79,13 +79,13 @@ int main(int, char**)
 		if (ImGui::IsKeyPressed(ImGuiKey_T, false)) scene.SetEditMode(1);
 		if (ImGui::IsKeyPressed(ImGuiKey_R, false)) scene.SetEditMode(2);
 
-		if (ImGui::IsMouseClicked(0) && scene.editAxis == Axis::none) {
+		if (ImGui::IsMouseClicked(0) && scene.editAxis == Axis::none && !UI.io->WantCaptureMouse) {
 			auto [hit, type] = findHitObject(scene, mainCamera, UI);
 			if (hit == scene.selectedIndex) {
 				scene.selectedIndex = -1;
 				scene.selectedType = -1;
 			}
-			if (hit != -1) {
+			else if (hit != -1) {
 				scene.selectedIndex = hit;
 				scene.selectedType = type;
 			}
@@ -112,7 +112,13 @@ int main(int, char**)
 			computeShader.Use();
 			computeShader.SetInt("selectedIndex", scene.selectedIndex);
 			computeShader.SetInt2("mousePos", UI.io->MousePos.x, UI.height - UI.io->MousePos.y);
-			computeShader.Dispatch(imageWidth, imageHeight, 32, 32);
+			computeShader.SetInt("frameIndex", ImGui::GetFrameCount());
+			computeShader.SetInt("AAsamples", scene.AAsamples);
+			float lightNorm = sqrt(scene.lightDir[0] * scene.lightDir[0] + scene.lightDir[1] * scene.lightDir[1] + scene.lightDir[2] * scene.lightDir[2]);
+			computeShader.SetFloat3("mainLight.direction", scene.lightDir[0] / lightNorm, scene.lightDir[1] / lightNorm, scene.lightDir[2] / lightNorm);
+			computeShader.SetFloat3("mainLight.color", scene.lightColor[0], scene.lightColor[1], scene.lightColor[2]);
+			computeShader.SetFloat("mainLight.radius", scene.lightRadius);
+			computeShader.Dispatch(imageWidth, imageHeight, 8, 8);
 
 			if (ImGui::IsKeyDown(ImGuiKey_MouseLeft) && scene.selectedIndex != -1) {
 				if (ImGui::IsKeyPressed(ImGuiKey_MouseLeft, false) && scene.editAxis == Axis::none) {
@@ -150,7 +156,7 @@ int main(int, char**)
 						}
 
 						object->position = float4{ intersect.x, intersect.y, intersect.z, 0 };
-						scene.ParseTransforms();
+						scene.ParseObjects();
 					}
 
 					else if (scene.editMode == EditMode::scaling) {
@@ -186,7 +192,7 @@ int main(int, char**)
 						}
 
 						object->scale = float4{ scale.x, scale.y, scale.z, 0 };
-						scene.ParseTransforms();
+						scene.ParseObjects();
 					}
 
 					else if (scene.editMode = EditMode::rotation) {
@@ -201,7 +207,7 @@ int main(int, char**)
 						}
 
 						object->rotation = float4{ rotation.x, rotation.y, 0, 0 };
-						scene.ParseTransforms();
+						scene.ParseObjects();
 					}
 				}
 			}

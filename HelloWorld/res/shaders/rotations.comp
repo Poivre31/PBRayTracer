@@ -1,3 +1,4 @@
+#version 460 core
 vec3 rotateX(vec3 vec, float alpha) {
 	float y = cos(alpha) * vec.y - sin(alpha) * vec.z;
 	float z = sin(alpha) * vec.y + cos(alpha) * vec.z;

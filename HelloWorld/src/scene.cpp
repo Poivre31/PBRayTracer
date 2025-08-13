@@ -8,8 +8,13 @@ Scene::Scene(ComputeShader& mainShader) {
 void Scene::ConnectGPU() {
 	glGenBuffers(1, &transformsSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, transformsSSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(TransformBuffer), &transformBuffer, GL_DYNAMIC_READ);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(transforms), transforms, GL_DYNAMIC_READ);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, transformsSSBO);
+
+	glGenBuffers(1, &colorsSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(colors), colors, GL_DYNAMIC_READ);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, colorsSSBO);
 }
 
 void randomTransforms(std::vector<Transform>& transforms, int nElements) {
@@ -28,7 +33,7 @@ void randomTransforms(std::vector<Transform>& transforms, int nElements) {
 }
 
 void Scene::RandomScene(int nObjects) {
-	int nPrimitives = sizeof(ObjectCount) / sizeof(int);
+	int nPrimitives = 7;
 	count.total = nObjects;
 	count.cube = nObjects / nPrimitives;
 	count.plane = count.cube;
@@ -47,9 +52,14 @@ void Scene::RandomScene(int nObjects) {
 	randomTransforms(pyramids, count.pyramid);
 	selectedIndex = -1;
 	selectedType = -1;
+
+	for (size_t i = 0; i < 4096; i++)
+	{
+		colors[i] = { randF(0,1),randF(0,1) ,randF(0,1) ,1 };
+	}
 }
 
-void Scene::AddObject(Transform object, int objectType) {
+void Scene::AddObject(Transform object, int objectType, float4 color) {
 	count.total++;
 	int index = 0;
 	switch (objectType) {
@@ -84,6 +94,8 @@ void Scene::AddObject(Transform object, int objectType) {
 	}
 	selectedIndex = index;
 	selectedType = objectType;
+
+	colors[index] = color;
 }
 
 void Scene::RemoveObject(int index, int objectType) {
@@ -130,55 +142,49 @@ void Scene::Clear() {
 	selectedType = -1;
 }
 
-void SetTransform(Transform in, TransformBuffer& out, int index) {
-	out.position[index].x = in.position.x;
-	out.position[index].y = in.position.y;
-	out.position[index].z = in.position.z;
-	out.scale[index].x = in.scale.x;
-	out.scale[index].y = in.scale.y;
-	out.scale[index].z = in.scale.z;
-	out.rotation[index].x = in.rotation.x;
-	out.rotation[index].y = in.rotation.y;
-}
-
-void Scene::ParseTransforms() {
+void Scene::ParseObjects() {
 	int baseIndex = 0;
 	for (size_t i = 0; i < count.sphere; i++)
 	{
-		SetTransform(spheres[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = spheres[i];
 	}
 	baseIndex += count.sphere;
 	for (size_t i = 0; i < count.cube; i++)
 	{
-		SetTransform(cubes[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = cubes[i];
 	}
 	baseIndex += count.cube;
 	for (size_t i = 0; i < count.plane; i++)
 	{
-		SetTransform(planes[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = planes[i];
 	}
 	baseIndex += count.plane;
 	for (size_t i = 0; i < count.circle; i++)
 	{
-		SetTransform(circles[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = circles[i];
 	}
 	baseIndex += count.circle;
 	for (size_t i = 0; i < count.cylinder; i++)
 	{
-		SetTransform(cylinders[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = cylinders[i];
 	}
 	baseIndex += count.cylinder;
 	for (size_t i = 0; i < count.cone; i++)
 	{
-		SetTransform(cones[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = cones[i];
 	}
 	baseIndex += count.cone;
 	for (size_t i = 0; i < count.pyramid; i++)
 	{
-		SetTransform(pyramids[i], transformBuffer, i + baseIndex);
+		transforms[i + baseIndex] = pyramids[i];
 	}
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, transformsSSBO);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(TransformBuffer), &transformBuffer);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, transformsSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(transforms), transforms, GL_DYNAMIC_READ);
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, colorsSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(colors), colors, GL_DYNAMIC_READ);
 
 	rtShader->SetInt("count.sphere", count.sphere);
 	rtShader->SetInt("count.cube", count.cube);

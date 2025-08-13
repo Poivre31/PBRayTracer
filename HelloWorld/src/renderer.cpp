@@ -4,11 +4,28 @@
 Renderer::Renderer(const char* windowName, size_t width, size_t height, bool vsync) : width(width), height(height), vsync(vsync), io(0), style(0) {
 	if (!glfwInit()) Log::Error("GLFW init failed");
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
 	window = glfwCreateWindow(width, height , windowName, nullptr, nullptr);
 
 	if (!window) Log::Error("Window creation failed");
 
 	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
+
+	GLint profileMask = 0;
+	glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profileMask);
+
+	if (profileMask & GL_CONTEXT_CORE_PROFILE_BIT)
+		printf("OpenGL Context Profile: Core\n");
+	else if (profileMask & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT)
+		printf("OpenGL Context Profile: Compatibility\n");
+	else
+		printf("OpenGL Context Profile: Unknown/None\n");
+
 	glfwSwapInterval(vsync);
 }
 

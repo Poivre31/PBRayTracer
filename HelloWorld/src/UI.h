@@ -13,9 +13,9 @@ static unsigned int colorsSSBO = 0;
 
 static void randomSpheres(Scene& scene, int nObjects) {
 	scene.RandomScene(nObjects);
-	colorsBuffer = randomColors(nObjects);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(ColorBuffer), &colorsBuffer);
+	//colorsBuffer = randomColors(nObjects);
+	//glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
+	//glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(ColorBuffer), &colorsBuffer);
 }
 
 void cameraOverlay(Camera& mainCamera)
@@ -62,7 +62,7 @@ void objectInfo(Transform& object)
 	ImGui::End();
 }
 
-void addObject(Scene& scene, float position[3], float scale[3], float rotation[2], int type) {
+void addObject(Scene& scene, float position[3], float scale[3], float rotation[2], int type, float color[3]) {
 	Transform object{};
 	object.position.x = position[0];
 	object.position.y = position[1];
@@ -73,7 +73,7 @@ void addObject(Scene& scene, float position[3], float scale[3], float rotation[2
 	object.rotation.x = rotation[0];
 	object.rotation.y = rotation[1];
 
-	scene.AddObject(object, type);
+	scene.AddObject(object, type, float4{ color[0],color[1],color[2], 1 });
 }
 
 void objectManager(Scene& scene)
@@ -89,6 +89,8 @@ void objectManager(Scene& scene)
 	static float _rotation2[2]{};
 	static int _objectType;
 	static int _objectType2;
+	static float _color[3]{ 1,1,1 };
+	static float _color2[3]{ 1,1,1 };
 	static int objectCount = 0;
 
 	ImGui::Begin("Object Manager");
@@ -106,13 +108,13 @@ void objectManager(Scene& scene)
 		ImGui::Text("Object creator");
 		ImGui::DragFloat3("Position", _position, .1, -100, 100);
 		ImGui::DragFloat3("Scale", _scale, .1, 0, 100);
-		if (ImGui::SliderFloat2("Rotation", _rotation, 0, 360)) {
-			_rotation[0] *= M_PI / 180;
-			_rotation[1] *= M_PI / 180;
-		}
+		ImGui::SliderFloat2("Rotation", _rotation, 0, 360);
+
 		ImGui::Combo("Object type", &_objectType, "Sphere\0Cube\0Plane\0Circle\0Cylinder\0Cone\0Pyramid");
 
-		if(ImGui::Button("Add object")) addObject(scene, _position, _scale, _rotation, _objectType);
+		ImGui::ColorEdit3("Color", _color, ImGuiColorEditFlags_Float);
+
+		if(ImGui::Button("Add object")) addObject(scene, _position, _scale, _rotation, _objectType, _color);
 
 		ImGui::Separator();
 
@@ -126,6 +128,9 @@ void objectManager(Scene& scene)
 			_scale2[2] = object->scale.z;
 			_rotation2[0] = object->rotation.x;
 			_rotation2[1] = object->rotation.y;
+			_color2[0] = scene.colors[scene.selectedIndex].x;
+			_color2[1] = scene.colors[scene.selectedIndex].y;
+			_color2[2] = scene.colors[scene.selectedIndex].z;
 			ImGui::Text("Object editor");
 			if (ImGui::DragFloat3("Edit position", _position2, .1, -100, 100)) {
 				object->position.x = _position2[0];
@@ -144,9 +149,12 @@ void objectManager(Scene& scene)
 			if (ImGui::Combo("Edit type", &_objectType, "Sphere\0Cube\0Plane\0Circle\0Cylinder\0Cone\0Pyramid")) {
 				std::cout << "Type editing not yet implemented" << std::endl;
 			}
+			if (ImGui::ColorEdit3("Edit color", _color2, ImGuiColorEditFlags_Float)) {
+				scene.colors[scene.selectedIndex] = {_color2[0],_color2[1],_color2[2],1};
+			}
 		}
 
-		scene.ParseTransforms();
+		scene.ParseObjects();
 	}
 	ImGui::End();
 }
@@ -161,6 +169,11 @@ void UIRender(Renderer& renderer, Scene& scene, Camera& mainCamera) {
 	ImGui::Checkbox("Render", &renderer.doRender);
 	if (!renderer.doRender) renderer.vsync = true;
 	ImGui::SliderFloat("Dither strength", &renderer.ditherStrength, 0, .1);
+	ImGui::SliderInt("GI samples", &scene.AAsamples, 0, 1024);
+	ImGui::SliderFloat3("Light direction", scene.lightDir, -1, 1);
+	ImGui::SliderFloat3("Light color", scene.lightColor, 0, 1);
+	ImGui::SliderFloat("Light radius", &scene.lightRadius, 0, 1);
+
 	ImGui::Text("Render time: %.3f ms/frame (%.1f FPS)", 1000.0f / renderer.io->Framerate, renderer.io->Framerate);
 	ImGui::End();
 

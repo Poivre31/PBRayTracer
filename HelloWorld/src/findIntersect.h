@@ -131,94 +131,13 @@ std::tuple<int, int> findHitObject(Scene& scene, Camera& camera, Renderer& UI) {
 	return {index, type};
 }
 
-//vec3 drawPos(Ray ray, vec3 originalColor) {
-//	float depth = 1000;
-//	vec3 pixelColor = originalColor;
-//	vec4 result;
-//
-//	Transform object;
-//	object.position = _position[selectedIndex].xyz;
-//	float objDist = sqrt(dot(object.position - mainCamera.position, object.position - mainCamera.position));
-//	object.scale = vec3(.02) * objDist;
-//	float dist = intersectSphere(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.8) + .2 * originalColor;
-//		depth = dist;
-//	}
-//
-//	// RED X CYLINDER
-//	object.position = _position[selectedIndex].xyz + 0.08 * vec3(objDist, 0, 0);
-//	object.scale = vec3(.01) * objDist;
-//	object.scale.z *= 8;
-//	object.rotation = vec2(M_PI / 2, 0);
-//	dist = intersectCylinder(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.8, .2, .2) + .2 * originalColor;
-//		depth = dist;
-//	}
-//	// RED X CONE
-//	object.position = _position[selectedIndex].xyz + 0.16 * vec3(objDist, 0, 0);
-//	object.scale = vec3(.02) * objDist;
-//	object.scale.z *= 1;
-//	object.rotation = vec2(M_PI / 2, 0);
-//	dist = intersectCone(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.8, .2, .2) + .2 * originalColor;
-//		depth = dist;
-//	}
-//
-//	// GREEN Y CYLINDER
-//	object.position = _position[selectedIndex].xyz + 0.08 * vec3(0, objDist, 0);
-//	object.scale = vec3(.01) * objDist;
-//	object.scale.z *= 8;
-//	object.rotation = vec2(M_PI / 2, M_PI / 2);
-//	dist = intersectCylinder(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.2, .8, .2) + .2 * originalColor;
-//		depth = dist;
-//	}
-//	// GREEN Y CONE
-//	object.position = _position[selectedIndex].xyz + 0.16 * vec3(0, objDist, 0);
-//	object.scale = vec3(.02) * objDist;
-//	object.scale.z *= 1;
-//	object.rotation = vec2(M_PI / 2, M_PI / 2);
-//	dist = intersectCone(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.2, .8, .2) + .2 * originalColor;
-//		depth = dist;
-//	}
-//
-//	// BLUE Z CYLINDER
-//	object.position = _position[selectedIndex].xyz + 0.08 * vec3(0, 0, objDist);
-//	object.scale = vec3(.01) * objDist;
-//	object.scale.z *= 8;
-//	object.rotation = vec2(0, 0);
-//	dist = intersectCylinder(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.2, .2, .8) + .2 * originalColor;
-//		depth = dist;
-//	}
-//	// BLUE Z CONE
-//	object.position = _position[selectedIndex].xyz + 0.16 * vec3(0, 0, objDist);
-//	object.scale = vec3(.02) * objDist;
-//	object.scale.z *= 1;
-//	object.rotation = vec2(0, 0);
-//	dist = intersectCone(ray, object);
-//	if (dist > 0 && dist < depth) {
-//		pixelColor = vec3(.2, .2, .8) + .2 * originalColor;
-//		depth = dist;
-//	}
-//
-//	return pixelColor;
-//}
-
 int findSelectedAxis(Scene& scene, Renderer& UI, Camera& camera) {
 	Transform object{};
 	float depth = 1000;
 	int axis = Axis::none;
 	///CHECK
 	Ray ray = getRay(camera, UI);
-	object.position = scene.transformBuffer.position[scene.selectedIndex];
+	object.position = scene.transforms[scene.selectedIndex].position;
 	Vec3 position = Vec3(object.position.x, object.position.y, object.position.z);
 	float objDist = sqrt(dot(position - camera.position, position - camera.position));
 
@@ -270,7 +189,7 @@ int findSelectedPlane(Scene& scene, Renderer& UI, Camera& camera) {
 	int axis = Axis::none;
 	///CHECK
 	Ray ray = getRay(camera, UI);
-	object.position = scene.transformBuffer.position[scene.selectedIndex];
+	object.position = scene.transforms[scene.selectedIndex].position;
 	Vec3 position = Vec3(object.position.x, object.position.y, object.position.z);
 	float objDist = sqrt(dot(position - camera.position, position - camera.position));
 

@@ -19,133 +19,131 @@ uniform struct Camera {
 	float vFov;
 } mainCamera;
 
-uniform struct Count {
-	int sphere;
-	int cube;
-	int plane;
-	int circle;
-	int cylinder;
-	int cone;
-	int pyramid;
-} count;
-
 struct Hit {
 	float depth;
 	int index;
 	int type;
 };
 
+uniform struct Light {
+	vec3 direction;
+	vec3 color;
+	float radius;
+} mainLight;
+
 // INPUTS
-layout(local_size_x = 32,local_size_y = 32,local_size_z = 1) in;
+layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
 layout(rgba16f, binding = 0) uniform image2D image;
 
 layout(std430, binding = 2) readonly restrict buffer ColorBuffer {
-	vec4 _color_roughness[1024];
+	vec4 _color_roughness[];
 };
+
+uniform int selectedIndex;
+uniform ivec2 mousePos;
+uniform int frameIndex;
+uniform int AAsamples;
 
 // FUNCTIONS
 vec3 skyColor(vec3 rayDirection);
 
+Hit launchRay(Ray ray, int originIndex);
 Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera);
-vec2 inversePoint(vec3 point, ivec2 imSize, Camera camera);
-Ray findPoint(vec2 pixelPos, ivec2 imSize, Camera camera);
-Ray transformRay(Ray ray, Transform transform);
-Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit initialHit);
+Ray generateRayOffset(ivec2 pixelCoords, ivec2 imSize, Camera camera, vec2 offset);
 vec3 computeNormal(Hit hit, Ray ray);
+
 vec3 drawTools(Ray ray, vec3 pixelColor);
 
-struct Light {
-	vec3 direction;
-	vec3 color;
-	float radius;
-};
-
-vec3 BRDF(Light light, vec3 normal, vec3 color) {
-	return light.color * light.radius * light.radius * M_PI * color * max(dot(normal,-light.direction),0) + .25 * color;
+vec3 BRDF(Light light, vec3 normal, vec3 color, float ambient) {
+	return light.color * light.radius * light.radius * M_PI * color * max(dot(normal,-light.direction),0) + ambient * color;
 }
 
-uniform int selectedIndex;
-uniform ivec2 mousePos;
-
-void drawAxis(vec3 p, vec3 color, ivec2 pixelCoords) {
-	vec2 p0 = inversePoint(vec3(0), imageSize(image), mainCamera);
-	vec2 p1 = inversePoint(p, imageSize(image), mainCamera);
-
-	vec2 d = p1 - p0;
-
-	float a = d.y / d.x;
-	float b = p0.y - p0.x * d.y / d.x;
-
-	float x = (pixelCoords.x + pixelCoords.y * a - a * b) / (1 + a * a);
-	float y = a * x + b;
-
-	float dist = distance(vec2(x,y), pixelCoords);
-
-	if(dist < 2) imageStore(image, pixelCoords, vec4(.2));
-
-	x = (mousePos.x + mousePos.y * a - a * b) / (1 + a * a);
-	y = a * x + b;
-
-	dist = distance(vec2(x,y), pixelCoords);
-
-	Ray ray = findPoint(vec2(x,y), imageSize(image), mainCamera);
-
-	float lambda = -ray.origin.z / ray.direction.z;
-	if(dist < 16) imageStore(image, pixelCoords, vec4(lambda));
+float randFloat(uint seed, float a, float b) {
+	uint state = seed*747796405u + 2891336453u;
+	uint word = ((state >> ((state>>28u)+4u))^state)*277803737;
+	word = (word>>22u)^word;
+	return a+(b-a)*float(word)/(-1u);
 }
+
+vec3 randVec3(uint seed, float a, float b) {
+	return vec3(randFloat(seed, a, b), randFloat(3 * seed + 57, a, b), randFloat(4 * seed + 1023, a, b));
+}
+
+vec2 randVec2(uint seed, float a, float b) {
+	return vec2(randFloat(seed, a, b), randFloat(3 * seed + 57, a, b));
+}
+
+vec3 randVecSphere(uint seed) {
+	float phi = randFloat(seed, 0, 2 * M_PI);
+	float theta = acos(randFloat(seed * 51797 + 47464, -1, 1));
+	return vec3(cos(phi) * sin(theta), sin(phi) * sin(theta), cos(theta));
+}
+
+uint getSeed(bool timeDependant) {
+	if(timeDependant) return gl_GlobalInvocationID.x + 7491304 * gl_GlobalInvocationID.y + 435179 * frameIndex;
+	else return gl_GlobalInvocationID.x + 74913 * gl_GlobalInvocationID.y;
+}
+
+
 // MAIN LOOP
 void main()
 {
 	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-
 	Ray ray = generateRay(pixelCoords, imageSize(image), mainCamera);
-	Light mainLight;
-	mainLight.direction = normalize(vec3(1,.5,.3));
-	mainLight.color = vec3(1,.95,.9)*600;
-	mainLight.radius = 0.02;
 
-	vec3 pixelColor = skyColor(ray.direction);
+	vec3 skyColor = 0 * skyColor(ray.direction);
 	if(dot(ray.direction,-mainLight.direction)>cos(mainLight.radius)) {
-		pixelColor = mainLight.color;
+		skyColor = mainLight.color;
 	}
 
-	Hit hit;
-	hit.depth = 1000;
-	hit.index = -1;
-	hit.type = -1;
-	int i = 0;
-	hit = intersect(ray, i, count.sphere, 0, hit);
-	i+=count.sphere;
-	hit = intersect(ray, i, count.cube, 1, hit);
-	i+=count.cube;
-	hit = intersect(ray, i, count.plane, 2, hit);
-	i+=count.plane;
-	hit = intersect(ray, i, count.circle, 3, hit);
-	i+=count.circle;
-	hit = intersect(ray, i, count.cylinder, 4, hit);
-	i+=count.cylinder;
-	hit = intersect(ray, i, count.cone, 5, hit);
-	i+=count.cone;
-	hit = intersect(ray, i, count.pyramid, 6, hit);
-
-	barrier();
-
+	Hit hit = launchRay(ray, -1);
+	vec3 pixelColor = skyColor;
+	bool hitSelected = false;
 	if(hit.index!=-1) {
 		vec3 normal =  computeNormal(hit, ray);
-		pixelColor = BRDF(mainLight, normal, vec3(1));
-		if(hit.index == selectedIndex) pixelColor *= vec3(1,.8,.8);
+		pixelColor = BRDF(mainLight, normal, vec3(_color_roughness[hit.index].xyz), 0);
+		if(hit.index == selectedIndex) hitSelected = true;
+
+		if(AAsamples > 0) {
+			Ray ray2;
+			ray2.origin = ray.origin + ray.direction * hit.depth;
+			vec3 ambientColor;
+			for(int i = 0; i < AAsamples; i++) {
+				ray2.direction = randVecSphere(getSeed(true) + 1209492 * i);
+				if(dot(ray2.direction, normal) < 0) ray2.direction = -ray2.direction;
+
+				Hit hit2 = launchRay(ray2, hit.index);
+				if(hit2.index != -1) {
+					vec3 normal2 =  computeNormal(hit2, ray2);
+					vec3 hitColor = BRDF(mainLight, normal2, _color_roughness[hit2.index].xyz, 0) * _color_roughness[hit.index].xyz;
+					ambientColor += hitColor * M_PI * dot(ray2.direction, normal)/2;
+				}
+			}
+			pixelColor += ambientColor / AAsamples;
+		}
 	}
 
+//	for(int i = 0; i < AAsamples; i++) {
+//		ray = generateRayOffset(pixelCoords, imageSize(image), mainCamera, randVec2(i,-.5,.5));
+//		hit = launchRay(ray);
+//		if(hit.index!=-1) {
+//			vec3 normal =  computeNormal(hit, ray);
+//			pixelColor += BRDF(mainLight, normal, vec3(1));
+//			if(hit.index == selectedIndex) hitSelected = true;
+//		}
+//		else pixelColor += skyColor;
+//	}
+//	pixelColor /= (1 + AAsamples);
+
+
+	if(hitSelected) pixelColor *= vec3(.95);
 	if(selectedIndex!= -1) {
 		pixelColor = drawTools(ray, pixelColor);
 	}
+
+	//pixelColor = _color_roughness[hit.index].xyz;
 	
-	imageStore(image, pixelCoords, vec4(pixelColor,1));
-
-//	drawAxis(vec3(1,0,0), vec3(1,0,0), pixelCoords);
-//	drawAxis(vec3(0,1,0), vec3(0,1,0), pixelCoords);
-//	drawAxis(vec3(0,0,1), vec3(0,0,1), pixelCoords);
-
-
+	imageStore(image, pixelCoords, vec4(sqrt(pixelColor),1));
 }
+
 

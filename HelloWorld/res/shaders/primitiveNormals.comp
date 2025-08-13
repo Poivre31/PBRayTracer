@@ -22,13 +22,7 @@ struct Hit {
 
 layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
 {
-	vec4 _position[1024];
-	vec4 _scale[1024];
-	vec4 _rotation[1024];
-};
-
-layout(std430, binding = 2) readonly restrict buffer ColorBuffer {
-	vec4 _color_roughness[1024];
+	Transform _transforms[];
 };
 
 // FUNCTIONS
@@ -43,10 +37,7 @@ vec3 normalPyramid(Ray ray, float intersectDistance, Transform transform);
 // MAIN LOOP
 vec3 computeNormal(Hit hit, Ray ray)
 {
-	Transform object;
-	object.position = _position[hit.index].xyz;
-	object.scale = _scale[hit.index].xyz;
-	object.rotation = _rotation[hit.index].xy;
+	Transform object = _transforms[hit.index];
 	vec3 normal;
 	switch(hit.type) {
 		case 0: {

@@ -46,6 +46,7 @@ project "HelloWorld"
       optimize "On"
       symbols "Off"
 
-postbuildcommands {
-   "{COPY} %{wks.location}/shaders %{cfg.targetdir}/shaders"
-}
+   filter {}
+   postbuildcommands {
+      '{COPYDIR} "%{prj.location}/res" "%{cfg.targetdir}/res"'
+   }

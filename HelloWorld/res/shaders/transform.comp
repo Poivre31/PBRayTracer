@@ -1,3 +1,4 @@
+#version 460 core
 vec3 rotateSpherical(vec3 v, float theta, float phi);
 vec3 rotateSphericalInv(vec3 v, float theta, float phi);
 
