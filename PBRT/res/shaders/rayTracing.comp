@@ -98,7 +98,7 @@ float getTheta(uint seed, float isotropy) {
 
 float PDF(float theta, float isotropy) {
 	float norm = 2 * (isotropy + 1./3);
-    return (isotropy + cos(theta) * cos(theta)) / norm /sin(theta);
+    return (isotropy + cos(theta) * cos(theta)) / norm;
 }
 
 vec3 biasedVector(vec3 axis, uint seed, float theta) {
@@ -127,12 +127,11 @@ Bounce computeAmbient(Ray lastRay, Hit lastHit, vec3 normal) {
 	result.ray.origin = lastRay.origin + lastHit.depth * lastRay.direction;
 
 	for(int i = 0; i < GIsamples; i++) {
-		
-//		float isotropy = GIthreshold;
-//		float theta = getTheta(getSeed(true) + 1209492 * i, isotropy);
-//		result.ray.direction = biasedVector(mainLight.direction, getSeed(true) + 1209492 * i, theta);
+		float u = randFloat(getSeed(true) + 1209492 * i, 0, 1);
+		float theta = .5 * acos(1 - 2 * u);
+		result.ray.direction = biasedVector(normal, getSeed(true) + 1209492 * i, theta);
 
-		result.ray.direction = randVecSphere(getSeed(true) + 1209492 * i);	
+		//result.ray.direction = randVecSphere(getSeed(true) + 1209492 * i);	
 
 		if(dot(result.ray.direction, normal) < 0) result.ray.direction *= -1;
 
@@ -140,7 +139,7 @@ Bounce computeAmbient(Ray lastRay, Hit lastHit, vec3 normal) {
 		if(result.hit.index != -1) {
 			result.normal = computeNormal(result.hit, result.ray);
 			vec3 hitColor = BRDF(mainLight, result.normal, _color_roughness[result.hit.index].xyz, 0.0001) * _color_roughness[lastHit.index].xyz;
-			result.color += hitColor * M_PI * dot(result.ray.direction, normal)/2;
+			result.color += hitColor * M_PI/4;
 		}
 	}
 

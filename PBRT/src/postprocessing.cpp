@@ -121,7 +121,7 @@ float PostProcessor::GetVariance() {
 	Vec3 SNR = mean * mean / variance;
 	float meanSNR = (SNR.x + SNR.y + SNR.z) / 3;
 
-	return 10 * log10(meanSNR) + 10;
+	return 10 * log10(meanSNR) + 20;
 }
 
 void PostProcessor::DrawTools(Texture& imageIn, Texture& imageOut, Texture& indices, Scene& scene) {

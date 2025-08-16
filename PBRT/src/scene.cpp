@@ -57,6 +57,8 @@ void Scene::RandomScene(int nObjects) {
 	{
 		colors[i] = { randF(0,1),randF(0,1) ,randF(0,1) ,1 };
 	}
+
+
 }
 
 void Scene::AddObject(Transform object, int objectType, float4 color) {

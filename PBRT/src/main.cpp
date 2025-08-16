@@ -211,12 +211,6 @@ int main(int, char**)
 				}
 			}
 
-			bool moving = abs(speed.x) > 0 || abs(speed.y) > 0 || abs(speed.z) > 0 || ImGui::IsKeyDown(ImGuiKey_MouseRight);
-			bool settingsChanged = UI.io->WantCaptureMouse;
-			if (ImGui::IsKeyPressed(ImGuiKey_Space, false) || moving || settingsChanged || scene.editAxis != Axis::none) {
-				scene.nAccumulated = 0;
-			}
-
 			image.BindImage(0, GL_READ_WRITE);
 			indices.BindImage(1, GL_READ_WRITE);
 			computeShader.Use();
@@ -241,6 +235,12 @@ int main(int, char**)
 
 			postProcess.AccumulateFrames(image, average, scene.accumulate? scene.nAccumulated : 0);
 			scene.nAccumulated++;
+
+			bool moving = abs(speed.x) > 0 || abs(speed.y) > 0 || abs(speed.z) > 0 || ImGui::IsKeyDown(ImGuiKey_MouseRight);
+			bool settingsChanged = ImGui::IsAnyItemActive();
+			if (ImGui::IsKeyPressed(ImGuiKey_Space, false) || moving || settingsChanged || scene.editAxis != Axis::none) {
+				scene.nAccumulated = 0;
+			}
 
 			postProcess.EstimateVariance(average, lastFrame);
 			noise = postProcess.GetVariance();
