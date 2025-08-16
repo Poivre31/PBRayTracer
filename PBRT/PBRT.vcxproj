@@ -187,6 +187,7 @@
     <ClInclude Include="vendor\ImGui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\computeShader.cpp" />
     <ClCompile Include="src\intersectionTest.cpp" />
     <ClCompile Include="src\log.cpp" />
@@ -208,6 +209,7 @@
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\accumulateFrames.comp" />
     <None Include="res\shaders\boxBlur.comp" />
     <None Include="res\shaders\buildingTools.comp" />
     <None Include="res\shaders\circle.comp" />
@@ -216,6 +218,7 @@
     <None Include="res\shaders\cylinder.comp" />
     <None Include="res\shaders\dither.comp" />
     <None Include="res\shaders\downsample.comp" />
+    <None Include="res\shaders\drawTools.comp" />
     <None Include="res\shaders\fastAA.comp" />
     <None Include="res\shaders\fullScreenQuad.frag" />
     <None Include="res\shaders\fullScreenQuad.vert" />
@@ -230,6 +233,7 @@
     <None Include="res\shaders\sphere.comp" />
     <None Include="res\shaders\transform.comp" />
     <None Include="res\shaders\upsample.comp" />
+    <None Include="res\shaders\varianceEstimator.comp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

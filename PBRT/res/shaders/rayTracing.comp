@@ -33,16 +33,17 @@ uniform struct Light {
 
 // INPUTS
 layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
-layout(rgba16f, binding = 0) uniform image2D image;
+layout(rgba32f, binding = 0) uniform image2D image;
+layout(r32ui, binding = 1) uniform uimage2D indices;
 
 layout(std430, binding = 2) readonly restrict buffer ColorBuffer {
 	vec4 _color_roughness[];
 };
 
-uniform int selectedIndex;
 uniform ivec2 mousePos;
 uniform int frameIndex;
-uniform int AAsamples;
+uniform int GIsamples;
+uniform float GIthreshold;
 
 // FUNCTIONS
 vec3 skyColor(vec3 rayDirection);
@@ -84,46 +85,97 @@ uint getSeed(bool timeDependant) {
 	else return gl_GlobalInvocationID.x + 74913 * gl_GlobalInvocationID.y;
 }
 
+float getTheta(uint seed, float isotropy) {
+	float y = randFloat(seed,0,1);
+	float norm = 2 * (isotropy + 1./3);
+	float q = 3 * norm * y - 3 *isotropy - 1;
+	float p = 3 * isotropy;
+	float u1 = -q / 2 + sqrt(q * q / 4 + p * p * p / 27);
+	float u2 = -q / 2 - sqrt(q * q / 4 + p * p * p / 27);
+	float u = sign(u1) * pow(abs(u1), 1./3) + sign(u2) * pow(abs(u2), 1./3);
+	return acos(u);
+}
+
+float PDF(float theta, float isotropy) {
+	float norm = 2 * (isotropy + 1./3);
+    return (isotropy + cos(theta) * cos(theta)) / norm /sin(theta);
+}
+
+vec3 biasedVector(vec3 axis, uint seed, float theta) {
+	float phi = randFloat(seed + 461731, 0, 2 * M_PI);
+
+	vec3 orthVec;
+	if(axis.z != 0) orthVec = vec3(1, 1, -(axis.x + axis.y) / axis.z);
+	else if(axis.y != 0) orthVec = vec3(1, -(axis.x + axis.z) / axis.y, 1);
+	else orthVec = vec3(-(axis.y + axis.z) / axis.x, 1, 1);
+	orthVec = normalize(orthVec);
+
+	vec3 u = axis * cos(theta) + cross(axis, orthVec) * sin(theta);
+	vec3 v = u * cos(phi) + cross(axis, u) * sin(phi) + axis * dot(axis, u) * (1 - cos(phi));
+	return v;
+}
+
+struct Bounce {
+	Ray ray;
+	Hit hit;
+	vec3 normal;
+	vec3 color;
+};
+
+Bounce computeAmbient(Ray lastRay, Hit lastHit, vec3 normal) {
+	Bounce result;
+	result.ray.origin = lastRay.origin + lastHit.depth * lastRay.direction;
+
+	for(int i = 0; i < GIsamples; i++) {
+		
+//		float isotropy = GIthreshold;
+//		float theta = getTheta(getSeed(true) + 1209492 * i, isotropy);
+//		result.ray.direction = biasedVector(mainLight.direction, getSeed(true) + 1209492 * i, theta);
+
+		result.ray.direction = randVecSphere(getSeed(true) + 1209492 * i);	
+
+		if(dot(result.ray.direction, normal) < 0) result.ray.direction *= -1;
+
+		result.hit = launchRay(result.ray, lastHit.index);
+		if(result.hit.index != -1) {
+			result.normal = computeNormal(result.hit, result.ray);
+			vec3 hitColor = BRDF(mainLight, result.normal, _color_roughness[result.hit.index].xyz, 0.0001) * _color_roughness[lastHit.index].xyz;
+			result.color += hitColor * M_PI * dot(result.ray.direction, normal)/2;
+		}
+	}
+
+	return result;
+}
 
 // MAIN LOOP
 void main()
 {
 	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-	Ray ray = generateRay(pixelCoords, imageSize(image), mainCamera);
+	vec2 offset = randVec2(getSeed(true),-.5,.5);
+	//if(dot(offset,offset) > 5 *5) randVec2(getSeed(true) + 437,-5,5);
+	Ray ray = generateRayOffset(pixelCoords, imageSize(image), mainCamera, offset);
 
 	vec3 skyColor = 0 * skyColor(ray.direction);
 	if(dot(ray.direction,-mainLight.direction)>cos(mainLight.radius)) {
 		skyColor = mainLight.color;
 	}
 
-	Hit hit = launchRay(ray, -1);
+	Hit firstHit = launchRay(ray, -1);
 	vec3 pixelColor = skyColor;
-	bool hitSelected = false;
-	if(hit.index!=-1) {
-		vec3 normal =  computeNormal(hit, ray);
-		pixelColor = BRDF(mainLight, normal, vec3(_color_roughness[hit.index].xyz), 0);
-		if(hit.index == selectedIndex) hitSelected = true;
+	if(firstHit.index!=-1) {
+		vec3 normal =  computeNormal(firstHit, ray);
+		pixelColor = BRDF(mainLight, normal, vec3(_color_roughness[firstHit.index].xyz), 0.0001);
 
-		if(AAsamples > 0) {
-			Ray ray2;
-			ray2.origin = ray.origin + ray.direction * hit.depth;
-			vec3 ambientColor;
-			for(int i = 0; i < AAsamples; i++) {
-				ray2.direction = randVecSphere(getSeed(true) + 1209492 * i);
-				if(dot(ray2.direction, normal) < 0) ray2.direction = -ray2.direction;
-
-				Hit hit2 = launchRay(ray2, hit.index);
-				if(hit2.index != -1) {
-					vec3 normal2 =  computeNormal(hit2, ray2);
-					vec3 hitColor = BRDF(mainLight, normal2, _color_roughness[hit2.index].xyz, 0) * _color_roughness[hit.index].xyz;
-					ambientColor += hitColor * M_PI * dot(ray2.direction, normal)/2;
-				}
-			}
-			pixelColor += ambientColor / AAsamples;
+		if(GIsamples > 0) {
+			Bounce bounce1 = computeAmbient(ray, firstHit, normal);
+			pixelColor += bounce1.color / GIsamples;
+			//Bounce bounce2 = computeAmbient(bounce1.ray, bounce1.hit, bounce1.normal);
+			//pixelColor += bounce2.color / GIsamples;
 		}
 	}
 
-//	for(int i = 0; i < AAsamples; i++) {
+
+//	for(int i = 0; i < GIsamples; i++) {
 //		ray = generateRayOffset(pixelCoords, imageSize(image), mainCamera, randVec2(i,-.5,.5));
 //		hit = launchRay(ray);
 //		if(hit.index!=-1) {
@@ -133,17 +185,10 @@ void main()
 //		}
 //		else pixelColor += skyColor;
 //	}
-//	pixelColor /= (1 + AAsamples);
-
-
-	if(hitSelected) pixelColor *= vec3(.95);
-	if(selectedIndex!= -1) {
-		pixelColor = drawTools(ray, pixelColor);
-	}
-
-	//pixelColor = _color_roughness[hit.index].xyz;
+//	pixelColor /= (1 + GIsamples);
 	
-	imageStore(image, pixelCoords, vec4(sqrt(pixelColor),1));
+	imageStore(image, pixelCoords, vec4(pixelColor,1));
+	imageStore(indices, pixelCoords, ivec4(firstHit.index));
 }
 
 

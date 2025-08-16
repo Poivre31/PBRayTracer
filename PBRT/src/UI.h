@@ -18,7 +18,7 @@ static void randomSpheres(Scene& scene, int nObjects) {
 	//glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(ColorBuffer), &colorsBuffer);
 }
 
-void cameraOverlay(Camera& mainCamera)
+void cameraOverlay(Camera& mainCamera, int nAccumulatedFrames)
 {
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuiWindowFlags winFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
@@ -41,6 +41,8 @@ void cameraOverlay(Camera& mainCamera)
 		ImGui::Separator();
 		Vec3 dir = sph2cart(mainCamera.direction);
 		ImGui::Text("Direction: x=%.1f, y=%.1f, z=%.1f", dir.x, dir.y, dir.z);
+		ImGui::Separator();
+		ImGui::Text("Number of accumulated frames: %i", nAccumulatedFrames);
 	}
 	ImGui::End();
 }
@@ -169,15 +171,18 @@ void UIRender(Renderer& renderer, Scene& scene, Camera& mainCamera) {
 	ImGui::Checkbox("Render", &renderer.doRender);
 	if (!renderer.doRender) renderer.vsync = true;
 	ImGui::SliderFloat("Dither strength", &renderer.ditherStrength, 0, .1);
-	ImGui::SliderInt("GI samples", &scene.AAsamples, 0, 1024);
+	ImGui::SliderInt("GI samples", &scene.GIsamples, 0, 256);
+	ImGui::SliderFloat("Bias isotropy", &scene.GIthreshold, 0, 2);
+	ImGui::SliderFloat("Variance threshold", &scene.thresh, 0, 2);
+	ImGui::Checkbox("Accumulate frames", &scene.accumulate);
 	ImGui::SliderFloat3("Light direction", scene.lightDir, -1, 1);
-	ImGui::SliderFloat3("Light color", scene.lightColor, 0, 1);
+	ImGui::ColorEdit3("Light color", scene.lightColor, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR);
 	ImGui::SliderFloat("Light radius", &scene.lightRadius, 0, 1);
 
 	ImGui::Text("Render time: %.3f ms/frame (%.1f FPS)", 1000.0f / renderer.io->Framerate, renderer.io->Framerate);
 	ImGui::End();
 
-	cameraOverlay(mainCamera);
+	cameraOverlay(mainCamera, scene.nAccumulated);
 	objectManager(scene);
 	if (scene.selectedIndex != -1) {
 		objectInfo(*scene.FindTransform(scene.selectedIndex, scene.selectedType));

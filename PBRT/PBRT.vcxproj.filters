@@ -164,6 +164,9 @@
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp">
       <Filter>vendor\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\boxBlur.comp">
@@ -230,6 +233,15 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\upsample.comp">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\accumulateFrames.comp">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\drawTools.comp">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\varianceEstimator.comp">
       <Filter>res\shaders</Filter>
     </None>
   </ItemGroup>

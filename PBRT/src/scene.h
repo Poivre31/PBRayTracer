@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include "computeShader.h"
 #include "vec3.h"
+#include "camera.h"
 
 namespace Object {
 	enum {
@@ -65,10 +66,15 @@ public:
 	Vec3 startScale{};
 	Vec3 startRot{};
 	float startAngle = 0;
-	int AAsamples = 0;
+	int GIsamples = 0;
 	float lightDir[3]{0,0,-1};
 	float lightColor[3]{1,1,1};
 	float lightRadius{.5};
+	Camera* mainCamera = nullptr;
+	float GIthreshold = 0;
+	bool accumulate = false;
+	int nAccumulated = 0;
+	float thresh = 0;
 
 	Scene() {};
 	Scene(ComputeShader& mainShader);

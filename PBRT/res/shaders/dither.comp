@@ -1,7 +1,7 @@
 #version 460 core
 layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
 
-layout(rgba16f) uniform image2D image;
+layout(rgba32f) uniform image2D image;
 
 uniform float ditherStrength;
 uniform int noiseSteps;
@@ -22,14 +22,17 @@ ivec2 getCoords(ivec2 pixelCoords, int i, int j) {
 }
 
 void main() {
-	ivec2 pixelID = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
-	vec3 color = imageLoad(image,getCoords(pixelID,0,0)).xyz;
-	int seed = pixelID.x+(100000+baseSeed)*pixelID.y + int(baseSeed);
+	vec3 color = imageLoad(image,pixelCoords).xyz;
+	int seed = pixelCoords.x+(100000+baseSeed)*pixelCoords.y + int(baseSeed);
 	//color+=((noiseSteps-1)+.5)/(noiseSteps-1);
-	float r = randFloat(seed + 0, (1-ditherStrength) * color.x, (1+ditherStrength) * color.x);
-	float g = randFloat(seed + 747, (1-ditherStrength) * color.y, (1+ditherStrength) * color.y);
-	float b = randFloat(seed + 1221, (1-ditherStrength) * color.z, (1+ditherStrength) * color.z);
-
-	imageStore(image,pixelID,vec4(r,g,b,1));
+	float lum = .2 * color.x + .7 * color.y + .1 * color.z;
+	float strength = ditherStrength * exp(-5 * lum / (1 + lum));
+	float r = randFloat(seed + 0, (1-strength) * color.x, (1+strength) * color.x);
+	float g = randFloat(seed + 747, (1-strength) * color.y, (1+strength) * color.y);
+	float b = randFloat(seed + 1221, (1-strength) * color.z, (1+strength) * color.z);
+	color = vec3(r,g,b);
+	//color *= color;
+	imageStore(image,pixelCoords,vec4(color,1));
 }

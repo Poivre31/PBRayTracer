@@ -30,6 +30,7 @@ float intersectCircle(Ray ray, Transform object) {
 vec3 normalCircle(Ray ray, float intersectDistance, Transform transform) {
 	vec3 normal = vec3(0,0,1);
 	normal = rotateSpherical(normal, transform.rotation.x, transform.rotation.y);
+	if(dot(normal, ray.direction) > 0) normal *= -1;
 
 	return normalize(normal);
 }

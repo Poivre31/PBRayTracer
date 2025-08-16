@@ -10,8 +10,7 @@
 static Camera mainCamera;
 static int nSphere = 1;
 static Scene scene;
-static int offsetX = 0;
-static int offsetY = 0;
+static float noise;
 
 int main(int, char**)
 {
@@ -19,10 +18,13 @@ int main(int, char**)
 	glewInit();
 	UI.Setup();
 
-	int dataType = GL_RGBA16F;
+	int dataType = GL_RGBA32F;
 
 	Texture screen = Texture(1920, 1080, dataType);
 	Texture image = Texture(1920, 1080, dataType);
+	Texture lastFrame = Texture(1920, 1080, dataType);
+	Texture average = Texture(1920, 1080, dataType);
+	Texture indices = Texture(1920, 1080, GL_R32UI);
 
 	ComputeShader computeShader = ComputeShader({
 		"res/shaders/rayTracing.comp" ,
@@ -47,14 +49,10 @@ int main(int, char**)
 	PostProcessor postProcess;
 
 	scene = Scene(computeShader);
+	scene.mainCamera = &mainCamera;
 
 	scene.ConnectGPU();
 	scene.ParseObjects();
-
-	glGenBuffers(1, &colorsSSBO);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colorsSSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(ColorBuffer), &colorsBuffer, GL_DYNAMIC_READ);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, colorsSSBO);
 
 	Vec3 dir{ 1,M_PI / 2,0 };
 	Vec3 speed{ 0 };
@@ -72,9 +70,10 @@ int main(int, char**)
 			postProcess.ReloadShaders();
 			computeShader.Reload();
 			screenQuad.Reload();
+			scene.nAccumulated = 0;
 			std::cout << "Reloaded RayTracing shader" << std::endl;
 		}
-		if (ImGui::IsKeyPressed(ImGuiKey_Space, false)) UI.doRender = 1 - UI.doRender;
+		//if (ImGui::IsKeyPressed(ImGuiKey_Space, false)) UI.doRender = 1 - UI.doRender;
 		if (ImGui::IsKeyPressed(ImGuiKey_G, false)) scene.SetEditMode(0);
 		if (ImGui::IsKeyPressed(ImGuiKey_T, false)) scene.SetEditMode(1);
 		if (ImGui::IsKeyPressed(ImGuiKey_R, false)) scene.SetEditMode(2);
@@ -91,13 +90,20 @@ int main(int, char**)
 			}
 		}
 
+		if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
+			scene.editAxis = Axis::none;
+		}
+
+		if (ImGui::IsKeyDown(ImGuiKey_ModShift) && ImGui::IsKeyPressed(ImGuiKey_D, false) && scene.selectedIndex != -1) {
+			Transform reference = *scene.FindTransform(scene.selectedIndex, scene.selectedType);
+			scene.AddObject(reference, scene.selectedType, scene.colors[scene.selectedIndex]);
+			scene.nAccumulated = 0;
+		}
+
 		updateCamera(mainCamera, UI, dir, speed, computeShader);
-		computeShader.SetInt("nSphere", nSphere);
 
 		static int imageWidth, imageHeight;
 		UI.Update(imageWidth, imageHeight);
-
-		UIRender(UI, scene, mainCamera);
 
 		static int lastW = 1920, lastH = 1080;
 		if (imageWidth != lastW || imageHeight != lastH) {
@@ -105,21 +111,14 @@ int main(int, char**)
 
 			screen.Update(imageWidth, imageHeight);
 			image.Update(imageWidth, imageHeight);
+			lastFrame.Update(imageWidth, imageHeight);
+			average.Update(imageWidth, imageHeight);
+			indices.Update(imageWidth, imageHeight);
+
+			scene.nAccumulated = 0;
 		}
 
 		if (UI.doRender && glfwGetWindowAttrib(UI.window, GLFW_FOCUSED)) {
-			image.BindImage(0, GL_READ_WRITE);
-			computeShader.Use();
-			computeShader.SetInt("selectedIndex", scene.selectedIndex);
-			computeShader.SetInt2("mousePos", UI.io->MousePos.x, UI.height - UI.io->MousePos.y);
-			computeShader.SetInt("frameIndex", ImGui::GetFrameCount());
-			computeShader.SetInt("AAsamples", scene.AAsamples);
-			float lightNorm = sqrt(scene.lightDir[0] * scene.lightDir[0] + scene.lightDir[1] * scene.lightDir[1] + scene.lightDir[2] * scene.lightDir[2]);
-			computeShader.SetFloat3("mainLight.direction", scene.lightDir[0] / lightNorm, scene.lightDir[1] / lightNorm, scene.lightDir[2] / lightNorm);
-			computeShader.SetFloat3("mainLight.color", scene.lightColor[0], scene.lightColor[1], scene.lightColor[2]);
-			computeShader.SetFloat("mainLight.radius", scene.lightRadius);
-			computeShader.Dispatch(imageWidth, imageHeight, 8, 8);
-
 			if (ImGui::IsKeyDown(ImGuiKey_MouseLeft) && scene.selectedIndex != -1) {
 				if (ImGui::IsKeyPressed(ImGuiKey_MouseLeft, false) && scene.editAxis == Axis::none) {
 					if (scene.editMode == EditMode::rotation) {
@@ -212,19 +211,64 @@ int main(int, char**)
 				}
 			}
 
-			if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
-				scene.editAxis = Axis::none;
+			bool moving = abs(speed.x) > 0 || abs(speed.y) > 0 || abs(speed.z) > 0 || ImGui::IsKeyDown(ImGuiKey_MouseRight);
+			bool settingsChanged = UI.io->WantCaptureMouse;
+			if (ImGui::IsKeyPressed(ImGuiKey_Space, false) || moving || settingsChanged || scene.editAxis != Axis::none) {
+				scene.nAccumulated = 0;
 			}
 
-			//image.BindImage(0, GL_READ_ONLY);
-			//screen.BindImage(1, GL_WRITE_ONLY);
-			//postProcess.BoxBlur(image, screen, kernelRadius);
+			image.BindImage(0, GL_READ_WRITE);
+			indices.BindImage(1, GL_READ_WRITE);
+			computeShader.Use();
+			computeShader.SetInt2("mousePos", UI.io->MousePos.x, UI.height - UI.io->MousePos.y);
+			computeShader.SetInt("frameIndex", ImGui::GetFrameCount());
+			computeShader.SetInt("GIsamples", scene.GIsamples);
+			computeShader.SetFloat("GIthreshold", scene.GIthreshold);
+			float lightNorm = sqrt(scene.lightDir[0] * scene.lightDir[0] + scene.lightDir[1] * scene.lightDir[1] + scene.lightDir[2] * scene.lightDir[2]);
+			computeShader.SetFloat3("mainLight.direction", scene.lightDir[0] / lightNorm, scene.lightDir[1] / lightNorm, scene.lightDir[2] / lightNorm);
+			computeShader.SetFloat3("mainLight.color", scene.lightColor[0], scene.lightColor[1], scene.lightColor[2]);
+			computeShader.SetFloat("mainLight.radius", scene.lightRadius);
+			computeShader.Dispatch(imageWidth, imageHeight, 8, 8);
 
+
+			lastFrame.BindImage(1, GL_READ_WRITE);
+			average.BindImage(2, GL_READ_WRITE);
+			glCopyImageSubData(
+				average.textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
+				lastFrame.textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
+				image.width, image.height, 0
+			);
+
+			postProcess.AccumulateFrames(image, average, scene.accumulate? scene.nAccumulated : 0);
+			scene.nAccumulated++;
+
+			postProcess.EstimateVariance(average, lastFrame);
+			noise = postProcess.GetVariance();
+
+			indices.BindImage(3, GL_READ_WRITE);
+			postProcess.DrawTools(average, image, indices, scene);
+			screen.BindImage(4, GL_READ_WRITE);
 			postProcess.Dither(image, UI.ditherStrength, 0, ImGui::GetFrameCount());
+
+			glCopyImageSubData(
+				image.textureID,GL_TEXTURE_2D,0,0,0,0,
+				screen.textureID,GL_TEXTURE_2D,0,0,0,0,
+				image.width,image.height,0
+			);
+
 		}
 
-		image.BindTexture(0);
+		screen.BindTexture(0);
+		ImGui::Begin("Image data");
+		ImGui::Text("SNR: %.3f dB", noise);
+		ImGui::End();
+		UIRender(UI, scene, mainCamera);
 		screenQuad.Draw(UI, 0);
+		glCopyImageSubData(
+			image.textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
+			screen.textureID, GL_TEXTURE_2D, 0, 0, 0, 0,
+			image.width, image.height, 0
+		);
 	}
 
 	UI.Close();

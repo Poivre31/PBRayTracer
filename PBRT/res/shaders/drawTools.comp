@@ -1,0 +1,45 @@
+#version 460 core
+
+// STRUCTS
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+uniform struct Camera {
+	vec3 position;
+	vec2 direction;
+	float vFov;
+} mainCamera;
+
+
+// INPUTS
+layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imageIn;
+layout(rgba32f, binding = 1) uniform image2D imageOut;
+layout(r32ui, binding = 2) uniform uimage2D indices;
+
+uniform int selectedIndex;
+
+// FUNCTIONS
+Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera);
+vec3 drawTools(Ray ray, vec3 pixelColor);
+
+// MAIN LOOP
+void main()
+{
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+	Ray ray = generateRay(pixelCoords, imageSize(imageIn), mainCamera);
+
+	vec3 pixelColor = imageLoad(imageIn, pixelCoords).xyz;
+
+	if(selectedIndex!= -1) {
+		pixelColor = drawTools(ray, pixelColor);
+		uint hitIndex = imageLoad(indices, pixelCoords).x;
+		//if(selectedIndex == hitIndex) pixelColor *= vec3(.9,.7,.7);
+	}
+	
+	imageStore(imageOut, pixelCoords, vec4(pixelColor,1));
+}
+
+

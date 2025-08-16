@@ -1,8 +1,8 @@
 #version 460 core
 layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
 
-layout(rgba16f) uniform readonly restrict image2D imageIn;
-layout(rgba16f) uniform writeonly restrict image2D imageOut;
+layout(rgba32f) uniform readonly restrict image2D imageIn;
+layout(rgba32f) uniform writeonly restrict image2D imageOut;
 
 uniform int kernelRadius;
 

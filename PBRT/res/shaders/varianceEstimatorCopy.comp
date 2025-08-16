@@ -1,0 +1,62 @@
+#version 460 core
+
+// INPUTS
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+layout(rgba16f, binding = 0) uniform image2D image1;
+layout(rgba16f, binding = 1) uniform image2D image2;
+layout(rgba16f, binding = 2) uniform image2D imageOut;
+
+uniform float threshold;
+
+layout(std430, binding = 10) buffer Variances {
+	vec4 resultVariance[16];
+	vec4 resultMean[16];
+};
+
+shared vec4 variances[1024];
+shared vec4 means[1024];
+
+ivec2 getCoords(uint index) {
+	return ivec2(index % imageSize(image1).x, index / imageSize(image1).x);
+}
+
+void main() {
+	uint nWork = (imageSize(image1).x * imageSize(image1).y + gl_WorkGroupSize.x * 16 - 1) / (gl_WorkGroupSize.x * 16) ;
+	ivec2 ID = ivec2(gl_GlobalInvocationID.xy);
+	vec4 var = vec4(0);
+	vec4 mean = vec4(0);
+	for(int i = 0; i < nWork; i++) {
+		vec4 color1 = imageLoad(image1, getCoords((ID.x + 64 * ID.y) * nWork + i));
+		vec4 color2 = imageLoad(image2, getCoords((ID.x + 64 * ID.y) * nWork + i));
+		vec4 avg = .5 * (color1 + color2);
+
+		mean += color2;
+		var += (color1 - avg) * (color1 - avg) + (color2 - avg) * (color2 - avg);
+	}
+	variances[ID.x + 64 * ID.y] = var / nWork;
+	means[ID.x + 64 * ID.y] = mean / nWork;
+
+	memoryBarrierShared();
+	barrier();
+
+	if(gl_LocalInvocationID.x == 0) {
+		vec4 accumulatorMean = vec4(0);
+		vec4 accumulatorVar = vec4(0);
+		for(int i = 0; i < gl_WorkGroupSize.x; i++) {
+			accumulatorVar += variances[i + 64 * ID.y];
+			accumulatorMean += means[i + 64 * ID.y];
+		}
+		resultVariance[ID.y] = accumulatorVar / (gl_WorkGroupSize.x * 16);
+		resultMean[ID.y + 16] = accumulatorMean / (gl_WorkGroupSize.x * 16);
+	}
+//	
+//	memoryBarrierShared();
+//	barrier();
+//
+//	for(int i = 0; i < nWork; i++) {
+//		if(threshold > 1) {
+//			imageStore(imageOut, getCoords((ID.x + 256 * ID.y) * nWork + i), result[ID.y]);	
+//		}
+//		else imageStore(imageOut, getCoords((ID.x + 256 * ID.y) * nWork + i), imageLoad(image2, getCoords((ID.x + 256 * ID.y) * nWork + i)));
+//	}
+}
