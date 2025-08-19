@@ -31,11 +31,13 @@ uniform struct Count {
 
 
 // INPUTS
-layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
 layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
 {
 	Transform _transforms[];
 };
+
+//shared Transform transforms[256];
 
 // FUNCTIONS
 vec3 skyColor(vec3 rayDirection);
@@ -53,6 +55,12 @@ float intersectPyramid(Ray ray, Transform object);
 
 Hit intersect(Ray ray, int startIndex, int nObject, int objectType, Hit hit, int originIndex)
 {
+//	uint index = gl_LocalInvocationID.x + gl_WorkGroupSize.x * gl_LocalInvocationID.y;
+//	if(index < nObject) {
+//		transforms[index] = _transforms[index+startIndex];
+//	}
+//	memoryBarrierShared();
+//	barrier();
 	for(int i = 0; i < nObject; i++) {
 		if(i + startIndex == originIndex) continue;
 		Transform object = _transforms[i+startIndex];

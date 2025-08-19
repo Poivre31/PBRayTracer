@@ -9,8 +9,8 @@
 
 class Renderer {
 public:
-	size_t width;
-	size_t height;
+	int width;
+	int height;
 	GLFWwindow* window;
 	ImGuiIO* io;
 	ImGuiStyle* style;
@@ -19,7 +19,7 @@ public:
 	float ditherStrength = 0.007f;
 	bool doRender = true;
 
-	Renderer(const char* windowName, size_t width, size_t height, bool vsync = true);
+	Renderer(const char* windowName, int width, int height, bool vsync = true);
 
 	void Setup();
 

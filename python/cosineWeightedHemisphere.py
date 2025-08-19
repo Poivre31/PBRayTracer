@@ -1,6 +1,7 @@
 import numpy as np
 from math import cos, sin
 from matplotlib import pyplot as plt
+np.random.seed(0)
 
 def PDF(theta, k):
     A = 1./2
@@ -25,7 +26,7 @@ theta = invCDF(u,k)
 
 lightDir = np.array([0.,0.,1.])
 lightDir /= np.dot(lightDir,lightDir)**.5
-orthVec = np.array([1., 1., -(lightDir[0] + lightDir[1])/lightDir[2]])
+orthVec = np.array([lightDir[2], lightDir[2], -(lightDir[0] + lightDir[1])])
 orthVec /= np.dot(orthVec,orthVec)**.5
 
 X = np.empty(n)
@@ -37,7 +38,7 @@ ax = fig.add_subplot(projection='3d')
 for i in range(n):
     u = lightDir * cos(theta[i]) + np.cross(lightDir,orthVec) * sin(theta[i])
     phi = np.random.uniform(0, 2*np.pi)
-    v = u*cos(phi) + np.cross(lightDir,u)*sin(phi) + lightDir * np.dot(lightDir, u) * (1 - cos(phi))
+    v = u*cos(phi) + np.cross(lightDir,u)*sin(phi) + lightDir * cos(theta[i]) * (1 - cos(phi))
     X[i] = v[0]
     Y[i] = v[1]
     Z[i] = v[2]

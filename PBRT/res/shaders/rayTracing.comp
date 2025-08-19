@@ -32,7 +32,7 @@ uniform struct Light {
 } mainLight;
 
 // INPUTS
-layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D image;
 layout(r32ui, binding = 1) uniform uimage2D indices;
 
@@ -101,16 +101,10 @@ float PDF(float theta, float isotropy) {
     return (isotropy + cos(theta) * cos(theta)) / norm;
 }
 
-vec3 biasedVector(vec3 axis, uint seed, float theta) {
-	float phi = randFloat(seed + 461731, 0, 2 * M_PI);
+vec3 biasedVector(vec3 axis, float theta, float phi) {
+	vec3 orthVec = normalize(vec3(axis.z, axis.z, -(axis.x + axis.y)));
 
-	vec3 orthVec;
-	if(axis.z != 0) orthVec = vec3(1, 1, -(axis.x + axis.y) / axis.z);
-	else if(axis.y != 0) orthVec = vec3(1, -(axis.x + axis.z) / axis.y, 1);
-	else orthVec = vec3(-(axis.y + axis.z) / axis.x, 1, 1);
-	orthVec = normalize(orthVec);
-
-	vec3 u = axis * cos(theta) + cross(axis, orthVec) * sin(theta);
+	vec3 u = axis * cos(theta) + orthVec * sin(theta);
 	vec3 v = u * cos(phi) + cross(axis, u) * sin(phi) + axis * dot(axis, u) * (1 - cos(phi));
 	return v;
 }
@@ -125,21 +119,19 @@ struct Bounce {
 Bounce computeAmbient(Ray lastRay, Hit lastHit, vec3 normal) {
 	Bounce result;
 	result.ray.origin = lastRay.origin + lastHit.depth * lastRay.direction;
+	result.color = vec3(0);
 
 	for(int i = 0; i < GIsamples; i++) {
-		float u = randFloat(getSeed(true) + 1209492 * i, 0, 1);
+		float u = randFloat(getSeed(true) + 1209492 * i + 137, 0, 1);
 		float theta = .5 * acos(1 - 2 * u);
-		result.ray.direction = biasedVector(normal, getSeed(true) + 1209492 * i, theta);
-
-		//result.ray.direction = randVecSphere(getSeed(true) + 1209492 * i);	
-
-		if(dot(result.ray.direction, normal) < 0) result.ray.direction *= -1;
+		float phi =	randFloat(getSeed(true) + 461721 * i, 0, 2 * M_PI);
+		result.ray.direction = biasedVector(normal, theta, phi);
 
 		result.hit = launchRay(result.ray, lastHit.index);
 		if(result.hit.index != -1) {
 			result.normal = computeNormal(result.hit, result.ray);
-			vec3 hitColor = BRDF(mainLight, result.normal, _color_roughness[result.hit.index].xyz, 0.0001) * _color_roughness[lastHit.index].xyz;
-			result.color += hitColor * M_PI/4;
+			vec3 hitColor = BRDF(mainLight, result.normal, _color_roughness[result.hit.index].xyz, 0.01) * _color_roughness[lastHit.index].xyz;
+			result.color += hitColor * M_PI / 4;
 		}
 	}
 
@@ -150,8 +142,7 @@ Bounce computeAmbient(Ray lastRay, Hit lastHit, vec3 normal) {
 void main()
 {
 	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-	vec2 offset = randVec2(getSeed(true),-.5,.5);
-	//if(dot(offset,offset) > 5 *5) randVec2(getSeed(true) + 437,-5,5);
+	vec2 offset = randVec2(getSeed(true),-.5,.5) * 0;
 	Ray ray = generateRayOffset(pixelCoords, imageSize(image), mainCamera, offset);
 
 	vec3 skyColor = 0 * skyColor(ray.direction);
@@ -163,8 +154,7 @@ void main()
 	vec3 pixelColor = skyColor;
 	if(firstHit.index!=-1) {
 		vec3 normal =  computeNormal(firstHit, ray);
-		pixelColor = BRDF(mainLight, normal, vec3(_color_roughness[firstHit.index].xyz), 0.0001);
-
+		pixelColor = BRDF(mainLight, normal, vec3(_color_roughness[firstHit.index].xyz), 0.01);
 		if(GIsamples > 0) {
 			Bounce bounce1 = computeAmbient(ray, firstHit, normal);
 			pixelColor += bounce1.color / GIsamples;
@@ -172,22 +162,7 @@ void main()
 			//pixelColor += bounce2.color / GIsamples;
 		}
 	}
-
-
-//	for(int i = 0; i < GIsamples; i++) {
-//		ray = generateRayOffset(pixelCoords, imageSize(image), mainCamera, randVec2(i,-.5,.5));
-//		hit = launchRay(ray);
-//		if(hit.index!=-1) {
-//			vec3 normal =  computeNormal(hit, ray);
-//			pixelColor += BRDF(mainLight, normal, vec3(1));
-//			if(hit.index == selectedIndex) hitSelected = true;
-//		}
-//		else pixelColor += skyColor;
-//	}
-//	pixelColor /= (1 + GIsamples);
 	
 	imageStore(image, pixelCoords, vec4(pixelColor,1));
 	imageStore(indices, pixelCoords, ivec4(firstHit.index));
 }
-
-

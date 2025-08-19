@@ -36,7 +36,7 @@ void main()
 	if(selectedIndex!= -1) {
 		pixelColor = drawTools(ray, pixelColor);
 		uint hitIndex = imageLoad(indices, pixelCoords).x;
-		//if(selectedIndex == hitIndex) pixelColor *= vec3(.9,.7,.7);
+		//if(selectedIndex == hitIndex) pixelColor *= vec3(1,.2,.2);
 	}
 	
 	imageStore(imageOut, pixelCoords, vec4(pixelColor,1));

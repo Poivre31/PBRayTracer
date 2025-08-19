@@ -1,14 +1,13 @@
 #include "renderer.h"
 #include "log.h"
 
-Renderer::Renderer(const char* windowName, size_t width, size_t height, bool vsync) : width(width), height(height), vsync(vsync), io(0), style(0) {
+Renderer::Renderer(const char* windowName, int width, int height, bool vsync) : width(width), height(height), vsync(vsync), io(0), style(0) {
 	if (!glfwInit()) Log::Error("GLFW init failed");
 
 	window = glfwCreateWindow(width, height , windowName, nullptr, nullptr);
 
 	if (!window) Log::Error("Window creation failed");
 
-	glfwMakeContextCurrent(window);
 	glfwMakeContextCurrent(window);
 
 	GLint profileMask = 0;

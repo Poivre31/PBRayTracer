@@ -8,7 +8,7 @@
 #include "vec3.h"
 #include "camera.h"
 
-namespace Object {
+namespace ObjectType {
 	enum {
 		sphere = 0,
 		cube = 1,
@@ -45,18 +45,31 @@ struct Transform {
 	float4 rotation;
 };
 
+struct Material {
+	float4 color;
+};
+
+struct Object {
+	Transform transform;
+	Material material;
+	int type;
+
+	Object() {
+		transform = {};
+		transform.scale = { 1,1,1,0 };
+		material = {};
+		material.color = { 1,1,1,0 };
+		type = 0;
+	}
+};
+
 class Scene {
 public:
-	std::vector<Transform> spheres;
-	std::vector<Transform> cubes;
-	std::vector<Transform> planes;
-	std::vector<Transform> circles;
-	std::vector<Transform> cylinders;
-	std::vector<Transform> cones;
-	std::vector<Transform> pyramids;
+	std::vector<Object> objects;
 	Transform transforms[4096]{};
 	float4 colors[4096]{};
-	ObjectCount count{};
+	int counts[7];
+	int totalCount;
 	int selectedIndex = -1;
 	int selectedType = -1;
 	int editMode = 0;
@@ -68,8 +81,8 @@ public:
 	float startAngle = 0;
 	int GIsamples = 0;
 	float lightDir[3]{0,0,-1};
-	float lightColor[3]{1,1,1};
-	float lightRadius{.5};
+	float lightColor[3]{120,120,120};
+	float lightRadius{.05};
 	Camera* mainCamera = nullptr;
 	float GIthreshold = 0;
 	bool accumulate = false;
@@ -82,16 +95,15 @@ public:
 	void ConnectGPU();
 
 	void RandomScene(int nObjects);
-	void AddObject(Transform object, int objectType, float4 color);
-	void RemoveObject(int index, int objectType);
+	void AddObject(Object object);
+	void RemoveObject(int index);
 	void Clear();
 
 	void ParseObjects();
 
-	int FindSubIndex(int globalIndex);
-	Transform* FindTransform(int globalIndex, int type);
-
 	void SetEditMode(int mode);
+
+	void SaveScene(Renderer& UI);
 	
 private:
 	unsigned int transformsSSBO = 0;

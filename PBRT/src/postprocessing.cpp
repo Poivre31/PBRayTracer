@@ -144,8 +144,8 @@ void PostProcessor::DrawTools(Texture& imageIn, Texture& imageOut, Texture& indi
 	toolsShader.SetFloat2("mainCamera.direction", scene.mainCamera->direction.y, scene.mainCamera->direction.z);
 	toolsShader.SetFloat("mainCamera.vFov", scene.mainCamera->vFov);
 	if (scene.selectedIndex != -1) {
-		Transform object = *scene.FindTransform(scene.selectedIndex, scene.selectedType);
-		toolsShader.SetFloat3("objectPosition", object.position.x, object.position.y, object.position.z);
+		Object& object = scene.objects[scene.selectedIndex];
+		toolsShader.SetFloat3("objectPosition", object.transform.position.x, object.transform.position.y, object.transform.position.z);
 	}
 
 	toolsShader.Dispatch(imageIn.width, imageIn.height, 8, 8);

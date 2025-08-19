@@ -48,6 +48,9 @@
     <ClInclude Include="src\mips.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\objectEditing.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\postprocessing.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -81,6 +84,9 @@
     <ClInclude Include="src\vec3.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\winDialogs.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\ImGui\imconfig.h">
       <Filter>vendor\ImGui</Filter>
     </ClInclude>
@@ -107,6 +113,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\computeShader.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -164,11 +173,11 @@
     <ClCompile Include="vendor\ImGui\imgui_widgets.cpp">
       <Filter>vendor\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\camera.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\accumulateFrames.comp">
+      <Filter>res\shaders</Filter>
+    </None>
     <None Include="res\shaders\boxBlur.comp">
       <Filter>res\shaders</Filter>
     </None>
@@ -191,6 +200,9 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\downsample.comp">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\drawTools.comp">
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\fastAA.comp">
@@ -233,12 +245,6 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\upsample.comp">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\accumulateFrames.comp">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\drawTools.comp">
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\varianceEstimator.comp">

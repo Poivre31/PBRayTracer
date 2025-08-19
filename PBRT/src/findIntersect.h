@@ -12,6 +12,35 @@ namespace Axis {
 	};
 }
 
+float intersect(Object& object, Ray ray) {
+	float hitDist = -1;
+	if(object.type == 0) hitDist = intersectSphere(object.transform, ray);
+	else if(object.type == 1) hitDist = intersectCube(object.transform, ray);
+	else if (object.type == 2) hitDist = intersectPlane(object.transform, ray);
+	else if (object.type == 3) hitDist = intersectCircle(object.transform, ray);
+	else if (object.type == 4) hitDist = intersectCylinder(object.transform, ray);
+	else if (object.type == 5) hitDist = intersectCone(object.transform, ray);
+	else if (object.type == 6) hitDist = intersectPyramid(object.transform, ray);
+
+	//switch (object.type) {
+	//case(ObjectType::sphere):
+	//	hitDist = intersectSphere(object.transform, ray); break;
+	//case(ObjectType::cube):
+	//	hitDist = intersectCube(object.transform, ray); break;
+	//case(ObjectType::plane):
+	//	hitDist = intersectPlane(object.transform, ray); break;
+	//case(ObjectType::circle):
+	//	hitDist = intersectCircle(object.transform, ray); break;
+	//case(ObjectType::cylinder):
+	//	hitDist = intersectCylinder(object.transform, ray); break;
+	//case(ObjectType::cone):
+	//	hitDist = intersectCone(object.transform, ray); break;
+	//case(ObjectType::pyramid):
+	//	hitDist = intersectPyramid(object.transform, ray); break;
+	//}
+	return hitDist;
+}
+
 Vec3 rotateY(Vec3 vec, float alpha) {
 	float x = cos(alpha) * vec.x + sin(alpha) * vec.z;
 	float z = -sin(alpha) * vec.x + cos(alpha) * vec.z;
@@ -52,77 +81,13 @@ std::tuple<int, int> findHitObject(Scene& scene, Camera& camera, Renderer& UI) {
 	float depth = 1000;
 
 	int i = 0;
-	for (Transform object : scene.spheres)
+	for (Object object : scene.objects)
 	{
-		float hitDist = intersectSphere(object, ray);
+		float hitDist = intersect(object, ray);
 		if (hitDist > 0 && hitDist < depth) {
 			index = i;
-			type = Object::sphere;
+			type = object.type;
 
-			depth = hitDist;
-		}
-		i++;
-	}
-	for (Transform object : scene.cubes)
-	{
-		float hitDist = intersectCube(object, ray);
-		if (hitDist > 0 && hitDist < depth) {
-			index = i;
-			type = Object::cube;
-			depth = hitDist;
-		}
-		i++;
-	}
-	for (Transform object : scene.planes)
-	{
-		float hitDist = intersectPlane(object, ray);
-		if (hitDist > 0 && hitDist < depth) {
-			index = i;
-			type = Object::plane;
-
-			depth = hitDist;
-		}
-		i++;
-	}
-	for (Transform object : scene.circles)
-	{
-		float hitDist = intersectCircle(object, ray);
-		if (hitDist > 0 && hitDist < depth) {
-			index = i;
-			type = Object::circle;
-
-			depth = hitDist;
-		}
-		i++;
-	}
-	for (Transform object : scene.cylinders)
-	{
-		float hitDist = intersectCylinder(object, ray);
-		if (hitDist > 0 && hitDist < depth) {
-			index = i;
-			type = Object::cylinder;
-
-			depth = hitDist;
-		}
-		i++;
-	}
-	for (Transform object : scene.cones)
-	{
-		float hitDist = intersectCone(object, ray);
-		if (hitDist > 0 && hitDist < depth) {
-			index = i;
-			type = Object::cone;
-
-			depth = hitDist;
-		}
-		i++;
-	}
-	for (Transform object : scene.pyramids)
-	{
-		float hitDist = intersectPyramid(object, ray);
-		if (hitDist > 0 && hitDist < depth) {
-			index = i;
-			type = Object::pyramid;
 			depth = hitDist;
 		}
 		i++;
@@ -137,7 +102,7 @@ int findSelectedAxis(Scene& scene, Renderer& UI, Camera& camera) {
 	int axis = Axis::none;
 	///CHECK
 	Ray ray = getRay(camera, UI);
-	object.position = scene.transforms[scene.selectedIndex].position;
+	object.position = scene.objects[scene.selectedIndex].transform.position;
 	Vec3 position = Vec3(object.position.x, object.position.y, object.position.z);
 	float objDist = sqrt(dot(position - camera.position, position - camera.position));
 
@@ -189,7 +154,7 @@ int findSelectedPlane(Scene& scene, Renderer& UI, Camera& camera) {
 	int axis = Axis::none;
 	///CHECK
 	Ray ray = getRay(camera, UI);
-	object.position = scene.transforms[scene.selectedIndex].position;
+	object.position = scene.objects[scene.selectedIndex].transform.position;
 	Vec3 position = Vec3(object.position.x, object.position.y, object.position.z);
 	float objDist = sqrt(dot(position - camera.position, position - camera.position));
 

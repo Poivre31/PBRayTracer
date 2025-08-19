@@ -166,6 +166,7 @@
     <ClInclude Include="src\mainheader.h" />
     <ClInclude Include="src\mathHelper.h" />
     <ClInclude Include="src\mips.h" />
+    <ClInclude Include="src\objectEditing.h" />
     <ClInclude Include="src\postprocessing.h" />
     <ClInclude Include="src\random.h" />
     <ClInclude Include="src\renderer.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\timer.h" />
     <ClInclude Include="src\vec3.h" />
+    <ClInclude Include="src\winDialogs.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />
     <ClInclude Include="vendor\ImGui\imgui.h" />
     <ClInclude Include="vendor\ImGui\imgui_impl_glfw.h" />

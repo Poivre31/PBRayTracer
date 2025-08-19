@@ -25,19 +25,19 @@ float intersectCone(Ray ray, Transform object) {
 	ray = transformRay(ray, object);
 
 	vec3 fac = vec3(4,4,-1);
-	double a = dot(fac * ray.direction, ray.direction);
-	double b = dot(fac * ray.origin, ray.direction) + ray.direction.z;
-	double c = dot(fac * ray.origin, ray.origin) - 1 + 2 * ray.origin.z;
+	float a = dot(fac * ray.direction, ray.direction);
+	float b = dot(fac * ray.origin, ray.direction) + ray.direction.z;
+	float c = dot(fac * ray.origin, ray.origin) - 1 + 2 * ray.origin.z;
 	
-	double delta = b*b-a*c;
+	float delta = b*b-a*c;
 	if(delta < 0) return -1;
-	double dist = (-b-sqrt(delta))/a;
-	double intersectZ = ray.origin.z + dist * ray.direction.z;
-	if(abs(intersectZ) <= 1.) return float(dist);
+	float dist = (-b-sqrt(delta))/a;
+	float intersectZ = ray.origin.z + dist * ray.direction.z;
+	if(abs(intersectZ) <= 1.) return dist;
 
 	dist = -dist - 2. * b / a;
 	intersectZ = ray.origin.z + dist * ray.direction.z;
-	if(abs(intersectZ) <= 1.) return float(dist);
+	if(abs(intersectZ) <= 1.) return dist;
 
 	return -1;
 }
@@ -45,8 +45,8 @@ float intersectCone(Ray ray, Transform object) {
 vec3 normalCone(Ray ray, float intersectDistance, Transform transform) {
 	vec3 intersect =  ray.origin + intersectDistance * ray.direction - transform.position;
 	vec3 spherePos = rotateSphericalInv(intersect, transform.rotation.x, transform.rotation.y) / transform.scale;
-	vec3 normal = vec3(8 * spherePos.x, 8 * spherePos.y, 2 - 2 * spherePos.z);
+	vec3 normal = 2 * vec3(4 * spherePos.x, 4 * spherePos.y, 1 - spherePos.z);
 	normal = rotateSpherical(normal, transform.rotation.x, transform.rotation.y);
 
-	return normalize(vec3(1,0,0));
+	return normalize(normal);
 }
