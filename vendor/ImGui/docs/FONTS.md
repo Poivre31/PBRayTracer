@@ -150,7 +150,6 @@ ImFontConfig config;
 config.MergeMode = true;
 io.Fonts->AddFontFromFileTTF("DroidSans.ttf", 0.0f, &config);           // Merge into first font to add e.g. Asian characters
 io.Fonts->AddFontFromFileTTF("fontawesome-webfont.ttf", 0.0f, &config); // Merge into first font to add Icons
-io.Fonts->Build();
 ```
 :rewind: **Before 1.92, or without an up to date backend:**
 ```cpp
@@ -387,7 +386,7 @@ io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\seguiemj.ttf", 16.0f, &cfg);
 
 ## Using Custom Glyph Ranges
 
-🆕 **Since 1.92, with an up to date backend: specifying glyph ranges is necessary, so this is not needed.**
+🆕 **Since 1.92, with an up to date backend: specifying glyph ranges is unnecessary. Therefore this is not really useful any more.**
 
 :rewind: You can use the `ImFontGlyphRangesBuilder` helper to create glyph ranges based on text input. For example: for a game where your script is known, if you can feed your entire script to it and only build the characters the game needs.
 ```cpp

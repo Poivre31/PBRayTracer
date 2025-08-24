@@ -1,0 +1,42 @@
+[
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\backends\\imgui_impl_glfw.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\backends\\imgui_impl_glfw.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\backends\\imgui_impl_opengl3.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\backends\\imgui_impl_opengl3.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_demo.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_demo.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_draw.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_draw.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_tables.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_tables.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_widgets.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\imgui_widgets.cpp"
+  },
+  {
+    "directory": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui",
+    "command": "\"C:\\WINDOWS\\system32\\CL.exe\" \/c \/I. \/Ibackends \/Imisc\\cpp \/I..\\glfw\\include \/I\"C:\\Users\\raphb\\vcpkg\\installed\\x64-windows\\include\" \/nologo \/W3 \/WX- \/diagnostics:column \/Ox \/Oi \/D CODE_ANALYSIS \/D _UNICODE \/D UNICODE \/EHsc \/MT \/GS \/Gy \/fp:precise \/Fo\"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\obj\\Debug\\\\\" \/Gd \/TP --target=amd64-pc-windows-msvc  \/Zc:__cplusplus  \"C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\misc\\cpp\\imgui_stdlib.cpp\"",
+    "file": "C:\\Users\\raphb\\Documents\\C_projects\\HelloWorld\\vendor\\ImGui\\misc\\cpp\\imgui_stdlib.cpp"
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.44.35209.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/imgui_demo.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "be339daf93c9a08c1858f2efb3d13fdfae14cab25de68d2080a242479174bd53"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "3a9cc7043ce915a47735002f38388c364a697da80773426b3cdeded9dcadd9b6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "a92534d918030048328fffcf0a50236b8c05f79558355b37e34b664e13c71091"
+          }
+        }
+      ]
+    }
+  ]
+}

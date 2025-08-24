@@ -1,0 +1,62 @@
+#version 460 core
+#define M_PI 3.14159265358979
+
+uniform vec3 objectPosition;
+uniform vec3 objectScale;
+uniform vec2 objectRotation;
+
+// STRUCTS
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Camera {
+	vec3 position;
+	vec2 direction;
+	float vFov;
+};
+
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D image;
+
+
+vec3 BRDF(vec3 lightColor, vec3 lightDirection, vec3 normal, vec3 color, float ambient) {
+	return lightColor * M_PI * color * max(dot(normal,-lightDirection),0) + ambient * color;
+}
+
+Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera);
+float intersectSphere(Ray ray, Transform object);
+vec3 normalSphere(Ray ray, float intersectDistance, Transform transform);
+
+// MAIN LOOP
+void main()
+{
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+	Camera mainCamera;
+	mainCamera.position = vec3(0);
+	mainCamera.direction = vec2(M_PI/2, 0);
+	mainCamera.vFov = 89;
+	Ray ray = generateRay(pixelCoords, imageSize(image), mainCamera);
+
+	vec3 pixelColor = vec3(0);
+
+	Transform object;
+	object.position = objectPosition;
+	object.scale = objectScale;
+	object.rotation = objectRotation;
+
+	float dist = intersectSphere(ray, object);
+	if(dist>0) {
+		pixelColor = BRDF(vec3(1), vec3(.4,.3,.8), normalSphere(ray, dist, object), vec3(.8,.2,.3),0.2);
+	}
+
+	
+	imageStore(image, pixelCoords, vec4(pixelColor,1));
+}

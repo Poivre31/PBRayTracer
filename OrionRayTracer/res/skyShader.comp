@@ -1,0 +1,19 @@
+#version 460 core
+#define M_PI 3.141592653589793
+
+float colorMapping(float theta, float alpha, float target, float offset) {
+	float a = (target-offset) / (1 - exp(-alpha*M_PI/2));
+	if(theta>M_PI/2) return target;
+	return min(a*(1-exp(-alpha*theta))+offset,target);
+}
+
+vec3 skyColor(vec3 rayDirection) {
+	float theta = acos(rayDirection.z);
+
+	float b = .9;
+	float r = colorMapping(theta, .1, b, .6);
+	float g = colorMapping(theta, .1, b, .7);
+
+	return vec3(r,g,b);
+}
+

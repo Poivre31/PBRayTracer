@@ -1,0 +1,42 @@
+#version 460 core
+vec3 rotateX(vec3 vec, float alpha) {
+	float y = cos(alpha) * vec.y - sin(alpha) * vec.z;
+	float z = sin(alpha) * vec.y + cos(alpha) * vec.z;
+	return vec3(vec.x,y,z);
+}
+
+vec3 rotateY(vec3 vec, float alpha) {
+	float x = cos(alpha) * vec.x + sin(alpha) * vec.z;
+	float z = -sin(alpha) * vec.x + cos(alpha) * vec.z;
+	return vec3(x,vec.y,z);
+}
+
+vec3 rotateZ(vec3 vec, float alpha) {
+	float x = cos(alpha) * vec.x - sin(alpha) * vec.y;
+	float y = sin(alpha) * vec.x + cos(alpha) * vec.y;
+	return vec3(x,y,vec.z);
+}
+
+vec3 rotateSpherical(vec3 vec, float theta, float phi) {
+	vec3 u;
+	u.x = cos(theta) * vec.x + sin(theta) * vec.z;
+	u.y = vec.y;
+	u.z = -sin(theta)* vec.x + cos(theta) * vec.z;
+
+	vec.x = cos(phi) * u.x - sin(phi) * u.y;
+	vec.y = sin(phi) * u.x + cos(phi) * u.y;
+	vec.z = u.z;
+	return vec;
+}
+
+vec3 rotateSphericalInv(vec3 vec, float theta, float phi) {
+	vec3 u;
+	u.x = cos(phi) * vec.x + sin(phi) * vec.y;
+	u.y = -sin(phi) * vec.x + cos(phi) * vec.y;
+	u.z = vec.z;
+
+	vec.x = cos(theta) * u.x - sin(theta) * u.z;
+	vec.y = u.y;
+	vec.z = sin(theta) * u.x + cos(theta) * u.z;
+	return vec;
+}

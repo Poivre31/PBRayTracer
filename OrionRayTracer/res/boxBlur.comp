@@ -1,0 +1,46 @@
+#version 460 core
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
+
+layout(rgba32f) uniform readonly restrict image2D imageIn;
+layout(rgba32f) uniform writeonly restrict image2D imageOut;
+
+uniform int kernelRadius;
+
+ivec2 getCoords(ivec2 pixelCoords, int i, int j) {
+	return clamp(pixelCoords+ivec2(i,j),ivec2(0,0),imageSize(imageIn)-1);
+}
+
+void main() {
+	int kernelSize = 2 * kernelRadius + 1;
+	ivec2 pixelID = ivec2(gl_GlobalInvocationID.xy);
+
+	vec3 color = vec3(0,0,0);
+
+	if(kernelSize==1){
+		imageStore(imageOut,getCoords(pixelID,0,0),imageLoad(imageIn,getCoords(pixelID,0,0)));
+		return;
+	}
+
+
+//	for(int i = -kernelRadius; i <= kernelRadius;i++) {
+//		for(int j = -kernelRadius; j <= kernelRadius;j++) {
+//			color+=imageLoad(imageIn,getCoords(pixelID,i,j)).xyz;
+//			sum++;
+//		}
+//	}
+
+	int sum = 0;
+	for(int i = 0; i <= kernelRadius;i+=2) {
+		for(int j = 0; j <= kernelRadius;j+=2) {
+			color+=mix(imageLoad(imageIn,getCoords(pixelID,i,j)).xyz,imageLoad(imageIn,getCoords(pixelID,i+1,j+1)).xyz,.5f);
+			color+=mix(imageLoad(imageIn,getCoords(pixelID,-i,j)).xyz,imageLoad(imageIn,getCoords(pixelID,-i-1,j+1)).xyz,.5f);
+			color+=mix(imageLoad(imageIn,getCoords(pixelID,i,-j)).xyz,imageLoad(imageIn,getCoords(pixelID,i+1,-j-1)).xyz,.5f);
+			color+=mix(imageLoad(imageIn,getCoords(pixelID,-i,-j)).xyz,imageLoad(imageIn,getCoords(pixelID,-i-1,-j-1)).xyz,.5f);
+			sum+=4;
+		}
+	}
+
+	color/=sum;
+
+	imageStore(imageOut,pixelID,vec4(color,1));
+}

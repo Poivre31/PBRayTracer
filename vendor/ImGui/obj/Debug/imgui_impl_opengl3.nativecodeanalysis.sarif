@@ -1,0 +1,165 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Return value ignored: 'sscanf'."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/raphb/Documents/C_projects/HelloWorld/vendor/ImGui/backends/imgui_impl_opengl3_loader.h"
+                },
+                "region": {
+                  "startLine": 814,
+                  "startColumn": 13,
+                  "endLine": 814,
+                  "endColumn": 65
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "parse_version",
+                  "decoratedName": "parse_version",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Return value ignored: 'sscanf'."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/raphb/Documents/C_projects/HelloWorld/vendor/ImGui/backends/imgui_impl_opengl3.cpp"
+                },
+                "region": {
+                  "startLine": 332,
+                  "startColumn": 9,
+                  "endLine": 332,
+                  "endColumn": 50
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui_ImplOpenGL3_Init",
+                  "decoratedName": "?ImGui_ImplOpenGL3_Init@@YA_NPEBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Return value ignored: 'sscanf'."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/raphb/Documents/C_projects/HelloWorld/vendor/ImGui/backends/imgui_impl_opengl3.cpp"
+                },
+                "region": {
+                  "startLine": 849,
+                  "startColumn": 5,
+                  "endLine": 849,
+                  "endColumn": 51
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui_ImplOpenGL3_CreateDeviceObjects",
+                  "decoratedName": "?ImGui_ImplOpenGL3_CreateDeviceObjects@@YA_NXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.44.35209.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "bbeca1010a156a156fdd1fd5b7c767f82489266a0f157082f2dd739a786d30aa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/raphb/Documents/C_projects/HelloWorld/vendor/ImGui/backends/imgui_impl_opengl3_loader.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "20b59c6e3182d62ec93b5b0500ba7680a7ca82d7cb5a6b5e8b468d1cccfea87e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "3a9cc7043ce915a47735002f38388c364a697da80773426b3cdeded9dcadd9b6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "a92534d918030048328fffcf0a50236b8c05f79558355b37e34b664e13c71091"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/raphb/documents/c_projects/helloworld/vendor/imgui/backends/imgui_impl_opengl3.h"
+          },
+          "hashes": {
+            "sha-256": "d70bf0cfe8254b06574ec20ae2353bd7517c2650a366248f73b71b1c1a5f925f"
+          }
+        }
+      ]
+    }
+  ]
+}

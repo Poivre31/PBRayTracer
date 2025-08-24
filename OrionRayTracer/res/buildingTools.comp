@@ -1,0 +1,297 @@
+#version 460 core
+#define M_PI 3.14159265358979
+
+// STRUCTS
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+uniform struct Camera {
+	vec3 position;
+	vec2 direction;
+	float vFov;
+} mainCamera;
+
+uniform vec3 objectPosition;
+uniform int editMode;
+
+float intersectSphere(Ray ray, Transform object);
+float intersectCube(Ray ray, Transform object);
+float intersectCircle(Ray ray, Transform object);
+float intersectCylinder(Ray ray, Transform object);
+float intersectCone(Ray ray, Transform object);
+vec3 rotateSpherical(vec3 vec, float theta, float phi);
+
+vec3 drawPos(Ray ray, vec3 originalColor) {
+	float depth = 1000;
+	vec3 pixelColor = originalColor;
+	vec4 result;
+
+	Transform object;
+	object.position = objectPosition;
+	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
+	object.scale = vec3(.02) * objDist;
+	float dist = intersectSphere(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// RED X CYLINDER
+	object.position = objectPosition + 0.08 * vec3(objDist,0,0);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, 0);
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// RED X CONE
+	object.position = objectPosition + 0.16 * vec3(objDist,0,0);
+	object.scale = vec3(.02) * objDist;
+	object.scale.z *= 1;
+	object.rotation = vec2(M_PI/2, 0);
+	dist = intersectCone(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	
+	// GREEN Y CYLINDER
+	object.position = objectPosition + 0.08 * vec3(0,objDist,0);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, M_PI/2);
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// GREEN Y CONE
+	object.position = objectPosition + 0.16 * vec3(0,objDist,0);
+	object.scale = vec3(.02) * objDist;
+	object.scale.z *= 1;
+	object.rotation = vec2(M_PI/2, M_PI/2);
+	dist = intersectCone(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// BLUE Z CYLINDER
+	object.position = objectPosition + 0.08 * vec3(0,0,objDist);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(0, 0);
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+	// BLUE Z CONE
+	object.position = objectPosition + 0.16 * vec3(0,0,objDist);
+	object.scale = vec3(.02) * objDist;
+	object.scale.z *= 1;
+	object.rotation = vec2(0, 0);
+	dist = intersectCone(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	return pixelColor;
+}
+
+vec3 drawScale(Ray ray, vec3 originalColor) {
+	float depth = 1000;
+	vec3 pixelColor = originalColor;
+
+	vec2 baseRotation = vec2(0);
+
+	Transform object;
+	object.position = objectPosition;
+	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
+	object.scale = vec3(.02) * objDist;
+	float dist = intersectSphere(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// RED X CYLINDER
+	object.position = objectPosition + rotateSpherical(0.08 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, 0) + baseRotation;
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// RED X CUBE
+	object.position = objectPosition + rotateSpherical(0.16 * vec3(objDist,0,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.016) * objDist;
+	object.rotation = vec2(M_PI/2, 0) + baseRotation;
+	dist = intersectCube(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	
+	// GREEN Y CYLINDER
+	object.position = objectPosition + rotateSpherical(0.08 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(M_PI/2, M_PI/2) + baseRotation;
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+	// GREEN Y CONE
+	object.position = objectPosition + rotateSpherical(0.16 * vec3(0,objDist,0), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.016) * objDist;
+	object.rotation = vec2(M_PI/2, M_PI/2) + baseRotation;
+	dist = intersectCube(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .8 ,.2) + .2 * originalColor;
+		depth = dist;
+	}
+
+	// BLUE Z CYLINDER
+	object.position = objectPosition + rotateSpherical(0.08 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.01) * objDist;
+	object.scale.z *= 8;
+	object.rotation = vec2(0, 0) + baseRotation;
+	dist = intersectCylinder(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+	// BLUE Z CONE
+	object.position = objectPosition + rotateSpherical(0.16 * vec3(0,0,objDist), baseRotation.x, baseRotation.y);
+	object.scale = vec3(.016) * objDist;
+	object.rotation = vec2(0, 0) + baseRotation;
+	dist = intersectCube(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+	return pixelColor;
+}
+
+vec3 drawRot(Ray ray, vec3 originalColor) {
+	float depth = 1000;
+	vec3 pixelColor = originalColor;
+
+	// CENTER SPHERE
+	Transform object;
+	object.position = objectPosition;
+	float objDist = sqrt(dot(object.position-mainCamera.position,object.position-mainCamera.position));
+	object.scale = vec3(.02) * objDist;
+	float dist = intersectSphere(ray, object);
+	if(dist>0 && dist <depth) {
+		pixelColor = vec3(.8) + .2 * originalColor;
+		depth = dist;
+	}
+
+//	// OUTER CYLIDNER RED
+//	object.position = _position[selectedIndex].xyz;
+//	object.scale = vec3(.12) * objDist;
+//	object.scale.z = .01 * objDist;
+//	object.rotation = vec2(0, 0);
+//	dist = intersectCylinder(ray, object);
+//	if(dist>0 && dist <depth) {
+//		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+//		depth = dist;
+//	}
+//
+//	// INNER CYLINDER RED
+//	object.position = _position[selectedIndex].xyz;
+//	object.scale = vec3(.10) * objDist;
+//	object.scale.z = .01 * objDist;
+//	object.rotation = vec2(0, 0);
+//	dist = intersectCylinder(ray, object);
+//	if(dist>0 && dist <depth) {
+//		pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+//		depth = dist;
+//	}
+
+	// TOP FILLING RED
+	object.position = objectPosition;
+	object.scale = vec3(.12) * objDist;
+	object.scale.z = .01 * objDist;
+	object.rotation = vec2(0, 0);
+	dist = intersectCircle(ray, object);
+	if(dist>0 && dist <depth) {
+		vec3 inter = ray.origin + dist * ray.direction - object.position;
+		if(dot(inter.xy, inter.xy) > .10*.10*objDist*objDist) {
+			pixelColor = vec3(.8, .2 ,.2) + .2 * originalColor;
+			depth = dist;
+		}
+	}
+
+	// TOP FILLING BLUE
+	object.position = objectPosition;
+	object.scale = vec3(.12) * objDist;
+	object.scale.z = .01 * objDist;
+	object.rotation = vec2(M_PI/2, M_PI/2);
+	dist = intersectCircle(ray, object);
+	if(dist>0 && dist <depth) {
+		vec3 inter = ray.origin + dist * ray.direction - object.position;
+		if(dot(inter.xz, inter.xz) > .10*.10*objDist*objDist) {
+			pixelColor = vec3(.2, .2 ,.8) + .2 * originalColor;
+			depth = dist;
+		}
+	}
+
+	return pixelColor;
+}
+
+vec3 drawTools(Ray ray, vec3 pixelColor) {
+	switch(editMode) {
+	case(0):
+		pixelColor = drawPos(ray, pixelColor); break;
+	case(1):
+		pixelColor = drawScale(ray, pixelColor); break;
+	case(2):
+		pixelColor = drawRot(ray, pixelColor); break;
+	}
+	return pixelColor;
+}
+
+//void drawAxis(vec3 p, vec3 color, ivec2 pixelCoords) {
+//	vec2 p0 = inversePoint(vec3(0), imageSize(image), mainCamera);
+//	vec2 p1 = inversePoint(p, imageSize(image), mainCamera);
+//
+//	vec2 d = p1 - p0;
+//
+//	float a = d.y / d.x;
+//	float b = p0.y - p0.x * d.y / d.x;
+//
+//	float x = (pixelCoords.x + pixelCoords.y * a - a * b) / (1 + a * a);
+//	float y = a * x + b;
+//
+//	float dist = distance(vec2(x,y), pixelCoords);
+//
+//	if(dist < 2) imageStore(image, pixelCoords, vec4(.2));
+//
+//	x = (mousePos.x + mousePos.y * a - a * b) / (1 + a * a);
+//	y = a * x + b;
+//
+//	dist = distance(vec2(x,y), pixelCoords);
+//
+//	Ray ray = findPoint(vec2(x,y), imageSize(image), mainCamera);
+//
+//	float lambda = -ray.origin.z / ray.direction.z;
+//	if(dist < 16) imageStore(image, pixelCoords, vec4(lambda));
+//}

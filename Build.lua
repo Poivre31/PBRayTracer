@@ -1,12 +1,12 @@
-workspace "PBRT"
+workspace "OrionRayTracer"
+   configurations {"Debug", "Release", "Dist"}
    architecture "x64"
-   configurations { "Debug", "Release", "Dist" }
-   startproject "PBRT"
+   startproject "OrionRayTracer"
+   systemversion "latest"
+   clangtidy "On"
+   buildoptions { "/Zc:__cplusplus" }
 
-   -- Workspace-wide build options for MSVC
-   filter "system:windows"
-      buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
-
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
+include "VegaEngine/Build-Vega.lua"
+include "OrionRayTracer/Build-Orion.lua"
 include "PBRT/Build-PBRT.lua"
+include "vendor/ImGui/Build-ImGui.lua"

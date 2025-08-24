@@ -23,7 +23,7 @@ void Scene::ConnectGPU() {
 void Scene::RandomScene(int nObjects) {
 	const int nPrimitives = 7;
 	totalCount = nObjects;
-	for (int i = 1; i < nPrimitives; i++)
+	for (int i = 0; i < nPrimitives; i++)
 	{
 		counts[i] = 0;
 	}
@@ -115,14 +115,4 @@ void Scene::ParseObjects() {
 void Scene::SetEditMode(int mode) {
 	rtShader->SetInt("editMode", mode);
 	editMode = mode;
-}
-
-void Scene::SaveScene(Renderer& UI) {
-	std::ofstream saveFile;
-
-	saveFile.open("saves/save1.txt");
-	saveFile << "hello\n";
-	saveFile.close();
-
-	//OpenFile(UI, "All files");
 }

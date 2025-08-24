@@ -42,3 +42,8 @@
 /bin
 /bin-int
 /.vs
+
+/python
+
+*/bin
+*/obj

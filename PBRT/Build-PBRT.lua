@@ -1,5 +1,5 @@
 project "PBRT"
-   kind "ConsoleApp"
+   kind "None"
    language "C++"
    cppdialect "C++23"
    targetdir "bin/%{cfg.buildcfg}"
@@ -11,17 +11,19 @@ project "PBRT"
    filter {}
 
    includedirs{
-      "../vendor/GLFW/include",
-      "../vendor/GLEW/include",
-      "../vendor/ImGui",
-      "../vendor/ImGui/backends",
-  }
-   libdirs{"../vendor/GLFW/lib","../vendor/GLEW/lib"}
+      "../vendor/glfw/include",
+      "../vendor/glew/include",
+      "../vendor/imgui",
+      "../vendor/imgui/backends",
+      "../vendor/spdlog/include",
+   }
+
+   libdirs{"../vendor/glfw/lib","../vendor/glew/lib"}
    links{"glew32s.lib","glfw3.lib","opengl32.lib"}
    defines{"GLEW_STATIC"}
 
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir "bin/%{cfg.buildcfg}"
+   objdir "obj/%{cfg.buildcfg}" 
 
    filter "system:windows"
       systemversion "latest"

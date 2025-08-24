@@ -88,6 +88,7 @@ public:
 	bool accumulate = false;
 	int nAccumulated = 0;
 	float thresh = 0;
+	char* sceneName = nullptr;
 
 	Scene() {};
 	Scene(ComputeShader& mainShader);
@@ -103,7 +104,7 @@ public:
 
 	void SetEditMode(int mode);
 
-	void SaveScene(Renderer& UI);
+	void SaveScene(const char* saveName);
 	
 private:
 	unsigned int transformsSSBO = 0;

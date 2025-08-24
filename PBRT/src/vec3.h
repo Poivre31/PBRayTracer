@@ -4,20 +4,19 @@
 #include <math.h>
 #include <numbers>
 
-using std::numbers::pi;
+#define M_PI 3.14159265358979
 
-struct Vec3 {
-	float x, y, z;
+template<typename T>
+class Vec3 {
+public:
+	T x{};
+	T y{};
+	T z{};
 
-	Vec3() {
-		x = .0f;
-		y = .0f;
-		z = .0f;
-	}
+	Vec3() = default;
 
-	Vec3(float a) : x(a), y(a), z(a) {};
-
-	Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
+	Vec3(T a) : x(a), y(a), z(a) {}
+	Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
 	Vec3(const Vec3& ref) {
 		x = ref.x;
@@ -41,56 +40,71 @@ struct Vec3 {
 		return out;
 	}
 
-	friend Vec3 operator*(const Vec3& v, const Vec3& u) {
+	friend Vec3 operator*(const Vec3& u, const Vec3& v) {
 		Vec3 out;
-		out.x = v.x * u.x;
-		out.y = v.y * u.y;
-		out.z = v.z * u.z;
+		out.x = u.x * v.x;
+		out.y = u.y * v.y;
+		out.z = u.z * v.z;
 		return out;
 	}
 
-	Vec3& operator*=(const Vec3& v) {
-		this->x *= v.x;
-		this->y *= v.y;
-		this->z *= v.z;
+	Vec3& operator*=(float a) {
+		x *= a;
+		y *= a;
+		z *= a;
 		return *this;
 	}
 
-	friend Vec3 operator/(const Vec3& v, const Vec3& u) {
+	Vec3& operator*=(const Vec3& u) {
+		x *= u.x;
+		y *= u.y;
+		z *= u.z;
+		return *this;
+	}
+
+	friend Vec3 operator/(const Vec3& u, const Vec3& v) {
 		Vec3 out;
-		out.x = v.x / u.x;
-		out.y = v.y / u.y;
-		out.z = v.z / u.z;
+		out.x = u.x / v.x;
+		out.y = u.y / v.y;
+		out.z = u.z / v.z;
+		return out;
+	}
+
+	friend Vec3 operator/(const Vec3& u, float a) {
+		Vec3 out;
+		float aInv = 1 / a;
+		out.x = u.x * aInv;
+		out.y = u.y * aInv;
+		out.z = u.z * aInv;
 		return out;
 	}
 
 	Vec3& operator/=(const Vec3& v) {
-		this->x /= v.x;
-		this->y /= v.y;
-		this->z /= v.z;
+		x /= v.x;
+		y /= v.y;
+		z /= v.z;
 		return *this;
 	}
 
-	friend Vec3 operator^(const Vec3& u, const Vec3& v) {
-		Vec3 out;
-		out.x = u.y * v.z - v.y * u.z;
-		out.y = u.z * v.x - v.z * u.x;
-		out.z = u.x * v.y - v.x * u.y;
-		return out;
+	Vec3& operator/=(float a) {
+		x /= a;
+		y /= a;
+		z /= az;
+		return *this;
 	}
 
 	friend Vec3 operator+(const Vec3& u, const Vec3& v) {
 		Vec3 out;
-		out.x = v.x + u.x;
-		out.y = v.y + u.y;
-		out.z = v.z + u.z;
+		out.x = u.x + v.x;
+		out.y = u.y + v.y;
+		out.z = u.z + v.z;
 		return out;
 	}
 
 	Vec3& operator+=(const Vec3& v) {
-		this->x += v.x;
-		this->y += v.y;
-		this->z += v.z;
+		x += v.x;
+		y += v.y;
+		z += v.z;
 		return *this;
 	}
 
@@ -102,6 +116,13 @@ struct Vec3 {
 		return out;
 	}
 
+	Vec3& operator-=(const Vec3& v) {
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		return *this;
+	}
+
 	Vec3 operator-() const {
 		Vec3 out;
 		out.x = -x;
@@ -109,12 +130,8 @@ struct Vec3 {
 		out.z = -z;
 		return out;
 	}
-	Vec3& operator-=(const Vec3& v) {
-		this->x -= v.x;
-		this->y -= v.y;
-		this->z -= v.z;
-		return *this;
-	}
+
+
 	void Set(float X, float Y, float Z) {
 		x = X;
 		y = Y;
@@ -166,6 +183,15 @@ struct Vec3 {
 		std::cout << "x: " << x << ", y: " << y << ", z: " << z << "\n";
 	}
 };
+
+
+inline Vec3 Cross(const Vec3& u, const Vec3& v) {
+	Vec3 out;
+	out.x = u.y * v.z - v.y * u.z;
+	out.y = u.z * v.x - v.z * u.x;
+	out.z = u.x * v.y - v.x * u.y;
+	return out;
+}
 
 inline float dot(const Vec3& a, const Vec3& b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z;

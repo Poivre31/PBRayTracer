@@ -7,6 +7,7 @@
 #include "vec3.h"
 #include "renderer.h"
 #include "camera.h"
+#include "saveSystem.h"
 
 static ColorBuffer colorsBuffer{};
 static unsigned int colorsSSBO = 0;
@@ -94,10 +95,9 @@ void objectManager(Scene& scene)
 			scene.Clear();
 		}
 		if (ImGui::Button("Generate random scene")) {
-			scene.Clear();
 			scene.RandomScene(objectCount);
 		}
-		ImGui::SliderInt("Number of objects", &objectCount, 1, 1024);
+		ImGui::SliderInt("Number of objects", &objectCount, 0, 1024);
 
 		ImGui::Separator();
 		ImGui::Text("Object creator");
@@ -140,7 +140,11 @@ void UIRender(Renderer& renderer, Scene& scene, Camera& mainCamera) {
 	if (renderer.showDemo)
 		ImGui::ShowDemoWindow(&renderer.showDemo);
 
+	char sceneName[255]{};
+
 	ImGui::Begin("Debug");
+	//ImGui::InputText("Save name: ", sceneName, sizeof(sceneName));
+	if (ImGui::Button("Save scene")) scene.SaveScene("ah");
 	ImGui::Checkbox("Show demo", &renderer.showDemo);
 	ImGui::Checkbox("Vsync", &renderer.vsync);
 	ImGui::Checkbox("Render", &renderer.doRender);

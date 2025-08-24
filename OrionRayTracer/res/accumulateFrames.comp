@@ -1,0 +1,16 @@
+#version 460 core
+
+layout(local_size_x = 8,local_size_y = 8,local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D frame;
+layout(rgba32f, binding = 1) uniform image2D average;
+
+uniform int nAccumulatedFrames;
+
+void main() {
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+	vec3 previousAverage = imageLoad(average, pixelCoords).xyz;
+	vec3 pixelColor = imageLoad(frame, pixelCoords).xyz;
+	double norm = 1. / double(nAccumulatedFrames + 1);
+	vec3 result = vec3(previousAverage * nAccumulatedFrames * norm + pixelColor * norm);
+	imageStore(average, pixelCoords, vec4(result,1));
+}

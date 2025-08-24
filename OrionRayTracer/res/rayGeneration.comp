@@ -1,0 +1,80 @@
+#version 460 core
+#define M_PI 3.14159265358979
+
+vec3 rotateX(vec3 vec, float alpha);
+vec3 rotateY(vec3 vec, float alpha);
+vec3 rotateZ(vec3 vec, float alpha);
+
+struct Camera {
+	vec3 position;
+	vec2 direction;
+	float vFov;
+};
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera) {
+	vec2 screenPos = vec2(pixelCoords)/imSize * 2.0 - 1.0;
+
+	float scale = tan(camera.vFov * M_PI / 360);
+	float x = -screenPos.y * scale;
+	float y = -screenPos.x * scale * float(imSize.x)/imSize.y;
+
+	Ray ray;
+	ray.origin = camera.position;
+	ray.direction = normalize(vec3(x, y, 1.f));
+	ray.direction = rotateY(ray.direction, camera.direction.x);
+	ray.direction = rotateZ(ray.direction, camera.direction.y);
+
+	return ray;
+}
+
+Ray generateRayOffset(ivec2 pixelCoords, ivec2 imSize, Camera camera, vec2 offset) {
+	vec2 screenPos = vec2(pixelCoords + offset)/imSize * 2.0 - 1.0;
+
+	float scale = tan(camera.vFov * M_PI / 360);
+	float x = -screenPos.y * scale;
+	float y = -screenPos.x * scale * float(imSize.x)/imSize.y;
+
+	Ray ray;
+	ray.origin = camera.position;
+	ray.direction = normalize(vec3(x, y, 1.f));
+	ray.direction = rotateY(ray.direction, camera.direction.x);
+	ray.direction = rotateZ(ray.direction, camera.direction.y);
+
+	return ray;
+}
+
+vec2 inversePoint(vec3 point, ivec2 imSize, Camera camera) {
+	vec3 rayDir = point - camera.position;
+	rayDir = rotateZ(rayDir, - camera.direction.y);
+	rayDir = rotateY(rayDir, - camera.direction.x);
+	rayDir /= rayDir.z;
+
+	float scale = tan(camera.vFov * M_PI / 360);
+	vec2 screenPos = -rayDir.yx / scale;
+	screenPos.x *= float(imSize.y)/imSize.x;
+
+	vec2 pixelCoords = .5 * (1 + screenPos) * imSize;
+
+	return pixelCoords;
+}
+
+Ray findPoint(vec2 pixelPos, ivec2 imSize, Camera camera) {
+	vec2 screenPos = vec2(pixelPos)/imSize * 2.0 - 1.0;
+
+	float scale = tan(camera.vFov * M_PI / 360);
+	float x = -screenPos.y * scale;
+	float y = -screenPos.x * scale * float(imSize.x)/imSize.y;
+
+	Ray ray;
+	ray.origin = camera.position;
+	ray.direction = normalize(vec3(x, y, 1.f));
+	ray.direction = rotateY(ray.direction, camera.direction.x);
+	ray.direction = rotateZ(ray.direction, camera.direction.y);
+
+	return ray;
+}

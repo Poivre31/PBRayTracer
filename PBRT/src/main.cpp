@@ -8,9 +8,7 @@
 #define M_PI 3.1415926535897932384626433832795
 
 static Camera mainCamera;
-static int nSphere = 1;
 static Scene scene;
-static float noise;
 
 int main(int, char**)
 {
@@ -52,8 +50,6 @@ int main(int, char**)
 	scene.mainCamera = &mainCamera;
 
 	scene.ConnectGPU();
-	scene.RandomScene(1);
-	scene.ParseObjects();
 
 	Vec3 dir{ 1,M_PI / 2,0 };
 	Vec3 speed{ 0 };
@@ -96,8 +92,6 @@ int main(int, char**)
 			scene.AddObject(scene.objects[scene.selectedIndex]);
 			scene.nAccumulated = 0;
 		}
-
-		scene.SaveScene(UI);
 
 		updateCamera(mainCamera, UI, dir, speed, computeShader);
 
@@ -150,7 +144,6 @@ int main(int, char**)
 			scene.nAccumulated++;
 
 			postProcess.EstimateVariance(average, lastFrame);
-			noise = postProcess.GetVariance();
 
 			indices.BindImage(3, GL_READ_WRITE);
 			postProcess.DrawTools(average, image, indices, scene);
@@ -158,7 +151,7 @@ int main(int, char**)
 		}
 
 		ImGui::Begin("Image data");
-		ImGui::Text("SNR: %.2f dB", noise);
+		ImGui::Text("SNR: %.2f dB", postProcess.GetVariance());
 		ImGui::End();
 		UIRender(UI, scene, mainCamera);
 

@@ -1,0 +1,36 @@
+#version 460 core
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+vec3 rotateSpherical(vec3 v, float theta, float phi);
+vec3 rotateSphericalInv(vec3 v, float theta, float phi);
+Ray transformRay(Ray ray, Transform transform);
+
+float intersectCircle(Ray ray, Transform object) {
+	float dirDotPos = dot(ray.direction, object.position - ray.origin);
+	float d2 = dot(object.position - ray.origin,object.position - ray.origin);
+	float radius = max(object.scale.x,object.scale.y);
+	if(dirDotPos * dirDotPos <= d2 - radius * radius) return -1.;
+
+	ray = transformRay(ray,object);
+	float dist = -ray.origin.z/ray.direction.z;
+	vec3 intersect = ray.origin + dist * ray.direction;
+	if(dot(intersect.xy,intersect.xy) < 1.) return dist;
+	return -1;
+}
+
+vec3 normalCircle(Ray ray, float intersectDistance, Transform transform) {
+	vec3 normal = vec3(0,0,1);
+	normal = rotateSpherical(normal, transform.rotation.x, transform.rotation.y);
+	if(dot(normal, ray.direction) > 0) normal *= -1;
+
+	return normalize(normal);
+}

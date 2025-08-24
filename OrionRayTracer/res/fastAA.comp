@@ -1,0 +1,56 @@
+#version 460 core
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
+
+layout(rgba32f) uniform readonly restrict image2D imageIn;
+layout(rgba32f) uniform writeonly restrict image2D imageOut;
+
+ivec2 getCoords(ivec2 pixelCoords, int i, int j) {
+	return clamp(pixelCoords+ivec2(i,j),ivec2(0,0),imageSize(imageIn)-1);
+}
+
+uniform float strength;
+uniform float threshold;
+
+void main() {
+	ivec2 pixelID = ivec2(gl_GlobalInvocationID.xy);
+
+	vec3 color = vec3(0,0,0);
+
+	if(strength == 0) {
+		imageStore(imageOut,pixelID,imageLoad(imageIn,pixelID));
+		return;
+	}
+
+//	for(int i = -kernelRadius; i <= kernelRadius;i++) {
+//		for(int j = -kernelRadius; j <= kernelRadius;j++) {
+//			color+=imageLoad(imageIn,getCoords(pixelID,i,j)).xyz;
+//			sum++;
+//		}
+//	}
+
+	vec3 sum = vec3(0);		
+	vec3 I0 = imageLoad(imageIn,pixelID).xyz;
+	for(int i = -1; i <= 1;i++) {
+		vec3 I = imageLoad(imageIn,getCoords(pixelID,i,-1)).xyz;
+		vec3 weight=exp(-(i*i+1)/strength)*exp((I0-I)*(I0-I)/threshold);
+		weight=vec3(1);
+		sum+=weight;
+		color+=weight*I; 
+
+		I = imageLoad(imageIn,getCoords(pixelID,i,0)).xyz;
+		weight=exp(-(i*i)/strength)*exp((I0-I)*(I0-I)/threshold);
+		weight=vec3(1);
+		sum+=weight;
+		color+=weight*I;
+
+		I = imageLoad(imageIn,getCoords(pixelID,i,1)).xyz;
+		weight=exp(-(i*i+1)/strength)*exp((I0-I)*(I0-I)/threshold);
+		weight=vec3(1);
+		sum+=weight;
+		color+=weight*I;
+	}
+
+	color/=sum;
+
+	imageStore(imageOut,pixelID,vec4(1,1,1,1));
+}

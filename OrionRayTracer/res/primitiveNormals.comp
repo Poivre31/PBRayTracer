@@ -1,0 +1,66 @@
+#version 460 core
+#define M_PI 3.14159265358979
+#define MAIN
+
+// STRUCTS
+struct Transform {
+	vec3 position;
+	vec3 scale;
+	vec2 rotation;
+};
+
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Hit {
+	float depth;
+	int index;
+	int type;
+};
+
+layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
+{
+	Transform _transforms[];
+};
+
+// FUNCTIONS
+vec3 normalSphere(Ray ray, float intersectDistance, Transform transform);
+vec3 normalCube(Ray ray, float intersectDistance, Transform transform);
+vec3 normalPlane(Ray ray, float intersectDistance, Transform transform);
+vec3 normalCircle(Ray ray, float intersectDistance, Transform transform);
+vec3 normalCylinder(Ray ray, float intersectDistance, Transform transform);
+vec3 normalCone(Ray ray, float intersectDistance, Transform transform);
+vec3 normalPyramid(Ray ray, float intersectDistance, Transform transform);
+
+// MAIN LOOP
+vec3 computeNormal(Hit hit, Ray ray)
+{
+	Transform object = _transforms[hit.index];
+	vec3 normal;
+	switch(hit.type) {
+		case 0: {
+			normal = normalSphere(ray, hit.depth, object); break;
+		}
+		case 1: {
+			normal = normalCube(ray, hit.depth, object); break;
+		}
+		case 2: {
+			normal = normalPlane(ray, hit.depth, object); break;
+		}
+		case 3: {
+			normal = normalCircle(ray, hit.depth, object); break;
+		}
+		case 4: {
+			normal = normalCylinder(ray, hit.depth, object); break;
+		}
+		case 5: {
+			normal = normalCone(ray, hit.depth, object); break;
+		}
+		case 6: {
+			normal = normalPyramid(ray, hit.depth, object); break;
+		}
+	}
+	return normal;
+}
