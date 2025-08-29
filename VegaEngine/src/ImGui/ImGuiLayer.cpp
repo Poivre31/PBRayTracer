@@ -3,8 +3,24 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "Core/Window.h"
+#include "Core/Application.h"
 
 namespace Vega {
+
+    //ImGuiLayer::ImGuiLayer() = default;
+
+    ImGuiLayer::ImGuiLayer(Window* window) : _window(window) {
+        if (!window) {
+            Log::error("Invalid window passed to ImGuiLayer");
+        }
+    }
+
+    //void ImGuiLayer::SetWindow(Window* window) {
+    //    if (!window) {
+    //        Log::error("Invalid window passed to ImGuiLayer");
+    //    }
+    //    _window = window;
+    //}
 
     void ImGuiLayer::OnAttach() {
         IMGUI_CHECKVERSION();
@@ -12,10 +28,10 @@ namespace Vega {
 
         ImGui::StyleColorsDark();
 
-        ImGui_ImplGlfw_InitForOpenGL(Window::Get()->GetGLFWWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(_window->GetGLFWWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 460");
 
-        spdlog::info("Created ImGui layer");
+        Log::trace("Created ImGui layer");
     }
 
     void ImGuiLayer::OnDetach() {
@@ -29,7 +45,7 @@ namespace Vega {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        for (ImGuiInterface* window: _imguiWindowStack)
+        for (ImGuiCanvas* window: _imguiCanvasStack)
         {
             window->Draw();
         }
@@ -37,6 +53,10 @@ namespace Vega {
         ImGui::Render();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+
+    void ImGuiLayer::AttachCanvas(ImGuiCanvas* window) {
+        _imguiCanvasStack.push_back(window);
     }
 
 }

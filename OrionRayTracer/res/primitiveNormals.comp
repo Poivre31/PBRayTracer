@@ -9,6 +9,12 @@ struct Transform {
 	vec2 rotation;
 };
 
+struct Object {
+	Transform transform;
+	vec3 color;
+	ivec4 data;
+};
+
 struct Ray {
 	vec3 origin;
 	vec3 direction;
@@ -20,9 +26,9 @@ struct Hit {
 	int type;
 };
 
-layout(std430, binding = 1) readonly restrict buffer TransfomBuffer
+layout(std430, binding = 0) readonly restrict buffer TransfomBuffer
 {
-	Transform _transforms[];
+	Object _objects[];
 };
 
 // FUNCTIONS
@@ -37,7 +43,7 @@ vec3 normalPyramid(Ray ray, float intersectDistance, Transform transform);
 // MAIN LOOP
 vec3 computeNormal(Hit hit, Ray ray)
 {
-	Transform object = _transforms[hit.index];
+	Transform object = _objects[hit.index].transform;
 	vec3 normal;
 	switch(hit.type) {
 		case 0: {

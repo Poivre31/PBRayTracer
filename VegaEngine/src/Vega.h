@@ -6,8 +6,11 @@
 #include "Core/Window.h"
 #include "Core/Log.h"
 #include "Core/Timer.h"
-#include "Core/Vec2.h"
-#include "Core/Vec3.h"
+
+#include "Math/Vec2.h"
+#include "Math/Vec3.h"
+#include "Math/Vec3Math.h"
+#include "Math/Mat3x3.h"
 
 #include "Renderer/Shader.h"
 #include "Renderer/ComputeShader.h"
@@ -15,8 +18,17 @@
 #include "Renderer/Mesh2D.h"
 #include "Renderer/ScreenQuad.h"
 #include "Renderer/Texture.h"
+#include "Renderer/TextureManager.h"
 
 #include "ImGui/ImGuiLayer.h"
-#include "ImGui/ImGuiInterface.h"
+#include "ImGui/ImGuiCanvas.h"
+
+#include "Scene/Camera.h"
+#include "Scene/Object.h"
+#include "Scene/Controller.h"
+#include "Scene/Scene.h"
+#include "Scene/Entity.h"
+
+#include "IO/Keys.h"
 
 #include "EntryPoint.h"

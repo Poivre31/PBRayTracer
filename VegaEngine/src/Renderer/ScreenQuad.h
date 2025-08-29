@@ -18,7 +18,7 @@ namespace Vega {
 
 	private:
 		Mesh2D _screenQuad;
-		Shader* _shader;
+		Shader* _shader = nullptr;
 	};
 
 }

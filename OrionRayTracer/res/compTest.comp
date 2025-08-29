@@ -1,10 +1,6 @@
 #version 460 core
 #define M_PI 3.14159265358979
 
-uniform vec3 objectPosition;
-uniform vec3 objectScale;
-uniform vec2 objectRotation;
-
 // STRUCTS
 struct Transform {
 	vec3 position;
@@ -17,10 +13,41 @@ struct Ray {
 	vec3 direction;
 };
 
-struct Camera {
+uniform struct Camera {
 	vec3 position;
-	vec2 direction;
+	vec3 direction;
+	mat3x3 base;
 	float vFov;
+} camera;
+
+struct Light {
+	vec3 direction;
+	vec3 color;
+	float radius;
+} mainLight;
+
+struct Hit {
+	float depth;
+	int index;
+	int type;
+};
+
+struct Object {
+	Transform transform;
+	vec3 color;
+	ivec4 data;
+};
+
+struct Bounce {
+	Ray ray;
+	Hit hit;
+	vec3 normal;
+	vec3 color;
+};
+
+layout(std430, binding = 0) readonly restrict buffer TransfomBuffer
+{
+	Object _objects[];
 };
 
 layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
@@ -31,32 +58,38 @@ vec3 BRDF(vec3 lightColor, vec3 lightDirection, vec3 normal, vec3 color, float a
 	return lightColor * M_PI * color * max(dot(normal,-lightDirection),0) + ambient * color;
 }
 
+vec3 skyColor(vec3 rayDirection);
 Ray generateRay(ivec2 pixelCoords, ivec2 imSize, Camera camera);
+Ray generateRayOffset(ivec2 pixelCoords, ivec2 imSize, Camera camera, vec2 offset);
+Hit launchRay(Ray ray, int originIndex);
+vec3 computeNormal(Hit hit, Ray ray);
 float intersectSphere(Ray ray, Transform object);
-vec3 normalSphere(Ray ray, float intersectDistance, Transform transform);
 
-// MAIN LOOP
+vec3 BRDF(Light light, vec3 normal, vec3 color, float ambient) {
+	return light.color * light.radius * light.radius * M_PI * color * max(dot(normal,-light.direction),0) + ambient * color;
+}
+
 void main()
 {
 	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-	Camera mainCamera;
-	mainCamera.position = vec3(0);
-	mainCamera.direction = vec2(M_PI/2, 0);
-	mainCamera.vFov = 89;
-	Ray ray = generateRay(pixelCoords, imageSize(image), mainCamera);
 
-	vec3 pixelColor = vec3(0);
+	Ray ray = generateRay(pixelCoords, imageSize(image), camera);
 
-	Transform object;
-	object.position = objectPosition;
-	object.scale = objectScale;
-	object.rotation = objectRotation;
+	mainLight.radius = .1;
+	mainLight.direction = vec3(1,0,0);
+	mainLight.color = vec3(30.);
 
-	float dist = intersectSphere(ray, object);
-	if(dist>0) {
-		pixelColor = BRDF(vec3(1), vec3(.4,.3,.8), normalSphere(ray, dist, object), vec3(.8,.2,.3),0.2);
+	vec3 skyColor = pow(.4 * skyColor(ray.direction), vec3(1.,1.,.9));
+	if(dot(ray.direction,-mainLight.direction)>cos(mainLight.radius)) {
+		skyColor = mainLight.color;
+	}
+	int GIsamples = 4;
+	Hit firstHit = launchRay(ray, -1);
+	vec3 pixelColor = skyColor;
+	if(firstHit.index!=-1) {
+		vec3 normal =  computeNormal(firstHit, ray);
+		pixelColor = BRDF(mainLight, normal, _objects[firstHit.index].color, 0.1);
 	}
 
-	
-	imageStore(image, pixelCoords, vec4(pixelColor,1));
+	imageStore(image, pixelCoords, vec4(pixelColor	,1));
 }

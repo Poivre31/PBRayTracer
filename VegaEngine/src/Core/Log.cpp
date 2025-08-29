@@ -15,7 +15,7 @@ namespace Vega {
         const void* userParam
     ) {
         if (type == GL_DEBUG_TYPE_ERROR) {
-            spdlog::error(std::format("[GL ERROR]: {}", message));
+            Log::error(std::format("[GL ERROR]: {}", message));
         }
     }
 

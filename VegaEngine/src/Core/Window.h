@@ -3,13 +3,11 @@
 #include "Log.h"
 #include "OpenGL.h"
 
-struct GLFWwindow;
-
 namespace Vega {
 
 	struct WindowData {
-		UINT width;
-		UINT height;
+		GLuint width;
+		GLuint height;
 		const char* name;
 		bool vsync;
 	};
@@ -17,27 +15,28 @@ namespace Vega {
 	class Window {
 	public:
 		Window();
-		virtual ~Window();
+		~Window();
 
-		static Window* Get();
 		GLFWwindow* GetGLFWWindow();
 
 		GLFWwindow* Create(const WindowData& props);
 		void OnUpdate();
-		void Close();
+		void Shutdown();
 
-		void Resize(UINT width, UINT height);
+		void Resize(GLuint width, GLuint height);
 
-		UINT GetWidth() const;
-		UINT GetHeight() const;
+		GLuint GetWidth() const;
+		GLuint GetHeight() const;
 		bool IsVsync() const;
 		void SetVsync(bool enable);
 
+
 	private:
+
+		static inline bool _GLFWinitialized = false;
+
 		GLFWwindow* _window = nullptr;
 		WindowData _data{};
-		static inline Window* _instance = nullptr;
-		static inline bool _GLFWinitialized = false;
-		static inline bool _GLADinitialized = false;
+		bool _GLADinitialized = false;
 	};
 }

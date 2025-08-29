@@ -12,23 +12,15 @@ project "PBRT"
 
    includedirs{
       "../vendor/glfw/include",
-      "../vendor/glew/include",
       "../vendor/imgui",
       "../vendor/imgui/backends",
       "../vendor/spdlog/include",
    }
 
-   libdirs{"../vendor/glfw/lib","../vendor/glew/lib"}
-   links{"glew32s.lib","glfw3.lib","opengl32.lib"}
-   defines{"GLEW_STATIC"}
 
-   targetdir "bin/%{cfg.buildcfg}"
-   objdir "obj/%{cfg.buildcfg}" 
-
-   filter "system:windows"
-      systemversion "latest"
-      defines { "WL_PLATFORM_WINDOWS" }
-      buildoptions { "/utf-8" }
+   systemversion "latest"
+   defines { "WL_PLATFORM_WINDOWS" }
+   buildoptions { "/utf-8" }
 
    filter "configurations:Debug"
       defines { "WL_DEBUG" }
@@ -42,7 +34,6 @@ project "PBRT"
       symbols "On"
 
    filter "configurations:Dist"
-      kind "WindowedApp"
       defines { "WL_DIST" }
       runtime "Release"
       optimize "On"

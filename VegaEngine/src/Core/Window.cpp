@@ -3,22 +3,18 @@
 
 
 namespace Vega {
-	Window::Window() {
-		Window::_instance = this;
-	}
+
+	extern void CloseEvent(GLFWwindow* window);
+	extern void ResizeEvent(GLFWwindow* window, int width, int height);
+
+	Window::Window() = default;
 
 	Window::~Window() {
-		Close();
-		gladLoaderUnloadGL();
+		if ((bool)_window) {
+			Log::warn("Calling window destructor but window hasn't been shut down");
+		}
 		glfwTerminate();
 		_GLFWinitialized = false;
-	}
-
-	Window* Window::Get() {
-		if (!(bool)Window::_instance) {
-			spdlog::warn("No window created");
-		}
-		return Window::_instance;
 	}
 
 	GLFWwindow* Window::GetGLFWWindow() {
@@ -27,7 +23,7 @@ namespace Vega {
 
 	GLFWwindow* Window::Create(const WindowData& props) {
 		if ((bool)_window) {
-			spdlog::warn(std::format("Window already created '{}', returning first instance", _data.name));
+			Log::warn(std::format("Window already created '{}', returning first instance", _data.name));
 			return _window;
 		}
 
@@ -35,20 +31,23 @@ namespace Vega {
 			int result = glfwInit();
 
 			if (!(bool)result) {
-				spdlog::critical("GLFW initialization failed");
+				Log::error("GLFW initialization failed");
 				return nullptr;
 			}
 
-			spdlog::info("Successfully initialized GLFW");
-			Window::_GLFWinitialized = true;
+			Log::trace("Successfully initialized GLFW");
+			_GLFWinitialized = true;
 		}
+
+#ifdef DEBUG
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif // DEBUG
 
 		_window = glfwCreateWindow((int)props.width, (int)props.height, props.name, nullptr, nullptr);
 		if (!(bool)_window) {
-			spdlog::critical("Window creation failed");
+			Log::error("Window creation failed");
 			return nullptr;
 		}
-		_data = props;
 
 		glfwMakeContextCurrent(_window);
 
@@ -56,48 +55,66 @@ namespace Vega {
 			int result = gladLoadGL(glfwGetProcAddress);
 
 			if (!(bool)result) {
-				spdlog::critical("GLAD initialization failed");
+				Log::error("GLAD initialization failed");
 				return nullptr;
 			}
 
-			spdlog::info("Successfully initialized GLAD");
-			Window::_GLADinitialized = true;
+			Log::trace("Successfully initialized GLAD");
+			_GLADinitialized = true;
 		}
+
+		_data = props;
 
 		glfwSwapInterval((int)props.vsync);
 
-		spdlog::info(std::format("Constructed window '{}' with size ({},{})", props.name, props.width, props.height));
-
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(MessageCallback, 0);
+
+		glClearColor(1, 0, 1, 1);
+
+		glfwSetWindowCloseCallback(_window, CloseEvent);
+		glfwSetWindowSizeCallback(_window, ResizeEvent);
+
+		Log::debug(std::format("Constructed window '{}' with size ({},{})", props.name, props.width, props.height));
 
 		return _window;
 	}
 
 	void Window::OnUpdate() {
+		if (!(bool)_window) {
+			Log::error("Trying to update a non initialised window");
+			return;
+		}
+
 		glfwPollEvents();
+		glViewport(0, 0, (GLsizei)_data.width, (GLsizei)_data.height);
 		glfwSwapBuffers(_window);
 		glFinish();
 	}
 
-	void Window::Close() {
-		if (!(bool)Window::_instance) return;
+	void Window::Shutdown() {
+		if (!(bool)_window) {
+			Log::error("Trying to shutdow a non initialised window");
+			return;
+		}
 
 		glfwDestroyWindow(_window);
 		_window = nullptr;
-		Window::_instance = nullptr;
-		spdlog::info(std::format("Closed window '{}'", _data.name));
+		gladLoaderUnloadGL();
+		_GLADinitialized = false;
+
+		Log::debug(std::format("Closed window '{}'", _data.name));
 	}
 
-	void Window::Resize(UINT width, UINT height) {
+	void Window::Resize(GLuint width, GLuint height) {
 		_data.width = width;
 		_data.height = height;
 	}
 
-	UINT Window::GetWidth() const {
+	GLuint Window::GetWidth() const {
 		return _data.width;
 	}
-	UINT Window::GetHeight() const {
+	GLuint Window::GetHeight() const {
 		return _data.height;
 	}
 	bool Window::IsVsync() const {
@@ -107,4 +124,4 @@ namespace Vega {
 		glfwSwapInterval((int)enable);
 		_data.vsync = enable;
 	}
-} // namespace Vega
+}

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Log.h"
 
 namespace Vega {
 
@@ -9,9 +10,27 @@ namespace Vega {
 		Layer();
 		virtual ~Layer();
 
+#ifdef DEBUG
+		const char* GetName() {
+			return _name;
+		}
+		void SetName(const char* name) {
+			if (!name) {
+				Log::error("Invalid layer name");
+				return;
+			}
+			_name = name;
+		}
+#endif
+
 		virtual void OnAttach();
 		virtual void OnDetach();
 		virtual void OnUpdate();
+		virtual void OnPhysicsUpdate(double timeStep);
+
+	private:
+		const char* _name = "default name";
 	};
+
 }
 

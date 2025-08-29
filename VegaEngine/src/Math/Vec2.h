@@ -11,11 +11,14 @@ public:
 	T x{};
 	T y{};
 
-	Vec2() = default;
+	Vec2() {
+	}
 
-	Vec2(T a) : x(a), y(a) {}
+	Vec2(T a) : x(a), y(a) {
+	}
 
-	Vec2(T x, T y) : x(x), y(y) {}
+	Vec2(T x, T y) : x(x), y(y) {
+	}
 
 	Vec2(const Vec2& ref) {
 		x = ref.x;

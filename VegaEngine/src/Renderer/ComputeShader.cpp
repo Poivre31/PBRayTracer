@@ -5,16 +5,17 @@ namespace Vega {
 
 	ComputeShader::ComputeShader(const char* path) {
 		_pathList = { path };
-		_ID = CreateComputeProgram(_pathList);
+		SetID(CreateComputeProgram(_pathList));
 	}
 
-	ComputeShader::ComputeShader(const std::vector<const char*>& pathList) {
-		_pathList = pathList;
-		_ID = CreateComputeProgram(_pathList);
+	ComputeShader::ComputeShader(const std::vector<const char*>& pathList) : _pathList(pathList) {
+		SetID(CreateComputeProgram(_pathList));
 	}
+
+	ComputeShader::~ComputeShader() = default;
 
 	void ComputeShader::Reload() {
-		_ID = CreateComputeProgram(_pathList);
+		SetID(CreateComputeProgram(_pathList));
 	}
 
 	void ComputeShader::Attach(const char* path) {
@@ -26,24 +27,24 @@ namespace Vega {
 			source << line << "\n";
 		}
 		unsigned int shader = CompileShader(GL_COMPUTE_SHADER, source.str());
-		glAttachShader(_ID, shader);
-		glLinkProgram(_ID);
-		glValidateProgram(_ID);
+		glAttachShader(GetID(), shader);
+		glLinkProgram(GetID());
+		glValidateProgram(GetID());
 
 		glDeleteShader(shader);
 	}
 
-	void ComputeShader::Dispatch1D(int res, int numThread) {
+	void ComputeShader::Dispatch1D(GLuint res, GLuint numThread) {
 		glDispatchCompute((res + numThread - 1) / numThread, 1, 1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}
 
-	void ComputeShader::Dispatch2D(int resX, int resY, int numThreadX, int numThreadY) {
+	void ComputeShader::Dispatch2D(GLuint resX, GLuint resY, GLuint numThreadX, GLuint numThreadY) {
 		glDispatchCompute((resX + numThreadX - 1) / numThreadX, (resY + numThreadY - 1) / numThreadY, 1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}
 
-	void ComputeShader::Dispatch3D(int resX, int resY, int resZ, int numThreadX, int numThreadY, int numThreadZ) {
+	void ComputeShader::Dispatch3D(GLuint resX, GLuint resY, GLuint resZ, GLuint numThreadX, GLuint numThreadY, GLuint numThreadZ) {
 		glDispatchCompute((resX + numThreadX - 1) / numThreadX, (resY + numThreadY - 1) / numThreadY, (resZ + numThreadZ - 1) / numThreadZ);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}

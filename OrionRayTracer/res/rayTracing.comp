@@ -116,6 +116,8 @@ struct Bounce {
 	vec3 color;
 };
 
+float intersectSphere(Ray ray, Transform object);
+
 Bounce computeAmbient(Ray lastRay, Hit lastHit, vec3 normal) {
 	Bounce result;
 	result.ray.origin = lastRay.origin + lastHit.depth * lastRay.direction;

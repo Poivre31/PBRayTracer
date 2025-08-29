@@ -4,11 +4,17 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IO">
+      <UniqueIdentifier>{FD735900-E9FF-870B-52AE-880B3E59880B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ImGui">
       <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
     </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,14 +36,23 @@
     <ClInclude Include="src\Core\Timer.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Vec2.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Vec3.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Window.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\EntryPoint.h" />
-    <ClInclude Include="src\ImGui\ImGuiLayer.h">
+    <ClInclude Include="src\IO\Keys.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\ImGuiCanvas.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui\ImGuiInterface.h">
+    <ClInclude Include="src\ImGui\ImGuiLayer.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenGL.h" />
@@ -59,8 +74,33 @@
     <ClInclude Include="src\Renderer\Shadercompiler.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Texture.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\TextureManager.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Controller.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Object.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vega.h" />
-    <ClInclude Include="src\Renderer\Texture.h" />
+    <ClInclude Include="src\Core\Vec3Math.h" />
+    <ClInclude Include="src\Core\Mat3x3.h" />
+    <ClInclude Include="src\Math\Mat2x2.h" />
+    <ClInclude Include="src\Math\Mat3x3.h" />
+    <ClInclude Include="src\Math\Vec2.h" />
+    <ClInclude Include="src\Math\Vec3.h" />
+    <ClInclude Include="src\Math\Vec3Math.h" />
+    <ClInclude Include="src\Renderer\Buffer.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\Math\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -84,10 +124,13 @@
     <ClCompile Include="src\Core\Window.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui\ImGuiLayer.cpp">
+    <ClCompile Include="src\IO\Keys.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui\ImGuiCanvas.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui\ImGuiInterface.cpp">
+    <ClCompile Include="src\ImGui\ImGuiLayer.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\ComputeShader.cpp">
@@ -108,6 +151,23 @@
     <ClCompile Include="src\Renderer\Shadercompiler.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Renderer\Texture.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\TextureManager.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Camera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Controller.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Object.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\Entity.cpp" />
   </ItemGroup>
 </Project>

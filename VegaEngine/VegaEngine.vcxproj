@@ -153,18 +153,30 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Math\Random.h" />
+    <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\Renderer\Buffer.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Log.h" />
+    <ClInclude Include="src\Core\Mat3x3.h" />
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Core\Vec2.h" />
     <ClInclude Include="src\Core\Vec3.h" />
+    <ClInclude Include="src\Core\Vec3Math.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\IO\Keys.h" />
+    <ClInclude Include="src\ImGui\ImGuiCanvas.h" />
     <ClInclude Include="src\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\ImGui\ImGuiInterface.h" />
+    <ClInclude Include="src\Math\Mat2x2.h" />
+    <ClInclude Include="src\Math\Mat3x3.h" />
+    <ClInclude Include="src\Math\Vec2.h" />
+    <ClInclude Include="src\Math\Vec3.h" />
+    <ClInclude Include="src\Math\Vec3Math.h" />
     <ClInclude Include="src\OpenGL.h" />
     <ClInclude Include="src\Renderer\ComputeShader.h" />
     <ClInclude Include="src\Renderer\Mesh.h" />
@@ -173,9 +185,16 @@
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Renderer\Shadercompiler.h" />
     <ClInclude Include="src\Renderer\Texture.h" />
+    <ClInclude Include="src\Renderer\TextureManager.h" />
+    <ClInclude Include="src\Scene\Camera.h" />
+    <ClInclude Include="src\Scene\Controller.h" />
+    <ClInclude Include="src\Scene\Object.h" />
     <ClInclude Include="src\Vega.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Scene\Entity.cpp" />
+    <ClCompile Include="src\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Core.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
@@ -183,8 +202,9 @@
     <ClCompile Include="src\Core\Log.cpp" />
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
+    <ClCompile Include="src\IO\Keys.cpp" />
+    <ClCompile Include="src\ImGui\ImGuiCanvas.cpp" />
     <ClCompile Include="src\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\ImGui\ImGuiInterface.cpp" />
     <ClCompile Include="src\Renderer\ComputeShader.cpp" />
     <ClCompile Include="src\Renderer\Mesh.cpp" />
     <ClCompile Include="src\Renderer\Mesh2D.cpp" />
@@ -192,6 +212,10 @@
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\Shadercompiler.cpp" />
     <ClCompile Include="src\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Renderer\TextureManager.cpp" />
+    <ClCompile Include="src\Scene\Camera.cpp" />
+    <ClCompile Include="src\Scene\Controller.cpp" />
+    <ClCompile Include="src\Scene\Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">

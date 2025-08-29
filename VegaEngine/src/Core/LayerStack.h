@@ -11,7 +11,7 @@ namespace Vega {
 		~LayerStack();
 
 		void AttachLayer(Layer* layer);
-		void DetachLayer(Layer* layer);
+		void DetachLayers(Layer* layer);
 
 		void ClearLayers();
 
@@ -24,6 +24,7 @@ namespace Vega {
 
 	private:
 		std::vector<Layer*> _layers;
+		std::vector<Layer*> _layerHistory;
 	};
 }
 

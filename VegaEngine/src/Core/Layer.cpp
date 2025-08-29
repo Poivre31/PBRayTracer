@@ -2,9 +2,13 @@
 
 namespace Vega {
 
+	extern void OnLayerDestruction(Layer* layer);
+
 	Layer::Layer() = default;
 
-	Layer::~Layer() = default;
+	Layer::~Layer() {
+		OnLayerDestruction(this);
+	}
 
 	void Layer::OnAttach() {
 
@@ -15,4 +19,7 @@ namespace Vega {
 	void Layer::OnUpdate() {
 
 	}
-} // namespace Vega
+	void Layer::OnPhysicsUpdate(double timeStep) {
+
+	}
+}

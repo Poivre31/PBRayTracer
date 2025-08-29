@@ -2,7 +2,20 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include "spdlog/spdlog.h"
+#include "Core/Log.h"
+
+static void ErrorLog(GLuint program, GLenum statusCheck, const char* errorMessage) {
+	int success = 0;
+	glGetProgramiv(program, statusCheck, &success);
+	if (!success) {
+		int length = 0;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+		std::unique_ptr<char> message = std::make_unique<char>(length);
+		glGetProgramInfoLog(program, length, nullptr, message.get());
+		Log::error(errorMessage);
+		Log::error(message.get());
+	}
+}
 
 GLuint CompileShader(unsigned int type, const std::string& source) {
 	GLuint id = glCreateShader(type);
@@ -10,30 +23,30 @@ GLuint CompileShader(unsigned int type, const std::string& source) {
 	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
 
-	int success;
+	int success = 0;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		int length;
+		int length = 0;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = new char[length];
-		glGetShaderInfoLog(id, length, &length, message);
+		std::unique_ptr<char> message = std::make_unique<char>(length);
+		glGetShaderInfoLog(id, length, &length, message.get());
 
 		switch (type) {
 		case(GL_VERTEX_SHADER):
-			spdlog::error("Failed to compile vertex shader");
+			Log::error("Failed to compile vertex shader");
 			break;
 		case(GL_FRAGMENT_SHADER):
-			spdlog::error("Failed to compile fragment shader");
+			Log::error("Failed to compile fragment shader");
 			break;
 		case(GL_COMPUTE_SHADER):
-			spdlog::error("Failed to compile compute shader");
+			Log::error("Failed to compile compute shader");
 			break;
 		default:
-			spdlog::error("Failed to compile 'unknown type' shader");
+			Log::error("Failed to compile 'unknown type' shader");
 		}
 
-		printf("%s \n", message);
+		Log::info(message.get());
 		glDeleteShader(id);
 		return id;
 	}
@@ -49,7 +62,6 @@ GLuint CreateComputeProgram(const std::vector<const char*>& pathList) {
 	std::vector<GLuint> shaderList(pathList.size());
 
 	int i = 0;
-	int success = 0;
 	for (std::string path : pathList)
 	{
 		stream = std::ifstream(path);
@@ -63,26 +75,10 @@ GLuint CreateComputeProgram(const std::vector<const char*>& pathList) {
 	}
 
 	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &success);
-	if (!success) {
-		int length;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-		char* message = new char[length];
-		glGetProgramInfoLog(program, length, nullptr, message);
-		spdlog::error("Program linking failed: ");
-		spdlog::error(message);
-	}
+	ErrorLog(program, GL_LINK_STATUS, "Program linking failed");
 
 	glValidateProgram(program);
-	glGetProgramiv(program, GL_VALIDATE_STATUS, &success);
-	if (!success) {
-		int length;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-		char* message = new char[length];
-		glGetProgramInfoLog(program, length, nullptr, message);
-		spdlog::error("Program linking failed: ");
-		spdlog::error(message);
-	}
+	ErrorLog(program, GL_VALIDATE_STATUS, "Program validation failed");
 
 	for (auto shader : shaderList) {
 		glDeleteShader(shader);
@@ -97,7 +93,6 @@ GLuint CreateProgram(const char* vertPath, const char* fragPath) {
 	std::string line;
 	GLuint program = glCreateProgram();
 
-	int success = 0;
 	stream = std::ifstream(vertPath);
 	while (getline(stream, line)) {
 		source << line << "\n";
@@ -114,26 +109,10 @@ GLuint CreateProgram(const char* vertPath, const char* fragPath) {
 	glAttachShader(program, fragShader);
 
 	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &success);
-	if (!success) {
-		int length;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-		char* message = new char[length];
-		glGetProgramInfoLog(program, length, nullptr, message);
-		spdlog::error("Program linking failed: ");
-		spdlog::error(message);
-	}
+	ErrorLog(program, GL_LINK_STATUS, "Program linking failed");
 
 	glValidateProgram(program);
-	glGetProgramiv(program, GL_VALIDATE_STATUS, &success);
-	if (!success) {
-		int length;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-		char* message = new char[length];
-		glGetProgramInfoLog(program, length, nullptr, message);
-		spdlog::error("Program linking failed: ");
-		spdlog::error(message);
-	}
+	ErrorLog(program, GL_VALIDATE_STATUS, "Program validation failed");
 
 	glDeleteShader(vertShader);
 	glDeleteShader(fragShader);

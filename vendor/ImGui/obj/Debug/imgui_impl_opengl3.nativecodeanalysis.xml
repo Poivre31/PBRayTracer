@@ -2,7 +2,7 @@
 <DEFECTS>
   <DEFECT>
     <SFA>
-      <FILEPATH>C:\Users\raphb\Documents\C_projects\HelloWorld\vendor\ImGui\backends\</FILEPATH>
+      <FILEPATH>C:\Users\rapha\Documents\Projets\CPP\PBRT\vendor\ImGui\backends\</FILEPATH>
       <FILENAME>imgui_impl_opengl3_loader.h</FILENAME>
       <LINE>814</LINE>
       <COLUMN>18</COLUMN>
@@ -16,7 +16,7 @@
   </DEFECT>
   <DEFECT>
     <SFA>
-      <FILEPATH>C:\Users\raphb\Documents\C_projects\HelloWorld\vendor\ImGui\backends\</FILEPATH>
+      <FILEPATH>C:\Users\rapha\Documents\Projets\CPP\PBRT\vendor\ImGui\backends\</FILEPATH>
       <FILENAME>imgui_impl_opengl3.cpp</FILENAME>
       <LINE>332</LINE>
       <COLUMN>14</COLUMN>
@@ -30,7 +30,7 @@
   </DEFECT>
   <DEFECT>
     <SFA>
-      <FILEPATH>C:\Users\raphb\Documents\C_projects\HelloWorld\vendor\ImGui\backends\</FILEPATH>
+      <FILEPATH>C:\Users\rapha\Documents\Projets\CPP\PBRT\vendor\ImGui\backends\</FILEPATH>
       <FILENAME>imgui_impl_opengl3.cpp</FILENAME>
       <LINE>849</LINE>
       <COLUMN>10</COLUMN>

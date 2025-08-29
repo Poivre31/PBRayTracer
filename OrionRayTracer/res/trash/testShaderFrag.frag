@@ -3,8 +3,8 @@
 out vec4 pixelColor;
 layout(location = 1) in vec2 UVs;
 
-uniform float t;
+//uniform float t;
 
 void main() {
-	pixelColor = vec4(UVs,(1 + sin(t))/2,1);
+	pixelColor = vec4(UVs,0,1);
 }

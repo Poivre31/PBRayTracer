@@ -11,7 +11,7 @@ namespace Vega {
 		shader->Use();
 
 		glBindVertexArray(_vertexArray);
-		glDrawArrays(GL_TRIANGLES, 0, _nVertices);
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_nVertices);
 	}
 
 }

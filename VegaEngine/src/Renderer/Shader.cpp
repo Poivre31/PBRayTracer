@@ -1,17 +1,31 @@
 #include "Shader.h"
+#include <span>
 
 namespace Vega {
 
 	Shader::Shader(const char* pathVertex, const char* pathFrag) : _pathVertex(pathVertex), _pathFrag(pathFrag) {
-		_ID = CreateProgram(pathVertex, pathFrag);
+		SetID(CreateProgram(pathVertex, pathFrag));
 	}
 
+	Shader::~Shader() {
+		glDeleteProgram(_ID);
+	}
+
+
 	void Shader::Reload() {
-		_ID = CreateProgram(_pathVertex, _pathFrag);
+		SetID(CreateProgram(_pathVertex, _pathFrag));
 	}
 
 	void Shader::Use() const {
 		glUseProgram(_ID);
+	}
+
+	GLuint Shader::GetID() {
+		return _ID;
+	}
+
+	void Shader::SetID(GLuint ID) {
+		_ID = ID;
 	}
 
 	void Shader::SetInt(const char* variable, int value) {
@@ -23,7 +37,7 @@ namespace Vega {
 		Use();
 		glUniform2i(glGetUniformLocation(_ID, variable), a, b);
 	}
-	void Shader::SetInt2(const char* variable, int* adress) {
+	void Shader::SetInt2(const char* variable, std::span<const int,2> adress) {
 		Use();
 		glUniform2i(glGetUniformLocation(_ID, variable), adress[0], adress[1]);
 	}
@@ -32,7 +46,7 @@ namespace Vega {
 		Use();
 		glUniform3i(glGetUniformLocation(_ID, variable), a, b, c);
 	}
-	void Shader::SetInt3(const char* variable, int* adress) {
+	void Shader::SetInt3(const char* variable, std::span<const int,3> adress) {
 		Use();
 		glUniform3i(glGetUniformLocation(_ID, variable), adress[0], adress[1], adress[2]);
 	}
@@ -46,7 +60,7 @@ namespace Vega {
 		Use();
 		glUniform2f(glGetUniformLocation(_ID, variable), a, b);
 	}
-	void Shader::SetFloat2(const char* variable, float* adress) {
+	void Shader::SetFloat2(const char* variable, std::span<const float,2> adress) {
 		Use();
 		glUniform2f(glGetUniformLocation(_ID, variable), adress[0], adress[1]);
 	}
@@ -55,10 +69,16 @@ namespace Vega {
 		Use();
 		glUniform3f(glGetUniformLocation(_ID, variable), a, b, c);
 	}
-	void Shader::SetFloat3(const char* variable, float* adress) {
+	void Shader::SetFloat3(const char* variable, std::span<const float,3> adress) {
 		Use();
 		glUniform3f(glGetUniformLocation(_ID, variable), adress[0], adress[1], adress[2]);
 	}
+
+	void Shader::SetMat3x3(const char* variable, float* adress, bool transpose) {
+		Use();
+		glUniformMatrix3fv(glGetUniformLocation(_ID, variable),1,GL_TRUE,adress);
+	}
+
 
 	//void Shader::AttachFloatRef(const char* variable, float* data, int count) {
 	//	_floatVariables.push_back({ variable, count, data });

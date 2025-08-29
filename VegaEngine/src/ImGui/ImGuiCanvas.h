@@ -4,9 +4,12 @@
 
 namespace Vega {
 
-	class ImGuiInterface
+	class ImGuiCanvas
 	{
 	public:
+		ImGuiCanvas() = default;
+		virtual ~ImGuiCanvas() = default;
+
 		virtual void Draw() = 0;
 	};
 

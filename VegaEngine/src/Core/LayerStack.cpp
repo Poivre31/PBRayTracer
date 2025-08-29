@@ -5,28 +5,42 @@ namespace Vega {
 
 	LayerStack::LayerStack() = default;
 
-	LayerStack::~LayerStack() = default;
+	LayerStack::~LayerStack() {
+		ClearLayers();
+		for (auto* layer : _layerHistory)
+		{
+			delete layer;
+		}
+		_layerHistory.clear();
+	}
 
 	void LayerStack::AttachLayer(Layer* layer) {
 		layer->OnAttach();
 		_layers.push_back(layer);
+		_layerHistory.push_back(layer);
 	}
 
-	void LayerStack::DetachLayer(Layer* layer) {
-		int i = 0;
-		for (Layer* layerIt : _layers)
+	void LayerStack::DetachLayers(Layer* layer) {
+		for (auto it = _layers.begin(); it!= _layers.end();)
 		{
-			if (layer == layerIt) {
+			if (layer == *it) {
 				layer->OnDetach();
-				_layers.erase(begin() + i);
-				return;
+				it = _layers.erase(it);
+#ifdef DEBUG
+				Log::debug(std::format("Detached layer: '{}'", layer->GetName()));
+#endif 
 			}
-			i++;
+			else {
+				it++;
+			}
 		}
-		spdlog::warn("Layer not found in Layer Stack during detach call");
 	}
 
 	void LayerStack::ClearLayers() {
+		for (auto layer: _layers)
+		{
+			layer->OnDetach();
+		}
 		_layers.clear();
 	}
-} // namespace Vega
+}

@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Application.h"
 
-extern std::unique_ptr <Vega::Application> Vega::CreateApplication();
+extern std::unique_ptr<Vega::Application> Vega::CreateApplication();
 
 #ifdef DIST
 
@@ -17,5 +17,5 @@ int main() {
 	app->Run();
 }
 
-#endif // 
+#endif
 

@@ -1,5 +1,4 @@
 project "OrionRayTracer"
-   kind "ConsoleApp"
    language "C++"
    cppdialect "C++23"
    targetdir "../bin/%{cfg.buildcfg}"
@@ -42,19 +41,19 @@ project "OrionRayTracer"
    staticruntime "On"
 
    filter { "configurations:Debug" }
-      entrypoint "mainCRTStartup"
+      kind "ConsoleApp"
       defines { "DEBUG" }
       optimize "Off"
       symbols "On"
 
    filter { "configurations:Release" }
-      entrypoint "mainCRTStartup"
+      kind "ConsoleApp"
       defines { "RELEASE" }
       optimize "On"
       symbols "On"
 
    filter { "configurations:Dist" }
-      entrypoint "wWinMainCRTStartup"
+      kind "WindowedApp"
       defines { "DIST" }
       optimize "On"
       symbols "Off"
