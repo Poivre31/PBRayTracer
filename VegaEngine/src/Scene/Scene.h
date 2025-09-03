@@ -1,14 +1,55 @@
 #pragma once
-#include "Camera.h"
-#include "Core/Layer.h"
-#include "Core/Application.h"
 #include "Renderer/Buffer.h"
-#include "Entity.h"
 #include "Math/Random.h"
 #include <iostream>
 #include "Renderer/Shader.h"
+#include "Entity.h"
+#include "Core/Layer.h"
+#include <array>
 
 namespace Vega {
+
+	struct float4 {
+		float x;
+		float y;
+		float z;
+		float w;
+	};
+
+	struct int4 {
+		int x;
+		int y;
+		int z;
+		int w;
+	};
+
+	struct Transform {
+		float4 position{};
+		float4 scale{};
+		float4 rotation{};
+		//int4 parameters{};
+	};
+
+	struct Material {
+		float4 color{};
+	};
+
+	class Object : public Entity {
+
+	public:
+		CRigidBody rigidBody;
+		CRTPrimitive rtobject;
+
+		void OnUpdate() {
+
+		}
+
+		void OnPhysicsUpdate(double timeStep) {
+			rigidBody.AddForce(Vec3(0., 0., -.0098));
+			rigidBody.AddForce(-.3 * rigidBody.GetVelocity());
+			rigidBody.Update(timeStep);
+		}
+	};
 
 	struct RTObject {
 		Transform transform;
@@ -24,38 +65,43 @@ namespace Vega {
 	class Scene : public Layer {
 	public:
 
-		void BindSSBO(GLuint slot) {
-			_transformsBuffer.Bind(slot);
+		void BindSSBO(GLuint slotTransform, GLuint slotColor) {
+			_transformsBuffer.Bind(slotTransform);
+			_colorsBuffer.Bind(slotColor);
 		}
 
-		virtual void OnPhysicsUpdate(double timeStep) {
+		void OnPhysicsUpdate(double timeStep) override {
 			for (auto& body : _entities)
 			{
-				body.Update(timeStep);
+				body.OnPhysicsUpdate(timeStep);
 			}
 		}
 
 		void ParseTransforms(Shader* rtShader) {
+			_transforms.resize(_entities.size());
+			_colors.resize(_entities.size());
 
-			int baseIndices[7]{};
-			for (int i = 1; i < 7; i++)
+			std::array<int, 7> baseIndices{};
+			for (size_t i = 1; i < 7; i++)
 			{
 				baseIndices[i] = baseIndices[i - 1] + _primitiveCounts[i - 1];
 			}
 
-			int i[7]{};
+			std::array<int, 7> i{};
 			for (auto& body : _entities)
 			{
-				int index = i[body.GetPrimitiveType()] + baseIndices[body.GetPrimitiveType()];
-				_transforms[index].transform.position = Vec3ToFloat4(body.GetPosition());
-				_transforms[index].transform.scale = Vec3ToFloat4(body.GetScale());
-				_transforms[index].transform.rotation = Vec3ToFloat4(body.GetOrientation());
-				_transforms[index].color = Vec3ToFloat4(body.GetColor());
-				_transforms[index].data = int4(body.GetPrimitiveType(), 0, 0, 0);
-				i[body.GetPrimitiveType()]++;
+				int type = (int)body.rtobject.GetPrimitiveType();
+				int index = i[type] + baseIndices[type];
+				_transforms[index].position = Vec3ToFloat4(body.rigidBody.GetPosition());
+				_transforms[index].scale = Vec3ToFloat4(body.rigidBody.GetScale());
+				auto rtp = cart2sph(body.rigidBody.GetRotation());
+				_transforms[index].rotation = Vec3ToFloat4(Vec3<double>(rtp.x, rtp.y,0.));
+				_colors[index] = Vec3ToFloat4(body.rtobject.GetColor());
+				i[type]++;
 			}
 
-			_transformsBuffer.UpdateData(_transforms, _entities.size());
+			_transformsBuffer.UpdateData(_transforms.data(), _entities.size());
+			_colorsBuffer.UpdateData(_colors.data(), _entities.size());
 			rtShader->SetInt("count.sphere", _primitiveCounts[PrimitiveType::sphere]);
 			rtShader->SetInt("count.cube", _primitiveCounts[PrimitiveType::cube]);
 			rtShader->SetInt("count.plane", _primitiveCounts[PrimitiveType::plane]);
@@ -65,55 +111,55 @@ namespace Vega {
 			rtShader->SetInt("count.pyramid", _primitiveCounts[PrimitiveType::pyramid]);
 		}
 
-		void SetCamera(Camera& camera) {
-			_camera = &camera;
-		}
-
-		void AddEntities(const std::vector<Entity>& entities) {
+		void AddEntities(const std::vector<Object>& entities) {
 			if (entities.size() + _entities.size() > 4096) {
 				Log::error("Trying to add more objects than the limit set at 4096");
 				return;
 			}
 			_entities.append_range(entities);
-			
+
 			//if(_transformsBuffer.GetReservedSize() < sizeof(Transform) * _entities.size())
 			_transformsBuffer.Reserve(sizeof(RTObject) * _entities.size());
-
+			_colorsBuffer.Reserve(sizeof(RTObject) * _entities.size());
 			for (auto& newBody : entities)
 			{
-				_primitiveCounts[newBody.GetPrimitiveType()]++;
+				_primitiveCounts[newBody.rtobject.GetPrimitiveType()]++;
 			}
 		}
 
 		void ClearEntities() {
-			std::memset(_primitiveCounts, 0, 7);
-			std::memset(_transforms, 0, 4096);
+			_primitiveCounts.fill(0);
+			_transforms.clear();
+			_colors.clear();
 			_entities.clear();
 			//_transformsBuffer.Zero();
 		}
 
 		static void RandomScene(Scene* scene, size_t nEntities) {
 			scene->ClearEntities();
-			std::vector<Entity> entities;
+			std::vector<Object> entities;
 			entities.reserve(nEntities);
 			for (size_t i = 0; i < nEntities; i++)
 			{
-				Entity entity;
-				entity.SetPosition(Random::RandVec3d(-1., 1.));
-				entity.SetScale(Random::RandVec3d(0.01, 0.04));
-				entity.SetColor(Random::RandVec3f(0., 1.));
-				entity.SetPrimitiveType(PrimitiveType(Random::RandInt(0,7)));
+				Object entity;
+				entity.rigidBody.SetPosition(Random::RandVec3f(-1.f, 1.f));
+				entity.rigidBody.SetScale(Random::RandVec3f(0.06f, 0.12f));
+				entity.rigidBody.SetRotation(sph2cart(Vec3<double>(1., Random::RandDouble(0, M_PI), Random::RandDouble(0, 2 * M_PI))));
+				entity.rigidBody.SetMass(Random::RandDouble(0.1, 10.));
+				entity.rtobject.SetColor(Random::RandVec3f(0.f, 1.f));
+				entity.rtobject.SetPrimitiveType(PrimitiveType(Random::RandInt(0, 6)));
 				entities.push_back(entity);
 			}
 			scene->AddEntities(entities);
 		}
 
 	private:
-		Camera* _camera = nullptr;
-		std::vector<Entity> _entities;
-		RTObject _transforms[4096]{};
+		std::vector<Object> _entities;
+		std::vector<Transform> _transforms;
+		std::vector<float4> _colors;
 		SSBO _transformsBuffer;
-		int _primitiveCounts[7];
+		SSBO _colorsBuffer;
+		std::array<int, 7> _primitiveCounts{};
 	};
 
 }

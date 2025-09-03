@@ -16,6 +16,7 @@ project "OrionRayTracer"
       "../vendor/ImGui",
       "../vendor/ImGui/backends",
       "../vendor/ImGui/misc/cpp",
+      -- "../vendor/gsl",
       "../VegaEngine/src",
    }
 

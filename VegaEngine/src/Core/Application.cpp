@@ -47,11 +47,12 @@ namespace Vega {
 		Log::trace("### LAUNCHING ###\n", Log::Color::Yellow);
 		_instance = this;
 		_window = new Window();
-		GLFWwindow* glfwWindow = _window->Create({ defaultWidth, defaultHeight, "Orion Ray Tracer", false });
+		_glfwWindow = _window->Create({ defaultWidth, defaultHeight, "Orion Ray Tracer", true });
 
 		_running = true;
 		_initialised = true;
 
+		_scene = std::make_unique<Scene>();
 		Timer::Init();
 
 		Log::info("Launched Vega engine");
@@ -76,6 +77,8 @@ namespace Vega {
 			{
 				layer->OnUpdate();
 			}
+			if(_scene)
+				_scene->OnUpdate();
 
 			Timer::OnUpdate();
 
@@ -87,6 +90,8 @@ namespace Vega {
 			{
 				layer->OnPhysicsUpdate(deltaTime);
 			}
+			if(_scene)
+				_scene->OnPhysicsUpdate(deltaTime);
 
 
 			_window->OnUpdate();

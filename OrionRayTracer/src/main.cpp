@@ -5,10 +5,17 @@
 #include<stdlib.h>
 #include <numbers>
 
+class Camera : Vega::Entity {
+public:
+	Vega::CCamera camera;
+	Vega::CController controller;
+};
+
 class ComputeLayer : public Vega::Layer {
 public:
 
 	void OnAttach() override {
+		_scene = Vega::Application::Get()->GetScene();
 		_shader = std::make_unique<Vega::ComputeShader>(std::vector<const char*>{
 			"res/compTest.comp",
 			"res/rayGeneration.comp",
@@ -30,11 +37,11 @@ public:
 		Vega::TextureManager::BindTextureSlot(*_image, { Vega::TextureReadMode::Sampler,0 });
 		_shader->SetInt("screenTexture", 0);
 
-		_camera.SetFov(65.f);
-		_camera.SetPosition(Vec3(-1., 0., 0.));
-		_camera.SetMass(.2);
+		_camera.camera.SetFov(65.f);
+		_camera.camera.SetPosition(Vec3(-1., 0., 0.));
+		_camera.controller.SetMass(.2);
 
-		Vega::Scene::RandomScene(&_scene, 1024);
+		Vega::Scene::RandomScene(_scene, 200);
 	}
 
 	void OnUpdate() override {
@@ -42,22 +49,18 @@ public:
 			_shader->Reload();
 		}
 
-		_scene.ParseTransforms(_shader.get());
-		_scene.BindSSBO(0);
+		_scene->ParseTransforms(_shader.get());
+		_scene->BindSSBO(0,1);
 		_shader->Use();
+		_shader->SetInt("frameIndex", (int)Vega::Timer::GetFrameCount());
 		_width = Vega::Application::Get()->GetWindow()->GetWidth();
 		_height = Vega::Application::Get()->GetWindow()->GetHeight();
 		Vega::TextureManager::UpdateTexture(*_image, _width, _height);
-		_shader->SetFloat3("objectPosition", std::span<float, 3>(_object->transform.position.GetAdress(), 3));
-		_shader->SetFloat3("objectScale", std::span<float, 3>(_object->transform.scale.GetAdress(), 3));
-		_shader->SetFloat2("objectRotation", std::span<float, 2>(_object->transform.rotation.GetAdress(), 2));
-		Vec3<float> position = _camera.GetPosition();
-		Vec3<float> direction = _camera.GetOrientation();
+		Vec3<float> position = _camera.camera.GetPosition();
 		_shader->SetFloat3("camera.position", position.x, position.y, position.z);
-		_shader->SetFloat3("camera.direction", direction.x, direction.y, direction.z);
-		auto mat = Mat3x3f(_camera.GetTransformationMatrix());
+		auto mat = Mat3x3f(_camera.camera.GetTransformationMatrix());
 		_shader->SetMat3x3("camera.base",&mat.a1);
-		_shader->SetFloat("camera.vFov", _camera.GetFov());
+		_shader->SetFloat("camera.vFov", _camera.camera.GetFov());
 
 		_shader->Dispatch2D(_width, _height, _threadSizeX, _threadSizeY);
 	}
@@ -72,11 +75,11 @@ public:
 		else
 			glfwSetInputMode(Vega::Application::Get()->GetWindow()->GetGLFWWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-		_camera.Rotate(timeStep, keys);
+		_camera.controller.Rotate(keys);
+		_camera.controller.Move(keys, _camera.camera.GetTransformationMatrix());
 
-		Vega::Controller::Move(&_camera, keys, _camera.GetTransformationMatrix());
-
-		_camera.Update(timeStep);
+		_camera.controller.Update(timeStep);
+		_camera.camera.ConstructCameraView(_camera.controller);
 	}
 
 private:
@@ -84,13 +87,12 @@ private:
 	GLuint _height = Vega::Application::Get()->GetWindow()->GetHeight();
 	std::unique_ptr<Vega::ComputeShader> _shader;
 	std::unique_ptr <Vega::Texture> _image = std::make_unique<Vega::Texture>(Vega::TextureData{ _width, _height, GL_RGBA32F });
-	Vega::Object2* _object = &Vega::Application::Get()->sphere;
 
 	GLuint _threadSizeX = 16;
 	GLuint _threadSizeY = 16;
 
-	Vega::Camera _camera;
-	Vega::Scene _scene;
+	Camera _camera;
+	Vega::Scene* _scene = nullptr;
 };
 
 class RunLayer : public Vega::Layer {
@@ -124,7 +126,7 @@ public:
 
 private:
 	std::unique_ptr<Vega::Shader> shader = std::make_unique<Vega::Shader>("res/fullScreenQuad.vert", "res/fullScreenQuad.frag");
-
+	Vega::Scene _scene;
 };
 
 std::unique_ptr<Vega::Application> Vega::CreateApplication() {

@@ -17,6 +17,7 @@ project "VegaEngine"
       "../vendor/ImGui",
       "../vendor/ImGui/backends",
       "../vendor/ImGui/misc/cpp",
+      -- "../vendor/gsl",
       "src",
    }
 

@@ -23,9 +23,6 @@
 #include "ImGui/ImGuiLayer.h"
 #include "ImGui/ImGuiCanvas.h"
 
-#include "Scene/Camera.h"
-#include "Scene/Object.h"
-#include "Scene/Controller.h"
 #include "Scene/Scene.h"
 #include "Scene/Entity.h"
 

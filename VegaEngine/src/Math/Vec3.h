@@ -3,6 +3,8 @@
 #include <math.h>
 #include <iostream>
 #include <span>
+#include <concepts>
+#include <type_traits>
 
 #define M_PI 3.14159265358979
 
