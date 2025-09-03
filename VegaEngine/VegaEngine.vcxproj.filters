@@ -10,11 +10,17 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Renderer">
       <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Components">
+      <UniqueIdentifier>{E8C60300-D4BF-2252-FDF1-07D7E949025E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,12 +42,6 @@
     <ClInclude Include="src\Core\Timer.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Vec2.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Vec3.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\Window.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -55,7 +55,28 @@
     <ClInclude Include="src\ImGui\ImGuiLayer.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Math\Mat2x2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Mat3x3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Random.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vec2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vec3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\Vec3Math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpenGL.h" />
+    <ClInclude Include="src\Renderer\Buffer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Renderer\ComputeShader.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -80,27 +101,30 @@
     <ClInclude Include="src\Renderer\TextureManager.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Camera.h">
+    <ClInclude Include="src\Scene\Components\Camera.h">
+      <Filter>Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Components\Controller.h">
+      <Filter>Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Components\RTPrimitive.h">
+      <Filter>Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Components\RigidBody.h">
+      <Filter>Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Components\Transform.h">
+      <Filter>Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Entity.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Controller.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\Object.h">
+    <ClInclude Include="src\Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Vega.h" />
-    <ClInclude Include="src\Core\Vec3Math.h" />
-    <ClInclude Include="src\Core\Mat3x3.h" />
-    <ClInclude Include="src\Math\Mat2x2.h" />
-    <ClInclude Include="src\Math\Mat3x3.h" />
-    <ClInclude Include="src\Math\Vec2.h" />
-    <ClInclude Include="src\Math\Vec3.h" />
-    <ClInclude Include="src\Math\Vec3Math.h" />
-    <ClInclude Include="src\Renderer\Buffer.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Scene\Entity.h" />
-    <ClInclude Include="src\Math\Random.h" />
+    <ClInclude Include="src\Scene\DefaultEntityTypes.h" />
+    <ClInclude Include="src\IO\IOLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -133,6 +157,9 @@
     <ClCompile Include="src\ImGui\ImGuiLayer.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\Buffer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Renderer\ComputeShader.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -157,17 +184,5 @@
     <ClCompile Include="src\Renderer\TextureManager.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Camera.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Controller.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Object.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Scene\Entity.cpp" />
   </ItemGroup>
 </Project>

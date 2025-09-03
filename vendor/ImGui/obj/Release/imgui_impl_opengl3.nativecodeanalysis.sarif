@@ -1,0 +1,165 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Return value ignored: 'sscanf'."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/rapha/Documents/Projets/CPP/PBRT/vendor/ImGui/backends/imgui_impl_opengl3_loader.h"
+                },
+                "region": {
+                  "startLine": 814,
+                  "startColumn": 13,
+                  "endLine": 814,
+                  "endColumn": 65
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "parse_version",
+                  "decoratedName": "parse_version",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Return value ignored: 'sscanf'."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/rapha/Documents/Projets/CPP/PBRT/vendor/ImGui/backends/imgui_impl_opengl3.cpp"
+                },
+                "region": {
+                  "startLine": 332,
+                  "startColumn": 9,
+                  "endLine": 332,
+                  "endColumn": 50
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui_ImplOpenGL3_Init",
+                  "decoratedName": "?ImGui_ImplOpenGL3_Init@@YA_NPEBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Return value ignored: 'sscanf'."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/rapha/Documents/Projets/CPP/PBRT/vendor/ImGui/backends/imgui_impl_opengl3.cpp"
+                },
+                "region": {
+                  "startLine": 849,
+                  "startColumn": 5,
+                  "endLine": 849,
+                  "endColumn": 51
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui_ImplOpenGL3_CreateDeviceObjects",
+                  "decoratedName": "?ImGui_ImplOpenGL3_CreateDeviceObjects@@YA_NXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.44.35214.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "f9c419ae746da20050dc6f4edecceea330fe2226295902e2e16cd942470a2f80"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/rapha/Documents/Projets/CPP/PBRT/vendor/ImGui/backends/imgui_impl_opengl3_loader.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "604a47c351771b58f1c16f6e081be57b79f9e4c6776c6d30cfef75ca69560067"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "93ee6f84f8881c26bc162db88b1ed5b975e768551252f3c08165b9f1742472bc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "227a8cfdc91e0fdf1ba7b3cc466ef5a2d7eb3b89e1b86dee400cd086bdd72d3f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/rapha/documents/projets/cpp/pbrt/vendor/imgui/backends/imgui_impl_opengl3.h"
+          },
+          "hashes": {
+            "sha-256": "71b539858c991a83b4ebf5d7d56cbb5031cc6b8887280ebde859659f198de2c2"
+          }
+        }
+      ]
+    }
+  ]
+}

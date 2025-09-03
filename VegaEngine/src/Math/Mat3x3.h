@@ -2,7 +2,9 @@
 #include "Vec3Math.h"
 #include <print>
 
-
+/// 3x3 matrix of doubles. 
+/// Default constructor returns the identity matrix.
+/// Matrix/Matrix and Matrix/Vector multiplication using Mul(A,B).
 class Mat3x3 {
 public:
 	double a1 = 0, a2 = 0, a3 = 0;
@@ -28,6 +30,21 @@ public:
 		c1 = 0.;
 		c2 = 0.;
 		c3 = 1.;
+	}
+
+	Mat3x3(double x)
+		: L1(a1, a2, a3), L2(b1, b2, b3), L3(c1, c2, c3),
+		C1(a1, b1, c1), C2(a2, b2, c2), C3(a3, b3, c3)
+	{
+		a1 = x;
+		a2 = x;
+		a3 = x;
+		b1 = x;
+		b2 = x;
+		b3 = x;
+		c1 = x;
+		c2 = x;
+		c3 = x;
 	}
 
 	Mat3x3(const Mat3x3& M)
@@ -119,6 +136,9 @@ public:
 		return det;
 	}
 
+	/// <summary>
+	/// Element wise multiplication of A and B
+	/// </summary>
 	friend Mat3x3 operator*(Mat3x3 A, const Mat3x3& B) {
 		Mat3x3 M;
 		M.a1 = A.a1 * B.a1;
@@ -130,6 +150,20 @@ public:
 		M.c1 = A.c1 * B.c1;
 		M.c2 = A.c2 * B.c2;
 		M.c3 = A.c3 * B.c3;
+		return M;
+	}
+
+	friend Mat3x3 operator*(float a, const Mat3x3& B) {
+		Mat3x3 M;
+		M.a1 = a * B.a1;
+		M.a2 = a * B.a2;
+		M.a3 = a * B.a3;
+		M.b1 = a * B.b1;
+		M.b2 = a * B.b2;
+		M.b3 = a * B.b3;
+		M.c1 = a * B.c1;
+		M.c2 = a * B.c2;
+		M.c3 = a * B.c3;
 		return M;
 	}
 
@@ -250,5 +284,9 @@ public:
 		c1 = (float)M.c1;
 		c2 = (float)M.c2;
 		c3 = (float)M.c3;
+	}
+
+	float* GetAdress() {
+		return &a1;
 	}
 };

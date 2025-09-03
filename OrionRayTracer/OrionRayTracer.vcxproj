@@ -161,6 +161,8 @@
   <ItemGroup>
     <ClInclude Include="src\DebugWindow.h" />
     <ClInclude Include="src\ObjectManager.h" />
+    <ClInclude Include="src\RayTracing.h" />
+    <ClInclude Include="src\ScreenDisplay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />

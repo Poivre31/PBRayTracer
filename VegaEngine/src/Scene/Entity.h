@@ -1,48 +1,29 @@
 #pragma once
-#include "Object.h"
-#include "Core/Application.h"
+#include "Components/Camera.h"
+#include "Components/Controller.h"
+#include "Components/RigidBody.h"
+#include "Components/RTPrimitive.h"
+#include "Components/Transform.h"
 
 namespace Vega {
 
-	enum PrimitiveType {
-		sphere = 0,
-		cube = 1,
-		plane = 2,
-		circle = 3,
-		cylinder = 4,
-		cone = 5,
-		pyramid = 6
-	};
+	class Entity {
 
-	class RTPrimitive {
 	public:
-		RTPrimitive() = default;
-		RTPrimitive(PrimitiveType type) : _type(type) {}
-
-		void SetColor(Vec3<float> color) {
-			_color = color;
-		}
-		Vec3<float> GetColor() const {
-			return _color;
+		size_t GetID() {
+			return _ID;
 		}
 
-		void SetPrimitiveType(PrimitiveType type) {
-			_type = type;
-		}
-		PrimitiveType GetPrimitiveType() const {
-			return _type;
+		virtual void OnUpate() {
+
 		}
 
+		virtual void OnPhysicsUpdate(double deltaTime) {
+
+		}
 
 	private:
-		Vec3<float> _color{};
-		PrimitiveType _type = PrimitiveType::sphere;
-	};
-
-	class Entity : public RigidBody, public RTPrimitive
-	{
-
+		size_t _ID;
 	};
 
 }
-

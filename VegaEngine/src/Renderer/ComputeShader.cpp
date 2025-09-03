@@ -3,12 +3,22 @@
 
 namespace Vega {
 
-	ComputeShader::ComputeShader(const char* path) {
+	ComputeShader::ComputeShader(const std::string& path) {
 		_pathList = { path };
 		SetID(CreateComputeProgram(_pathList));
 	}
 
-	ComputeShader::ComputeShader(const std::vector<const char*>& pathList) : _pathList(pathList) {
+	ComputeShader::ComputeShader(const std::vector<std::string>& pathList) : _pathList(pathList) {
+		SetID(CreateComputeProgram(_pathList));
+	}		
+	
+	ComputeShader::ComputeShader(const std::string& directory, const std::string& extension ) {
+		for (const auto& file : std::filesystem::directory_iterator(directory)) {
+			//if (std::any_of(begin(extensions), end(extensions), [file](std::string a) {return a == file.path().extension(); })) {
+			if (extension == file.path().extension()) {
+				_pathList.push_back(file.path().string());
+			}
+		}
 		SetID(CreateComputeProgram(_pathList));
 	}
 
@@ -18,7 +28,7 @@ namespace Vega {
 		SetID(CreateComputeProgram(_pathList));
 	}
 
-	void ComputeShader::Attach(const char* path) {
+	void ComputeShader::Attach(std::string path) {
 		std::ifstream stream(path);
 		std::stringstream source;
 		std::string line;

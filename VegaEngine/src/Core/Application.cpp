@@ -5,12 +5,9 @@
 #include "imgui.h"
 
 namespace Vega {
-	const static int defaultWidth = 1920;
-	const static int defaultHeight = 1080;
-
 	void OnLayerDestruction(Layer* layer) {
 #ifdef DEBUG
-		//Vega::debug(std::format("Destroyed layer: '{}'", layer->GetName()));
+		Log::debug(std::format("Destroyed layer: '{}'", layer->GetName()));
 #endif
 		Application::Get()->DetachLayers(layer);
 	}
@@ -18,7 +15,7 @@ namespace Vega {
 	void CloseEvent(GLFWwindow* window) {
 		Application::Get()->Shutdown();
 	}
-	
+
 	void ResizeEvent(GLFWwindow* window, int width, int height) {
 		Application* app = Application::Get();
 		Window* _window = app->GetWindow();
@@ -30,6 +27,11 @@ namespace Vega {
 
 		app->Resize((GLuint)width, (GLuint)height);
 	}
+}
+
+namespace Vega {
+	const static int defaultWidth = 1920;
+	const static int defaultHeight = 1080;
 
 	Application::Application() {
 		SetLogLevel();
@@ -46,19 +48,22 @@ namespace Vega {
 		}
 		Log::trace("### LAUNCHING ###\n", Log::Color::Yellow);
 		_instance = this;
-		_window = new Window();
-		GLFWwindow* glfwWindow = _window->Create({ defaultWidth, defaultHeight, "Orion Ray Tracer", false });
+		_window = std::make_unique<Window>();
+		_window->Create({ defaultWidth, defaultHeight, "Orion Ray Tracer", true });
 
 		_running = true;
 		_initialised = true;
 
+		_scene = std::make_unique<Scene>();
+		_IO = new IOLayer(_window.get());
+		_layerStack.AttachLayer(_IO);
 		Timer::Init();
 
 		Log::info("Launched Vega engine");
 	}
 
 	void Application::Run() {
-		if (!Application::_instance) {
+		if (!_initialised) {
 			Log::error("Running application before initialisation");
 			return;
 		}
@@ -76,7 +81,8 @@ namespace Vega {
 			{
 				layer->OnUpdate();
 			}
-
+			if(_scene)
+				_scene->OnUpdate();
 			Timer::OnUpdate();
 
 
@@ -87,6 +93,8 @@ namespace Vega {
 			{
 				layer->OnPhysicsUpdate(deltaTime);
 			}
+			if(_scene)
+				_scene->OnPhysicsUpdate(deltaTime);
 
 
 			_window->OnUpdate();
@@ -107,7 +115,7 @@ namespace Vega {
 
 		if (_window) {
 			_window->Shutdown();
-			delete _window;
+			_window.reset();
 			_window = nullptr;
 		}
 
@@ -132,7 +140,14 @@ namespace Vega {
 		if (!_window) {
 			Log::error("Getting window before window creation");
 		}
-		return _window;
+		return _window.get();
+	}
+
+	Scene* Application::GetScene() {
+		return _scene.get();
+	}
+	IOData Application::GetIOData() {
+		return _IO->GetData();
 	}
 
 	void Application::AttachLayer(Layer* layer) {
@@ -146,6 +161,11 @@ namespace Vega {
 		_layerStack.ClearLayers();
 	}
 
-	void Application::Resize(GLuint width, GLuint height) {}
+	void Application::Resize(GLuint width, GLuint height) {
+		for (Layer* layer : _layerStack)
+		{
+			layer->OnResize(width, height);
+		}
+	}
 
 }

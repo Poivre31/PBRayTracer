@@ -16,6 +16,9 @@ namespace Vega {
 	void Layer::OnDetach() {
 
 	}
+	void Layer::OnResize(GLuint width, GLuint height) {
+
+	}
 	void Layer::OnUpdate() {
 
 	}

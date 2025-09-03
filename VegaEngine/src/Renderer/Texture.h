@@ -11,6 +11,7 @@ namespace Vega {
 
 	class Texture {
 	public:
+		Texture() = default;
 		Texture(TextureData textureData);
 
 		TextureData GetData();

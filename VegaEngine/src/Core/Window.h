@@ -25,6 +25,8 @@ namespace Vega {
 
 		void Resize(GLuint width, GLuint height);
 
+		void CenterCursor(bool enable);
+
 		GLuint GetWidth() const;
 		GLuint GetHeight() const;
 		bool IsVsync() const;

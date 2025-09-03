@@ -54,7 +54,7 @@ GLuint CompileShader(unsigned int type, const std::string& source) {
 	return id;
 }
 
-GLuint CreateComputeProgram(const std::vector<const char*>& pathList) {
+GLuint CreateComputeProgram(const std::vector<std::string>& pathList) {
 	std::ifstream stream;
 	std::stringstream source;
 	std::string line;
@@ -87,7 +87,7 @@ GLuint CreateComputeProgram(const std::vector<const char*>& pathList) {
 	return program;
 }
 
-GLuint CreateProgram(const char* vertPath, const char* fragPath) {
+GLuint CreateProgram(const std::string& vertPath, const std::string& fragPath) {
 	std::ifstream stream;
 	std::stringstream source;
 	std::string line;

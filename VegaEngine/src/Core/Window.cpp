@@ -111,6 +111,16 @@ namespace Vega {
 		_data.height = height;
 	}
 
+	void Window::CenterCursor(bool enable) {
+		if (enable) {
+			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else {
+			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	}
+
+
 	GLuint Window::GetWidth() const {
 		return _data.width;
 	}

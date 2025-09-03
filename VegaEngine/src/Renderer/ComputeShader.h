@@ -1,17 +1,23 @@
 #pragma once
 #include "Shader.h"
+#include <string>
+#include <iostream>
+#include <filesystem>
 
 namespace Vega {
 
 	class ComputeShader : public Shader {
 	public:
-		ComputeShader(const char* path);
-		ComputeShader(const std::vector<const char*>& pathList);
+		ComputeShader() = default;
+		ComputeShader(const std::string& path);
+		ComputeShader(const std::vector<std::string>& pathList);
+		ComputeShader(const std::string& directory, const std::string& extension);
+
 		virtual ~ComputeShader();
 
 		void Reload() override;
 
-		void Attach(const char* path);
+		void Attach(std::string path);
 
 		void Dispatch1D(GLuint res, GLuint numThread);
 
@@ -20,7 +26,7 @@ namespace Vega {
 		void Dispatch3D(GLuint resX, GLuint resY, GLuint resZ, GLuint numThreadX, GLuint numThreadY, GLuint numThreadZ);
 
 	private:
-		std::vector<const char*> _pathList;
+		std::vector<std::string> _pathList;
 	};
 
 }

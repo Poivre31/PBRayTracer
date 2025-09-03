@@ -23,7 +23,7 @@ namespace Vega {
 		}
 	};
 
-	class TextureManager
+	class TextureManager final
 	{
 	public:
 		~TextureManager() {

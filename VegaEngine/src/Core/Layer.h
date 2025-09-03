@@ -25,6 +25,7 @@ namespace Vega {
 
 		virtual void OnAttach();
 		virtual void OnDetach();
+		virtual void OnResize(GLuint width, GLuint height);
 		virtual void OnUpdate();
 		virtual void OnPhysicsUpdate(double timeStep);
 

@@ -37,18 +37,18 @@ namespace Vega {
 		Use();
 		glUniform2i(glGetUniformLocation(_ID, variable), a, b);
 	}
-	void Shader::SetInt2(const char* variable, std::span<const int,2> adress) {
+	void Shader::SetInt2(const char* variable, Vec2<int> vec) {
 		Use();
-		glUniform2i(glGetUniformLocation(_ID, variable), adress[0], adress[1]);
+		glUniform2i(glGetUniformLocation(_ID, variable), vec.x, vec.y);
 	}
 
 	void Shader::SetInt3(const char* variable, int a, int b, int c) {
 		Use();
 		glUniform3i(glGetUniformLocation(_ID, variable), a, b, c);
 	}
-	void Shader::SetInt3(const char* variable, std::span<const int,3> adress) {
+	void Shader::SetInt3(const char* variable, Vec3<int> vec) {
 		Use();
-		glUniform3i(glGetUniformLocation(_ID, variable), adress[0], adress[1], adress[2]);
+		glUniform3i(glGetUniformLocation(_ID, variable), vec.x, vec.y , vec.z);
 	}
 
 	void Shader::SetFloat(const char* variable, float value) {
@@ -60,23 +60,23 @@ namespace Vega {
 		Use();
 		glUniform2f(glGetUniformLocation(_ID, variable), a, b);
 	}
-	void Shader::SetFloat2(const char* variable, std::span<const float,2> adress) {
+	void Shader::SetFloat2(const char* variable, Vec2<float> vec) {
 		Use();
-		glUniform2f(glGetUniformLocation(_ID, variable), adress[0], adress[1]);
+		glUniform2f(glGetUniformLocation(_ID, variable), vec.x, vec.y);
 	}
 
 	void Shader::SetFloat3(const char* variable, float a, float b, float c) {
 		Use();
 		glUniform3f(glGetUniformLocation(_ID, variable), a, b, c);
 	}
-	void Shader::SetFloat3(const char* variable, std::span<const float,3> adress) {
+	void Shader::SetFloat3(const char* variable, Vec3<float> vec) {
 		Use();
-		glUniform3f(glGetUniformLocation(_ID, variable), adress[0], adress[1], adress[2]);
+		glUniform3f(glGetUniformLocation(_ID, variable), vec.x, vec.y , vec.z);
 	}
 
-	void Shader::SetMat3x3(const char* variable, float* adress, bool transpose) {
+	void Shader::SetMat3x3(const char* variable, const Mat3x3f& matrix, bool transpose) {
 		Use();
-		glUniformMatrix3fv(glGetUniformLocation(_ID, variable),1,GL_TRUE,adress);
+		glUniformMatrix3fv(glGetUniformLocation(_ID, variable),1,GL_TRUE,&matrix.a1);
 	}
 
 

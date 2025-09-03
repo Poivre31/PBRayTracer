@@ -102,25 +102,25 @@ inline Vec3<T> tanh(const Vec3<T>& u) {
 	return Vec3<T>(tanh(u.x), tanh(u.y), tanh(u.z));
 }
 
-template<typename T>
-inline Vec3<T> min(const Vec3<T>& u, const Vec3<T>& v) {
-	return Vec3<T>(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z));
-}
-
-template<typename T, typename U >
-inline Vec3<T> min(const Vec3<T>& u, U a) {
-	return Vec3<T>(min(u.x, a), min(u.y, a), min(u.z, a));
-}
-
-template<typename T>
-inline Vec3<T> max(const Vec3<T>& u, const Vec3<T>& v) {
-	return Vec3<T>(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z));
-}
-
-template<typename T, typename U >
-inline Vec3<T> max(const Vec3<T>& u, U a) {
-	return Vec3<T>(max(u.x, a), max(u.y, a), max(u.z, a));
-}
+//template<typename T>
+//inline Vec3<T> min(const Vec3<T>& u, const Vec3<T>& v) {
+//	return Vec3<T>(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z));
+//}
+//
+//template<typename T, typename U >
+//inline Vec3<T> min(const Vec3<T>& u, U a) {
+//	return Vec3<T>(min(u.x, a), min(u.y, a), min(u.z, a));
+//}
+//
+//template<typename T>
+//inline Vec3<T> max(const Vec3<T>& u, const Vec3<T>& v) {
+//	return Vec3<T>(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z));
+//}
+//
+//template<typename T, typename U >
+//inline Vec3<T> max(const Vec3<T>& u, U a) {
+//	return Vec3<T>(max(u.x, a), max(u.y, a), max(u.z, a));
+//}
 
 template<typename T>
 inline Vec3<T> abs(const Vec3<T>& u) {

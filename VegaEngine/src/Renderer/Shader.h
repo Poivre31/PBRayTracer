@@ -3,6 +3,9 @@
 #include <iostream>
 #include "OpenGL.h"
 #include <span>
+#include "Math/Mat3x3.h"
+#include "Math/Vec3.h"
+#include "Math/Vec2.h"
 
 namespace Vega {
 
@@ -37,17 +40,17 @@ namespace Vega {
 
 		void SetInt(const char* variable, int value) ;
 		void SetInt2(const char* variable, int a, int b);
-		void SetInt2(const char* variable, std::span<const int,2> adress);
+		void SetInt2(const char* variable, Vec2<int> vec);
 		void SetInt3(const char* variable, int a, int b, int c);
-		void SetInt3(const char* variable, std::span<const int,3> adress);
+		void SetInt3(const char* variable, Vec3<int> vec);
 
 		void SetFloat(const char* variable, float value);
 		void SetFloat2(const char* variable, float a, float b);
-		void SetFloat2(const char* variable, std::span<const float,2> adress);
+		void SetFloat2(const char* variable, Vec2<float> vec);
 		void SetFloat3(const char* variable, float a, float b, float c);
-		void SetFloat3(const char* variable, std::span<const float,3> adress);
+		void SetFloat3(const char* variable, Vec3<float> vec);
 
-		void SetMat3x3(const char* variable, float* adress, bool transpose = GL_TRUE);
+		void SetMat3x3(const char* variable, const Mat3x3f& matrix, bool transpose = GL_TRUE);
 		//void AttachFloatRef(const char* variable, float* data, int count);
 
 		//void AttachIntRef(const char* variable, int* data, int count);
