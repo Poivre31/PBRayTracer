@@ -161,11 +161,6 @@ namespace Vega {
 		_layerStack.ClearLayers();
 	}
 
-	void Application::Resize(GLuint width, GLuint height) {
-		for (Layer* layer : _layerStack)
-		{
-			layer->OnResize(width, height);
-		}
-	}
+	void Application::Resize(GLuint width, GLuint height) {}
 
 }
