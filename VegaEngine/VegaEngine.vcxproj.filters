@@ -46,6 +46,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\IO\IOLayer.h">
+      <Filter>IO</Filter>
+    </ClInclude>
     <ClInclude Include="src\IO\Keys.h">
       <Filter>IO</Filter>
     </ClInclude>
@@ -116,6 +119,9 @@
     <ClInclude Include="src\Scene\Components\Transform.h">
       <Filter>Scene\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\DefaultEntityTypes.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Entity.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -123,8 +129,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Vega.h" />
-    <ClInclude Include="src\Scene\DefaultEntityTypes.h" />
-    <ClInclude Include="src\IO\IOLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">

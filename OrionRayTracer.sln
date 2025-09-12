@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PBRT", "PBRT\PBRT.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VegaEngine", "VegaEngine\VegaEngine.vcxproj", "{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VegaEngine2", "VegaEngine2\VegaEngine2.vcxproj", "{70344A7B-DCE9-C270-65DE-BC47D192B974}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -37,6 +39,12 @@ Global
 		{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}.Dist|x64.Build.0 = Dist|x64
 		{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}.Release|x64.ActiveCfg = Release|x64
 		{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}.Release|x64.Build.0 = Release|x64
+		{70344A7B-DCE9-C270-65DE-BC47D192B974}.Debug|x64.ActiveCfg = Debug|x64
+		{70344A7B-DCE9-C270-65DE-BC47D192B974}.Debug|x64.Build.0 = Debug|x64
+		{70344A7B-DCE9-C270-65DE-BC47D192B974}.Dist|x64.ActiveCfg = Dist|x64
+		{70344A7B-DCE9-C270-65DE-BC47D192B974}.Dist|x64.Build.0 = Dist|x64
+		{70344A7B-DCE9-C270-65DE-BC47D192B974}.Release|x64.ActiveCfg = Release|x64
+		{70344A7B-DCE9-C270-65DE-BC47D192B974}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

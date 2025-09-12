@@ -38,6 +38,11 @@ namespace Vega {
 			return _frameCount;
 		}
 
+		static void PrintTime() {
+			auto time = zoned_time{ current_zone() };
+			std::println("Time is: {}", time);
+		}
+
 	private:
 		static inline double _startTime = 0.;
 		static inline double _prevTime = 0.;
