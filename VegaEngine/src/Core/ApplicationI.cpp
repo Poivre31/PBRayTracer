@@ -1,0 +1,158 @@
+module;
+#include "OpenGL.h"
+module Core;
+import :Application;
+
+namespace Vega {
+	//static void OnLayerDestruction(Layer* layer) {
+	//	//#ifdef DEBUG
+	//	//		Log.debug(std::format("Destroyed layer: '{}'", layer->GetName()));
+	//	//#endif
+	//	Application::Get()->DetachLayers(layer);
+	//}
+
+	void CloseEvent(GLFWwindow* window) {
+		Application::Get()->Shutdown();
+	}
+
+	void ResizeEvent(GLFWwindow* window, int width, int height) {
+		auto* app = Application::Get();
+		auto* _window = app->GetWindow();
+
+		if (!_window) {
+			Log.error("Resizing window before window creation");
+		}
+		_window->Resize(width, height);
+
+		app->Resize((GLuint)width, (GLuint)height);
+	}
+}
+
+namespace Vega {
+
+	Application::Application() {
+		_instance = this;
+		Init();
+	}
+
+	Application::~Application() = default;
+
+	void Application::Init() {
+		if (_initialised) {
+			Log.error("Application already initialised, shutdown before new call to Init");
+			return;
+		}
+		Log.trace("### LAUNCHING ###\n", Color::Yellow);
+		_instance = this;
+		_window = std::make_unique<Window>();
+		_window->Create({ 1920, 1080, "Orion Ray Tracer", true });
+
+		_guiLayer = AttachLayer<ImGuiLayer>(_window.get());
+		_IO = AttachLayer<IOLayer>(_window.get());
+		_scene = AttachLayer<Scene>();
+
+		_running = true;
+		_initialised = true;
+
+		Timer::Init();
+
+		Log.trace("Launched Vega engine");
+	}
+
+	void Application::Run() {
+		if (!_initialised) {
+			Log.error("Running application before initialisation");
+			return;
+		}
+		std::cout << "\n";
+		Log.trace("### RUNNING ###\n", Color::Yellow);
+		while (_running) {
+			if (_shouldClose) {
+				Shutdown();
+				return;
+			}
+
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (Layer* layer : _layerStack)
+			{
+				layer->OnUpdate();
+			}
+
+			Timer::OnUpdate();
+
+
+			//TO FIX: UNUSUALLY LONG FRAME TIME AT STARTUP CAUSING LARGE ERRORS
+			double deltaTime = std::min(Timer::GetDeltaTime(), 1. / 60);;
+			for (Layer* layer : _layerStack)
+			{
+				layer->OnPhysicsUpdate(deltaTime);
+			}
+
+			_window->OnUpdate();
+
+		}
+	}
+
+	void Application::Shutdown() {
+		if (!_initialised) {
+			Log.error("Shuting down application before initialisation");
+			return;
+		}
+
+		std::cout << "\n";
+		Log.trace("### SHUTTING DOWN ###\n", Color::Yellow);
+
+		_running = false;
+
+		if (_window) {
+			_window->Shutdown();
+			_window.reset();
+			_window = nullptr;
+		}
+
+		_layerStack.ClearLayers();
+
+		_initialised = false;
+		Log.trace("Shut down Vega engine");
+	}
+
+	void Application::PlanShutdown() {
+		_shouldClose = true;
+	}
+
+	Application* Application::Get() {
+		if (!_instance) {
+			Log.error("No application created");
+		}
+		return _instance;
+	}
+
+	Window* Application::GetWindow() {
+		if (!_window) {
+			Log.error("Getting window before window creation");
+		}
+		return _window.get();
+	}
+
+	ImGuiLayer* Application::GetGUI() {
+		return _guiLayer;
+	}
+	
+	Scene* Application::GetScene() {
+		return _scene;
+	}
+	IOData Application::GetIOData() {
+		return _IO->GetData();
+	}
+
+	void Application::DetachLayers(Layer* layer) {
+		_layerStack.DetachLayers(layer);
+	}
+	void Application::ClearLayers() {
+		_layerStack.ClearLayers();
+	}
+
+	void Application::Resize(GLuint width, GLuint height) {}
+
+}

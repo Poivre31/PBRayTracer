@@ -5,14 +5,17 @@ project "VegaEngine"
    targetdir "bin/%{cfg.buildcfg}"
    objdir "obj/%{cfg.buildcfg}"
 
+   enablemodules "On"
+   buildstlmodules "On"
+
    files {
       "**.h",
-       "**.cpp",
+      "**.cpp",
+      "**.ixx",
    }
 
    includedirs{
       "../vendor/GLFW/include",
-      "../vendor/spdlog/include",
       "../vendor/Glad/include",
       "../vendor/ImGui",
       "../vendor/ImGui/backends",

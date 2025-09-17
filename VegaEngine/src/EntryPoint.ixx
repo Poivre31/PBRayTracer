@@ -1,8 +1,9 @@
-#pragma once
+module;
 #include "OpenGL.h"
+export module EntryPoint;
 
 import std;
-import Vega;
+import Core;
 
 extern std::unique_ptr<Vega::Application> Vega::CreateApplication();
 

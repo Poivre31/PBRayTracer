@@ -44,6 +44,7 @@
 /.vs
 
 /python
+/Legacy
 
 */bin
 */obj
