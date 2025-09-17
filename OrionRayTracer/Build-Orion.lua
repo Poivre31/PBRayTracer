@@ -4,6 +4,9 @@ project "OrionRayTracer"
    targetdir "../bin/%{cfg.buildcfg}"
    objdir "obj/"
 
+   enablemodules "On"
+   buildstlmodules "On"
+
    files {
       "**.h",
        "**.cpp",
