@@ -12,10 +12,10 @@ namespace Vega {
 	export void ResizeEvent(GLFWwindow* window, int width, int height);
 
 	export struct WindowData {
-		GLuint width;
-		GLuint height;
-		const char* name;
-		bool vsync;
+		GLuint height = 720;
+		GLuint width = 1280;
+		const char* name = "Application";
+		bool vsync = true;
 	};
 
 	export class Window final {

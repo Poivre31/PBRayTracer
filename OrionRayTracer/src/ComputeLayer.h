@@ -31,6 +31,8 @@ public:
 	}
 
 	void OnResize(GLuint width, GLuint height) override {
+		_width = width;
+		_height = height;
 		Vega::TextureManager::UpdateTexture(_image, width, height);
 	}
 

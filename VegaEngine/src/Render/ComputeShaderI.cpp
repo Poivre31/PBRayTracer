@@ -32,6 +32,7 @@ namespace Vega {
 	}
 
 	void ComputeShader::Attach(std::string path) {
+		Use();
 		std::ifstream stream(path);
 		std::stringstream source;
 		std::string line;
@@ -48,16 +49,19 @@ namespace Vega {
 	}
 
 	void ComputeShader::Dispatch1D(GLuint res, GLuint numThread) {
+		Use();
 		glDispatchCompute((res + numThread - 1) / numThread, 1, 1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}
 
 	void ComputeShader::Dispatch2D(GLuint resX, GLuint resY, GLuint numThreadX, GLuint numThreadY) {
+		Use();
 		glDispatchCompute((resX + numThreadX - 1) / numThreadX, (resY + numThreadY - 1) / numThreadY, 1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}
 
 	void ComputeShader::Dispatch3D(GLuint resX, GLuint resY, GLuint resZ, GLuint numThreadX, GLuint numThreadY, GLuint numThreadZ) {
+		Use();
 		glDispatchCompute((resX + numThreadX - 1) / numThreadX, (resY + numThreadY - 1) / numThreadY, (resZ + numThreadZ - 1) / numThreadZ);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}

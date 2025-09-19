@@ -10,6 +10,7 @@ export import :IOLayer;
 export import :Keys;
 
 export import :Buffer;
+export import :LinkedSSBO;
 export import :ComputeShader;
 export import :Shader;
 export import :Mesh;
@@ -28,6 +29,7 @@ import :Components.Transform;
 export import :DefaultEntityTypes;
 export import :Entity;
 export import :Scene;
+export import :Collection;
 
 import :ImGuiLayer;
 import :LayerStack;

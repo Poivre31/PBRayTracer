@@ -2,9 +2,7 @@ export module Math:Random;
 import :Vec3;
 import <random>;
 
-using namespace Vega::Math;
-
-export namespace Vega {
+export namespace Vega::Math {
 
 	class Random {
 	public:

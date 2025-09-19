@@ -6,13 +6,13 @@ import :Log;
 
 export namespace Vega {
 
-	class ScreenQuadDisplay : public Layer {
+	class ScreenQuad : public Layer {
 	public:
-		ScreenQuadDisplay() {
+		ScreenQuad() {
 			_screenQuad = Mesh2D::CreateScreenQuad();
 		}
 
-		ScreenQuadDisplay(Shader* shader) : _shader(shader) {
+		ScreenQuad(Shader* shader) : _shader(shader) {
 			_screenQuad = Mesh2D::CreateScreenQuad();
 		}
 
