@@ -27,7 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\EntryPoint.h" />
     <ClInclude Include="src\OpenGL.h" />
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +54,6 @@
     <ClCompile Include="src\Core\WindowI.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\EntryPoint.ixx" />
     <ClCompile Include="src\IO\IOLayer.ixx">
       <Filter>IO</Filter>
     </ClCompile>
@@ -162,5 +160,8 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\Vega.ixx" />
+    <ClCompile Include="src\Scene\Collection.ixx" />
+    <ClCompile Include="src\Render\LinkedSSBO.ixx" />
+    <ClCompile Include="src\Math\VecTypes.ixx" />
   </ItemGroup>
 </Project>

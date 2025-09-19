@@ -16,11 +16,11 @@ namespace Vega {
 
 		void ClearLayers();
 
-		auto begin() -> std::vector<Layer*>::iterator {
-			return _layers.begin();
+		auto begin() -> std::vector<Layer*>::reverse_iterator {
+			return _layers.rbegin();
 		}
-		auto end() -> std::vector<Layer*>::iterator {
-			return _layers.end();
+		auto end() -> std::vector<Layer*>::reverse_iterator {
+			return _layers.rend();
 		}
 
 	private:

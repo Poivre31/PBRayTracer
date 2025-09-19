@@ -91,6 +91,7 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +121,7 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +153,7 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,10 +179,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Boids.h" />
     <ClInclude Include="src\ComputeLayer.h" />
     <ClInclude Include="src\DebugWindow.h" />
+    <ClInclude Include="src\Orion.h" />
     <ClInclude Include="src\OrionLogger.h" />
-    <ClInclude Include="src\ScreenDisplay.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\boids\boids.comp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

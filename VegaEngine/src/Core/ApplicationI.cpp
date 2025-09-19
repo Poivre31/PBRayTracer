@@ -30,14 +30,14 @@ namespace Vega {
 
 namespace Vega {
 
-	Application::Application() {
+	Application::Application(ApplicationSpec spec) {
 		_instance = this;
-		Init();
-	}
+		Init(spec);
+	};
 
 	Application::~Application() = default;
 
-	void Application::Init() {
+	void Application::Init(ApplicationSpec spec) {
 		if (_initialised) {
 			Log.error("Application already initialised, shutdown before new call to Init");
 			return;
@@ -45,7 +45,7 @@ namespace Vega {
 		Log.trace("### LAUNCHING ###\n", Color::Yellow);
 		_instance = this;
 		_window = std::make_unique<Window>();
-		_window->Create({ 1920, 1080, "Orion Ray Tracer", true });
+		_window->Create(spec.windowData);
 
 		_guiLayer = AttachLayer<ImGuiLayer>(_window.get());
 		_IO = AttachLayer<IOLayer>(_window.get());
@@ -64,7 +64,8 @@ namespace Vega {
 			Log.error("Running application before initialisation");
 			return;
 		}
-		std::cout << "\n";
+
+		std::println();
 		Log.trace("### RUNNING ###\n", Color::Yellow);
 		while (_running) {
 			if (_shouldClose) {
@@ -100,7 +101,7 @@ namespace Vega {
 			return;
 		}
 
-		std::cout << "\n";
+		std::println();
 		Log.trace("### SHUTTING DOWN ###\n", Color::Yellow);
 
 		_running = false;
@@ -153,6 +154,11 @@ namespace Vega {
 		_layerStack.ClearLayers();
 	}
 
-	void Application::Resize(GLuint width, GLuint height) {}
+	void Application::Resize(GLuint width, GLuint height) {
+		for (Layer* layer : _layerStack)
+		{
+			layer->OnResize(width, height);
+		}
+	}
 
 }

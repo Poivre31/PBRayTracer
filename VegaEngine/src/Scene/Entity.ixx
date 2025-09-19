@@ -4,8 +4,9 @@ export import :Components.Controller;
 export import :Components.RigidBody;
 export import :Components.Transform;
 export import :Components.RTPrimitive;
+import std;
 
-namespace Vega {
+export namespace Vega {
 
 	class Entity {
 
@@ -14,11 +15,15 @@ namespace Vega {
 			return _ID;
 		}
 
+		virtual void Random() {
+
+		}
+
 		virtual void OnCreate() {
 
 		}
 
-		virtual void OnUpate() {
+		virtual void OnUpdate() {
 
 		}
 
@@ -33,5 +38,12 @@ namespace Vega {
 	private:
 		size_t _ID;
 	};
+
+	template<std::derived_from<Entity> T>
+	T RandomEntity() {
+		auto e = T();
+		e.Random();
+		return e;
+	}
 
 }

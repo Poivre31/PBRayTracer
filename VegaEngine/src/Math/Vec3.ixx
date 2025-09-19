@@ -112,6 +112,10 @@ export namespace Vega::Math {
 			return (x == v.x && y == v.y && z == v.z);
 		}
 
+		Vec3<T> ApplyElementWise(std::function<T (T)> func) {
+			return Vec3(func(x), func(y), func(z));
+		}
+
 		template<typename U>
 		operator Vec3<U>() {
 			return Vec3<U>(U(x), U(y), U(z));
@@ -236,4 +240,8 @@ export namespace Vega::Math {
 		}
 	};
 
+	template <typename T>
+	Vec3<T> ApplyElementWise(Vec3<T> v1, Vec3<T> v2, std::function<T(T, T)> func) {
+		return Vec3(func(v1.x, v2.x), func(v1.y, v2.y), func(v1.z, v2.z));
+	}
 }

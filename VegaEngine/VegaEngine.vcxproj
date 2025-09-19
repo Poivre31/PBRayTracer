@@ -88,6 +88,7 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,6 +117,7 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,6 +148,7 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,7 +162,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\EntryPoint.h" />
     <ClInclude Include="src\OpenGL.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +173,6 @@
     <ClCompile Include="src\Core\LayerStackI.cpp" />
     <ClCompile Include="src\Core\Window.ixx" />
     <ClCompile Include="src\Core\WindowI.cpp" />
-    <ClCompile Include="src\EntryPoint.ixx" />
     <ClCompile Include="src\IO\IOLayer.ixx" />
     <ClCompile Include="src\IO\Keys.ixx" />
     <ClCompile Include="src\ImGui\ImGuiCanvas.ixx" />
@@ -183,10 +184,12 @@
     <ClCompile Include="src\Math\Random.ixx" />
     <ClCompile Include="src\Math\Vec3.ixx" />
     <ClCompile Include="src\Math\Vec3Math.ixx" />
+    <ClCompile Include="src\Math\VecTypes.ixx" />
     <ClCompile Include="src\Render\Buffer.ixx" />
     <ClCompile Include="src\Render\ComputeShader.ixx" />
     <ClCompile Include="src\Render\ComputeShaderI.cpp" />
     <ClCompile Include="src\Render\ImageFormats.ixx" />
+    <ClCompile Include="src\Render\LinkedSSBO.ixx" />
     <ClCompile Include="src\Render\Mesh.ixx" />
     <ClCompile Include="src\Render\Mesh2D.ixx" />
     <ClCompile Include="src\Render\ScreenQuad.ixx" />
@@ -199,6 +202,7 @@
     <ClCompile Include="src\Render\TextureManager.ixx">
       <ObjectFileName>$(IntDir)\TextureManager1.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="src\Scene\Collection.ixx" />
     <ClCompile Include="src\Scene\Components\Camera.ixx" />
     <ClCompile Include="src\Scene\Components\Controller.ixx" />
     <ClCompile Include="src\Scene\Components\RTPrimitive.ixx" />

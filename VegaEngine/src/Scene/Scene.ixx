@@ -10,20 +10,6 @@ using namespace Vega::Math;
 
 namespace Vega {
 
-	struct float4 {
-		float x;
-		float y;
-		float z;
-		float w;
-	};
-
-	struct int4 {
-		int x;
-		int y;
-		int z;
-		int w;
-	};
-
 	struct Transform {
 		float4 position{};
 		float4 scale{};
@@ -101,8 +87,8 @@ namespace Vega {
 				i[type]++;
 			}
 
-			_transformsBuffer.UpdateData(_transforms.data(), _entities.size());
-			_colorsBuffer.UpdateData(_colors.data(), _entities.size());
+			_transformsBuffer.UpdateData(_transforms);
+			_colorsBuffer.UpdateData(_colors);
 			rtShader->SetInt("count.sphere", _primitiveCounts[PrimitiveType::sphere]);
 			rtShader->SetInt("count.cube", _primitiveCounts[PrimitiveType::cube]);
 			rtShader->SetInt("count.plane", _primitiveCounts[PrimitiveType::plane]);
@@ -154,8 +140,8 @@ namespace Vega {
 		std::vector<Object> _entities;
 		std::vector<Transform> _transforms;
 		std::vector<float4> _colors;
-		SSBO _transformsBuffer;
-		SSBO _colorsBuffer;
+		SSBO<Transform> _transformsBuffer;
+		SSBO<float4> _colorsBuffer;
 		std::array<int, 7> _primitiveCounts{};
 	};
 

@@ -14,14 +14,18 @@ import std;
 
 namespace Vega {
 
+	export struct ApplicationSpec {
+		WindowData windowData{};
+	};
+
 	export class Application
 	{
 	public:
 
-		Application();
+		Application(ApplicationSpec spec);
 		virtual ~Application();
 
-		void Init();
+		void Init(ApplicationSpec spec);
 		void Run();
 		void Shutdown();
 		void PlanShutdown();
