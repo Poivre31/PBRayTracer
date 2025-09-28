@@ -1,7 +1,7 @@
-export module Core:Collection;
+export module Entities:Collection;
 import :Components.RigidBody;
 import :Entity;
-import :Log;
+import Utility;
 import Math;
 
 using namespace Vega::Math;

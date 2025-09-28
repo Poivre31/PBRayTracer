@@ -1,4 +1,4 @@
-export module Core:Components.Camera;
+export module Entities:Components.Camera;
 import Math;
 import :Components.Transform;
 

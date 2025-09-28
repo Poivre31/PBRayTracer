@@ -1,6 +1,6 @@
 module;
 #include "OpenGL.h"
-export module Core:Shader;
+export module Render:Shader;
 import :ShaderCompiler;
 import std;
 import Math;

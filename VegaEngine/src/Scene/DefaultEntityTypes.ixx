@@ -1,4 +1,4 @@
-export module Core:DefaultEntityTypes;
+export module Entities:DefaultEntityTypes;
 import :Entity;
 import :Components.Camera;
 import :Components.Controller;

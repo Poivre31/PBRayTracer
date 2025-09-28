@@ -1,13 +1,16 @@
 export module Core:IOLayer;
 import :Window;
 import :Layer;
-import :Keys;
-import :Log;
+import IO;
+import Utility;
+
+using enum Vega::KeyEvent;
+
 namespace Vega {
 
 	class IOData {
 	public:
-		Keys mainControls;
+		Keys inputs;
 	};
 
 	class IOLayer : public Layer {
@@ -15,9 +18,9 @@ namespace Vega {
 		IOLayer(Window* window) : _window(window) {}
 
 		void OnUpdate() override {
-			_data.mainControls.SetKeysFromInput();
+			_data.inputs.Update();
 
-			_window->CenterCursor(_data.mainControls.GetMouseRight());
+			_window->CenterCursor(_data.inputs.KeyStatus(Key::MouseRight, Down));
 		}
 
 		IOData GetData() const {

@@ -5,6 +5,7 @@ workspace "OrionRayTracer"
    systemversion "latest"
    clangtidy "On"
    buildoptions { "/Zc:__cplusplus" }
+   include "vendor/premake-vscode/vscode.lua"
 
 include "VegaEngine/Build-Vega.lua"
 include "OrionRayTracer/Build-Orion.lua"

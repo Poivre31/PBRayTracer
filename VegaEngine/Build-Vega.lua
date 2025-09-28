@@ -12,6 +12,9 @@ project "VegaEngine"
       "**.h",
       "**.cpp",
       "**.ixx",
+      "**.comp",
+      "**.frag",
+      "**.vert"
    }
 
    includedirs{
@@ -39,6 +42,10 @@ project "VegaEngine"
    buildoptions { "/utf-8" }
 
    staticruntime "On"
+
+   postbuildcommands {
+      '{COPYDIR} "%{prj.location}/res" "%{cfg.targetdir}/res"',
+   } 
 
    filter { "configurations:Debug" }
       defines { "DEBUG" }

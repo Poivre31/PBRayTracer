@@ -1,4 +1,4 @@
-export module Core:Timer;
+export module Utility:Timer;
 import std;
 
 //void PrintTime() {

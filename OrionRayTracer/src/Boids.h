@@ -19,7 +19,7 @@ public:
 	void Random() override {
 		_rb.SetPosition(Random::RandVec3d(0., 1.));
 		_rb.SetVelocity(.01 * Random::RandVec3d(-1., 1.));
-		_rb.SetMass(Random::RandFloat(1., .2));
+		_rb.SetMass(Random::RandDouble(1., .2));
 	}
 
 	void OnPhysicsUpdate(double deltaTime) override {

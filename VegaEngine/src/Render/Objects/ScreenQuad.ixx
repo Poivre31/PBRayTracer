@@ -1,8 +1,7 @@
 export module Core:ScreenQuad;
-import :Mesh2D;
-import :Shader;
 import :Layer;
-import :Log;
+import Utility;
+import Render;
 
 export namespace Vega {
 

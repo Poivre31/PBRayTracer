@@ -1,8 +1,7 @@
 export module Core:Scene;
-import :Entity;
 import :Layer;
-import :Shader;
-import :Buffer;
+import Entities;
+import Render;
 import Math;
 import std;
 

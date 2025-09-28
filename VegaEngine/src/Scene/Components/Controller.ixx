@@ -1,10 +1,11 @@
 module;
 #include "imgui.h"
-export module Core:Components.Controller;
+export module Entities:Components.Controller;
 import :Components.RigidBody;
 import Math;
+import IO;
 import std;
-import :Keys;
+
 
 using namespace Vega::Math;
 
@@ -39,27 +40,27 @@ namespace Vega {
 
 			Vec3<double> forceDirection = Vec3(0.);
 			Vec3<bool> moving = Vec3(false);
-			if (keys.GetKeyZ()) {
+			if (keys.KeyDown(Key::Z)) {
 				forceDirection.x += 1.;
 				moving.x = true;
 			}
-			if (keys.GetKeyS()) {
+			if (keys.KeyDown(Key::S)) {
 				forceDirection.x -= 1.;
 				moving.x = !moving.x;
 			}
-			if (keys.GetKeyQ()) {
+			if (keys.KeyDown(Key::Q)) {
 				forceDirection.y += 1.;
 				moving.y = true;
 			}
-			if (keys.GetKeyD()) {
+			if (keys.KeyDown(Key::D)) {
 				forceDirection.y -= 1.;
 				moving.y = !moving.y;
 			}
-			if (keys.GetKeyA()) {
+			if (keys.KeyDown(Key::A)) {
 				forceDirection.z += 1.;
 				moving.z = true;
 			}
-			if (keys.GetKeyE()) {
+			if (keys.KeyDown(Key::E)) {
 				forceDirection.z -= 1.;
 				moving.z = !moving.z;
 			}
@@ -89,7 +90,7 @@ namespace Vega {
 		}
 
 		void Rotate(Keys keys, float mouseSpeed = 1.) {
-			if (keys.GetMouseRight()) {
+			if (keys.KeyDown(Key::MouseRight) && !keys.KeyPressed(Key::MouseRight)) {
 				double speedTheta = mouseSpeed * ImGui::GetIO().MouseDelta.y / 640;
 				double speedPhi = -mouseSpeed * ImGui::GetIO().MouseDelta.x / 640;
 

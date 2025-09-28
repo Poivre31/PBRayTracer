@@ -1,6 +1,6 @@
 module;
 #include "OpenGL.h"
-export module Core:ImageFormats;
+export module Render:ImageFormats;
 
 export namespace Vega::Formats {
 	enum : GLenum {

@@ -1,6 +1,6 @@
 module;
 #include "OpenGL.h"
-export module Core:ShaderCompiler;
+export module Render:ShaderCompiler;
 import std;
 
 namespace Vega {

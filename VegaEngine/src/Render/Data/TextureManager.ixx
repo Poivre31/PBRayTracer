@@ -1,6 +1,6 @@
 module;
 #include "OpenGL.h"
-export module Core:TextureManager;
+export module Render:TextureManager;
 import :Texture;
 import std;
 

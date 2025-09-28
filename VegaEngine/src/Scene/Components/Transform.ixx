@@ -1,4 +1,4 @@
-export module Core:Components.Transform;
+export module Entities:Components.Transform;
 import std;
 import Math;
 

@@ -1,6 +1,6 @@
 module;
 #include "OpenGL.h"
-export module Core:Texture;
+export module Render:Texture;
 
 export namespace Vega {
 

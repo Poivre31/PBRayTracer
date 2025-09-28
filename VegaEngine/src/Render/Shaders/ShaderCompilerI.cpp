@@ -1,9 +1,9 @@
 module;
 #include "OpenGL.h"
-module Core;
+module Render;
 import :ShaderCompiler;
 import std;
-import Core;
+import Utility;
 
 namespace Vega {
 	static void ErrorLog(GLuint program, GLenum statusCheck, const char* errorMessage) {
@@ -96,6 +96,10 @@ namespace Vega {
 		GLuint program = glCreateProgram();
 
 		stream = std::ifstream(vertPath);
+		if (!stream) {
+			Vega::Log.error("Invalid vertex shader file path, aborting program creation");
+			return 0;
+		}
 		while (getline(stream, line)) {
 			source << line << "\n";
 		}
@@ -104,6 +108,10 @@ namespace Vega {
 		source.str("");
 
 		stream = std::ifstream(fragPath);
+		if (!stream) {
+			Vega::Log.error("Invalid fragment shader file path, aborting program creation");
+			return 0;
+		}
 		while (getline(stream, line)) {
 			source << line << "\n";
 		}

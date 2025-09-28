@@ -3,7 +3,7 @@ module;
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-export module Core:Log;
+export module Utility:Log;
 import :Timer;
 import std;
 

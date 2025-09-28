@@ -1,90 +1,118 @@
 module;
 #include "imgui.h"
-export module Core:Keys;
+export module IO:Keys;
+import std;
+import Utility;
 
 export namespace Vega {
+
+	enum class KeyMod : int {
+		ModCtrl = ImGuiKey_ModCtrl,
+		ModShift = ImGuiKey_ModShift,
+		ModAlt = ImGuiKey_ModAlt,
+	};
+
+	enum class Key : int {
+		A = 0,
+		B,
+		C,
+		D,
+		E,
+		F,
+		G,
+		H,
+		I,
+		J,
+		K,
+		L,
+		M,
+		N,
+		O,
+		P,
+		Q,
+		R,
+		S,
+		T,
+		U,
+		V,
+		W,
+		X,
+		Y,
+		Z,
+		Ctrl,
+		Alt,
+		Shift,
+		MouseLeft,
+		MouseRight,
+		KeyNumber,
+	};
+
+	enum class KeyEvent : char {
+		None = 0b0,
+		Released = 0b10,
+		Pressed = 0b100,
+		Repeat = 0b1000,
+		Down = 0b10000,
+	};
 
 	class Keys {
 	public:
 		Keys() = default;
-		Keys(char keyCodes) : _keysCode(keyCodes) {}
 
-		void SetKeyZ(bool pressed) {
-			SetBit(0, pressed);
-		}
-		void SetKeyS(bool pressed) {
-			SetBit(1, pressed);
-		}
-		void SetKeyQ(bool pressed) {
-			SetBit(2, pressed);
-		}
-		void SetKeyD(bool pressed) {
-			SetBit(3, pressed);
-		}
-		void SetKeyA(bool pressed) {
-			SetBit(4, pressed);
-		}
-		void SetKeyE(bool pressed) {
-			SetBit(5, pressed);
-		}
-		void SetMouseLeft(bool pressed) {
-			SetBit(6, pressed);
-		}
-		void SetMouseRight(bool pressed) {
-			SetBit(7, pressed);
+		void SetKey(char& key, ImGuiKey imguiKey) {
+			key = (char)KeyEvent::None;
+			if (ImGui::IsKeyReleased(imguiKey)) {
+				key |= (char)KeyEvent::Released;
+			}
+			if (ImGui::IsKeyPressed(imguiKey, false)) {
+				key |= (char)KeyEvent::Pressed;
+			}
+			if (ImGui::IsKeyPressed(imguiKey, true)) {
+				key |= (char)KeyEvent::Repeat;
+			}
+			if (ImGui::IsKeyDown(imguiKey)) {
+				key |= (char)KeyEvent::Down;
+			}
 		}
 
-		void SetKeysFromInput() {
-			SetKeyZ(ImGui::IsKeyDown(ImGuiKey_Z));
-			SetKeyS(ImGui::IsKeyDown(ImGuiKey_S));
-			SetKeyQ(ImGui::IsKeyDown(ImGuiKey_Q));
-			SetKeyD(ImGui::IsKeyDown(ImGuiKey_D));
-			SetKeyA(ImGui::IsKeyDown(ImGuiKey_A));
-			SetKeyE(ImGui::IsKeyDown(ImGuiKey_E));
-			SetMouseLeft(ImGui::IsKeyDown(ImGuiKey_MouseLeft));
-			SetMouseRight(ImGui::IsKeyDown(ImGuiKey_MouseRight));
+
+		void Update() {
+			for (size_t i = 0; i <= (int)Key::Z; i++)
+			{
+				SetKey(keys[i], (ImGuiKey)(ImGuiKey_A + i));
+			}
+			SetKey(keys[(int)Key::Ctrl], ImGuiKey_ModCtrl);
+			SetKey(keys[(int)Key::Alt], ImGuiKey_ModAlt);
+			SetKey(keys[(int)Key::Shift], ImGuiKey_ModShift);
+			SetKey(keys[(int)Key::MouseLeft], ImGuiKey_MouseLeft);
+			SetKey(keys[(int)Key::MouseRight], ImGuiKey_MouseRight);
 		}
 
-		bool GetKeyZ() {
-			return GetBit(0);
+
+		bool KeyStatus(Key key, KeyEvent eventType) const {
+			return keys[(int)key] & (int)eventType;
 		}
-		bool GetKeyS() {
-			return GetBit(1);
+		bool KeyStatus(Key key, KeyEvent eventType, KeyMod mod) const {
+			return keys[(int)key] & (int)eventType && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
-		bool GetKeyQ() {
-			return GetBit(2);
+
+		bool KeyPressed(Key key) const {
+			return keys[(int)key] & (int)KeyEvent::Pressed;
 		}
-		bool GetKeyD() {
-			return GetBit(3);
+		bool KeyPressed(Key key, KeyMod mod) const {
+			return keys[(int)key] & (int)KeyEvent::Pressed && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
-		bool GetKeyA() {
-			return GetBit(4);
+
+		bool KeyDown(Key key) const {
+			return keys[(int)key] & (int)KeyEvent::Down;
 		}
-		bool GetKeyE() {
-			return GetBit(5);
+		bool KeyDown(Key key, KeyMod mod) const {
+			return keys[(int)key] & (int)KeyEvent::Down && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
-		bool GetMouseLeft() {
-			return GetBit(6);
-		}
-		bool GetMouseRight() {
-			return GetBit(7);
-		}
+
 
 	private:
-		void SetBit(int n, bool value) {
-			if (value) {
-				_keysCode |= (1 << n);
-			}
-			else {
-				_keysCode &= ~(1 << n);
-			}
-		}
-
-		bool GetBit(int n) const {
-			return _keysCode & (1 << n);
-		}
-
-		char _keysCode = 0;
+		std::array<char, 32> keys;
 	};
 
 }

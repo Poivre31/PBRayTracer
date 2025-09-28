@@ -1,6 +1,6 @@
 export module Core:LayerStack;
 import :Layer;
-import :Log;
+import Utility;
 import std;
 
 namespace Vega {

@@ -7,7 +7,7 @@ export module Core:ImGuiLayer;
 import :Window;
 import :Layer;
 import :GuiCanvas;
-import :Log;
+import Utility;
 import std;
 
 export namespace Vega {
@@ -61,10 +61,11 @@ export namespace Vega {
         }
 
         template <std::derived_from<GuiCanvas> T>
-        ImGuiLayer* AttachCanvas() {
-            _imguiCanvasStack.push_back(new T());
+        T* AttachCanvas() {
+            auto* canvas = new T();
+            _imguiCanvasStack.push_back(canvas);
             Log.debug("Attached canvas");
-            return this;
+            return canvas;
         }
 
     private:

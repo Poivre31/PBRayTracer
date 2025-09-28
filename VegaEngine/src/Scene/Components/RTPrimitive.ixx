@@ -1,9 +1,9 @@
-export module Core:Components.RTPrimitive;
+export module Entities:Components.RTPrimitive;
 import Math;
 
 using namespace Vega::Math;
 
-namespace Vega {
+export namespace Vega {
 
 	enum PrimitiveType {
 		sphere = 0,

@@ -88,7 +88,6 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -98,6 +97,9 @@
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "bin\Debug\res"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -117,7 +119,6 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,6 +130,9 @@
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "bin\Release\res"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -148,7 +152,6 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,6 +163,9 @@
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "bin\Dist\res"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\OpenGL.h" />
@@ -173,11 +179,12 @@
     <ClCompile Include="src\Core\LayerStackI.cpp" />
     <ClCompile Include="src\Core\Window.ixx" />
     <ClCompile Include="src\Core\WindowI.cpp" />
-    <ClCompile Include="src\IO\IOLayer.ixx" />
+    <ClCompile Include="src\IO\IO.ixx" />
+    <ClCompile Include="src\Core\Layers\IOLayer.ixx" />
     <ClCompile Include="src\IO\Keys.ixx" />
-    <ClCompile Include="src\ImGui\ImGuiCanvas.ixx" />
-    <ClCompile Include="src\ImGui\ImGuiLayer.ixx" />
-    <ClCompile Include="src\ImGui\ImGuiLayerI.cpp" />
+    <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx" />
+    <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx" />
+    <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp" />
     <ClCompile Include="src\Math\Mat3x3.ixx" />
     <ClCompile Include="src\Math\Mat3x3f.ixx" />
     <ClCompile Include="src\Math\Math.ixx" />
@@ -185,23 +192,25 @@
     <ClCompile Include="src\Math\Vec3.ixx" />
     <ClCompile Include="src\Math\Vec3Math.ixx" />
     <ClCompile Include="src\Math\VecTypes.ixx" />
-    <ClCompile Include="src\Render\Buffer.ixx" />
-    <ClCompile Include="src\Render\ComputeShader.ixx" />
-    <ClCompile Include="src\Render\ComputeShaderI.cpp" />
-    <ClCompile Include="src\Render\ImageFormats.ixx" />
-    <ClCompile Include="src\Render\LinkedSSBO.ixx" />
-    <ClCompile Include="src\Render\Mesh.ixx" />
-    <ClCompile Include="src\Render\Mesh2D.ixx" />
-    <ClCompile Include="src\Render\ScreenQuad.ixx" />
-    <ClCompile Include="src\Render\Shader.ixx" />
-    <ClCompile Include="src\Render\ShaderCompiler.ixx" />
-    <ClCompile Include="src\Render\ShaderCompilerI.cpp" />
-    <ClCompile Include="src\Render\ShaderI.cpp" />
-    <ClCompile Include="src\Render\Texture.ixx" />
-    <ClCompile Include="src\Render\TextureManager.cpp" />
-    <ClCompile Include="src\Render\TextureManager.ixx">
+    <ClCompile Include="src\Render\Data\Buffer.ixx" />
+    <ClCompile Include="src\Render\Render.ixx" />
+    <ClCompile Include="src\Render\Shaders\ComputeShader.ixx" />
+    <ClCompile Include="src\Render\Shaders\ComputeShaderI.cpp" />
+    <ClCompile Include="src\Render\Data\ImageFormats.ixx" />
+    <ClCompile Include="src\Render\Data\LinkedSSBO.ixx" />
+    <ClCompile Include="src\Render\Objects\Mesh.ixx" />
+    <ClCompile Include="src\Render\Objects\Mesh2D.ixx" />
+    <ClCompile Include="src\Render\Objects\ScreenQuad.ixx" />
+    <ClCompile Include="src\Render\Shaders\Shader.ixx" />
+    <ClCompile Include="src\Render\Shaders\ShaderCompiler.ixx" />
+    <ClCompile Include="src\Render\Shaders\ShaderCompilerI.cpp" />
+    <ClCompile Include="src\Render\Shaders\ShaderI.cpp" />
+    <ClCompile Include="src\Render\Data\Texture.ixx" />
+    <ClCompile Include="src\Render\Data\TextureManager.cpp" />
+    <ClCompile Include="src\Render\Data\TextureManager.ixx">
       <ObjectFileName>$(IntDir)\TextureManager1.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="src\Render\Shaders\ShaderManager.ixx" />
     <ClCompile Include="src\Scene\Collection.ixx" />
     <ClCompile Include="src\Scene\Components\Camera.ixx" />
     <ClCompile Include="src\Scene\Components\Controller.ixx" />
@@ -209,11 +218,27 @@
     <ClCompile Include="src\Scene\Components\RigidBody.ixx" />
     <ClCompile Include="src\Scene\Components\Transform.ixx" />
     <ClCompile Include="src\Scene\DefaultEntityTypes.ixx" />
+    <ClCompile Include="src\Scene\Entities.ixx" />
     <ClCompile Include="src\Scene\Entity.ixx" />
     <ClCompile Include="src\Scene\Scene.ixx" />
     <ClCompile Include="src\Utility\Log.ixx" />
     <ClCompile Include="src\Utility\Timer.ixx" />
+    <ClCompile Include="src\Utility\Utility.ixx" />
     <ClCompile Include="src\Vega.ixx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\res\defaults\exp.frag" />
+    <None Include="bin\Debug\res\defaults\fullScreenQuad.frag" />
+    <None Include="bin\Debug\res\defaults\fullScreenQuad.vert" />
+    <None Include="bin\Release\res\defaults\exp.frag" />
+    <None Include="bin\Release\res\defaults\fullScreenQuad.frag" />
+    <None Include="bin\Release\res\defaults\fullScreenQuad.vert" />
+    <None Include="bin\Release\res\exp.frag" />
+    <None Include="bin\Release\res\fullScreenQuad.frag" />
+    <None Include="bin\Release\res\fullScreenQuad.vert" />
+    <None Include="res\exp.frag" />
+    <None Include="res\fullScreenQuad.frag" />
+    <None Include="res\fullScreenQuad.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">

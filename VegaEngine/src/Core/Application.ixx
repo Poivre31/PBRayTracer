@@ -2,14 +2,13 @@ module;
 #include "OpenGL.h"
 
 export module Core:Application;
+import :Scene;
 import :LayerStack;
 import :Layer;
-import :Timer;
-import :Log;
 import :Window;
 import :ImGuiLayer;
 import :IOLayer;
-import :Scene;
+import Utility;
 import std;
 
 namespace Vega {

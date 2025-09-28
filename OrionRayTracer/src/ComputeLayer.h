@@ -54,7 +54,7 @@ public:
 	}
 
 	void OnPhysicsUpdate(double timeStep) override {
-		Vega::Keys controls = _app->GetIOData().mainControls;
+		Vega::Keys controls = _app->GetIOData().inputs;
 
 		_camera.Update(timeStep, controls);
 	}

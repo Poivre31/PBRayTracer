@@ -1,8 +1,8 @@
 module;
 #include "OpenGL.h"
-module Core;
+module Render;
 import :TextureManager;
-import Core;
+import Utility;
 
 namespace Vega {
 

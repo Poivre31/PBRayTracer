@@ -1,6 +1,6 @@
-export module Core:Components.RigidBody;
+export module Entities:Components.RigidBody;
 import :Components.Transform;
-import :Log;
+import Utility;
 import Math;
 using namespace Vega::Math;
 

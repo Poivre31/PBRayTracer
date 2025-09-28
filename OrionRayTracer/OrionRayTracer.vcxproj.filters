@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\boids">
+      <UniqueIdentifier>{8FA5B710-FB0F-6C87-444E-1D2DB0F749DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\defaults">
+      <UniqueIdentifier>{9669AA93-82CC-3938-2B52-72EE179405BB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trash">
+      <UniqueIdentifier>{A7497210-135E-9AC1-DCDF-3D2148B396F2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Boids.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ComputeLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Orion.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OrionLogger.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math.h" />
+    <ClInclude Include="src\MathInput.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\boids\boids.comp">
+      <Filter>res\boids</Filter>
+    </None>
+    <None Include="res\circle.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\compTest.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\cone.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\cube.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\cylinder.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\mathTest\sphericalSources.frag">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\fullScreenQuad.frag">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\fullScreenQuad.vert">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\fullScreenQuad.frag">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\fullScreenQuad.vert">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\intersectPrimitives.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\plane.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\primitiveNormals.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\pyramid.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\rayGeneration.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\rotations.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\skyShader.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\sphere.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\transform.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="trash\accumulateFrames.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\boxBlur.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\buildingTools.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\dither.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\downsample.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\drawTools.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\fastAA.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\rayTracing.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\testShaderFrag.frag">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\testShaderVert.vert">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\upsample.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\varianceEstimator.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="trash\varianceEstimatorCopy.comp">
+      <Filter>trash</Filter>
+    </None>
+    <None Include="res\mathTest\planes.frag" />
+  </ItemGroup>
+</Project>

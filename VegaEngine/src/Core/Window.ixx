@@ -3,7 +3,7 @@ module;
 #include <GLFW/glfw3.h>
 
 export module Core:Window;
-import :Log;
+import Utility;
 
 
 namespace Vega {

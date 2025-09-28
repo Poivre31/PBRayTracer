@@ -1,4 +1,4 @@
-export module Core:Entity;
+export module Entities:Entity;
 export import :Components.Camera;
 export import :Components.Controller;
 export import :Components.RigidBody;

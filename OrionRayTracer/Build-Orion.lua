@@ -9,8 +9,13 @@ project "OrionRayTracer"
 
    files {
       "**.h",
-       "**.cpp",
+      "**.cpp",
+      "**.ixx",
+      "**.comp",
+      "**.frag",
+      "**.vert"
    }
+
 
    includedirs{
       "../vendor/GLFW/include",
@@ -38,7 +43,8 @@ project "OrionRayTracer"
 
    buildoptions { "/utf-8" }
 
-   postbuildcommands {
+   prebuildcommands {
+      '{COPYDIR} "../VegaEngine/res" "%{prj.location}/res/defaults"',
       '{COPYDIR} "%{prj.location}/res" "%{cfg.targetdir}/res"'
    } 
 

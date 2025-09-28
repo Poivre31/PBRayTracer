@@ -91,7 +91,6 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -99,9 +98,10 @@
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Debug\res"</Command>
-    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy /Q /E /Y /I "..\VegaEngine\res" "$(ProjectDir)\res\defaults"
+xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Debug\res"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -121,7 +121,6 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,9 +130,10 @@
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Release\res"</Command>
-    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy /Q /E /Y /I "..\VegaEngine\res" "$(ProjectDir)\res\defaults"
+xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Release\res"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -153,7 +153,6 @@
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,12 +162,58 @@
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist\res"</Command>
-    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy /Q /E /Y /I "..\VegaEngine\res" "$(ProjectDir)\res\defaults"
+xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist\res"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Boids.h" />
+    <ClInclude Include="src\ComputeLayer.h" />
+    <ClInclude Include="src\DebugWindow.h" />
+    <ClInclude Include="src\Math.h" />
+    <ClInclude Include="src\MathInput.h" />
+    <ClInclude Include="src\Orion.h" />
+    <ClInclude Include="src\OrionLogger.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\boids\boids.comp" />
+    <None Include="res\circle.comp" />
+    <None Include="res\compTest.comp" />
+    <None Include="res\cone.comp" />
+    <None Include="res\cube.comp" />
+    <None Include="res\cylinder.comp" />
+    <None Include="res\mathTest\planes.frag" />
+    <None Include="res\mathTest\sphericalSources.frag" />
+    <None Include="res\defaults\fullScreenQuad.frag" />
+    <None Include="res\defaults\fullScreenQuad.vert" />
+    <None Include="res\fullScreenQuad.frag" />
+    <None Include="res\fullScreenQuad.vert" />
+    <None Include="res\intersectPrimitives.comp" />
+    <None Include="res\plane.comp" />
+    <None Include="res\primitiveNormals.comp" />
+    <None Include="res\pyramid.comp" />
+    <None Include="res\rayGeneration.comp" />
+    <None Include="res\rotations.comp" />
+    <None Include="res\skyShader.comp" />
+    <None Include="res\sphere.comp" />
+    <None Include="res\transform.comp" />
+    <None Include="trash\accumulateFrames.comp" />
+    <None Include="trash\boxBlur.comp" />
+    <None Include="trash\buildingTools.comp" />
+    <None Include="trash\dither.comp" />
+    <None Include="trash\downsample.comp" />
+    <None Include="trash\drawTools.comp" />
+    <None Include="trash\fastAA.comp" />
+    <None Include="trash\rayTracing.comp" />
+    <None Include="trash\testShaderFrag.frag" />
+    <None Include="trash\testShaderVert.vert" />
+    <None Include="trash\upsample.comp" />
+    <None Include="trash\varianceEstimator.comp" />
+    <None Include="trash\varianceEstimatorCopy.comp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">
@@ -177,16 +222,6 @@
     <ProjectReference Include="..\VegaEngine\VegaEngine.vcxproj">
       <Project>{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Boids.h" />
-    <ClInclude Include="src\ComputeLayer.h" />
-    <ClInclude Include="src\DebugWindow.h" />
-    <ClInclude Include="src\Orion.h" />
-    <ClInclude Include="src\OrionLogger.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\boids\boids.comp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

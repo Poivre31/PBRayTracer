@@ -3,8 +3,8 @@ module;
 
 
 export module Core:Layer;
+import Utility;
 import std;
-import :Log;
 
 namespace Vega {
 

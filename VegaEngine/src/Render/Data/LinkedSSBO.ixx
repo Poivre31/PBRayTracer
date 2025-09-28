@@ -1,40 +1,56 @@
 module;
 #include "OpenGL.h"
-export module Core:Buffer;
-import :Log;
+export module Render:LinkedSSBO;
+import :Buffer;
 import std;
 
-export namespace Vega {
+namespace Vega {
 
-	template <typename T>
-	class SSBO
+	template <typename CpuObject, typename GpuObject>
+	concept Parsable = requires(CpuObject t) {
+		{ t.Parse() } -> std::convertible_to<GpuObject>;
+	};
+
+	export template <typename CpuT, typename GpuT>
+		requires Parsable<CpuT, GpuT>
+	class LinkedSSBO
 	{
 	public:
-		SSBO() {
+		LinkedSSBO() {
 			glGenBuffers(1, &_ID);
 			_dataSet = false;
 		}
 
-		SSBO(const std::vector<T>& data) {
+		LinkedSSBO(const std::vector<CpuT>& data) {
+			_nElements = data.size();
+			_gpuObjects.resize(_nElements);
+			for (size_t i = 0; i < _nElements; i++)
+			{
+				_gpuObjects[i] = data[i].Parse();
+			}
 			glGenBuffers(1, &_ID);
 			glBindBuffer(GL_SHADER_STORAGE_BUFFER, _ID);
-			glBufferData(GL_SHADER_STORAGE_BUFFER, data.size() * sizeof(T), data.data(), GL_DYNAMIC_READ);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, _nElements * sizeof(GpuT), _gpuObjects.data(), GL_DYNAMIC_READ);
 			_dataSet = true;
-			_nElements = data.size();
 		}
 
 		size_t GetReservedSize() const {
 			return _nElements;
 		}
 
-		void SetData(const std::vector<T>& data, size_t nElements = -1) {
+		void SetData(const std::vector<CpuT>& data, size_t nElements = -1) {
 			if (nElements == -1)
 				_nElements = data.size();
 			else
 				_nElements = nElements;
 
+			_gpuObjects.resize(_nElements);
+			for (size_t i = 0; i < _nElements; i++)
+			{
+				_gpuObjects[i] = data[i].Parse();
+			}
 			glBindBuffer(GL_SHADER_STORAGE_BUFFER, _ID);
-			glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(T) * _nElements, data.data(), GL_DYNAMIC_READ);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, _nElements * sizeof(GpuT), _gpuObjects.data(), GL_DYNAMIC_READ);
 			_dataSet = true;
 		}
 
@@ -47,7 +63,7 @@ export namespace Vega {
 
 		/// Updates a portion of the data on the GPU.
 		/// Offset is in number of elements
-		void UpdateData(const std::vector<T>& data, size_t nSubElements = -1, size_t offset = 0) {
+		void UpdateData(const std::vector<CpuT>& data, size_t nSubElements = -1, size_t offset = 0) {
 			if (nSubElements == -1)
 				nSubElements = data.size();
 
@@ -59,8 +75,14 @@ export namespace Vega {
 				Log.error("Trying to update SSBO with subdata larget than allocated size");
 				return;
 			}
+
+			for (size_t i = offset; i < offset + nSubElements; i++)
+			{
+				_gpuObjects[i] = data[i].Parse();
+			}
+
 			glBindBuffer(GL_SHADER_STORAGE_BUFFER, _ID);
-			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset * sizeof(T), nSubElements * sizeof(T), &data[offset]);
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset * sizeof(GpuT), nSubElements * sizeof(GpuT), &_gpuObjects[offset]);
 		}
 
 		void Zero() {
@@ -69,30 +91,31 @@ export namespace Vega {
 				return;
 			}
 			glBindBuffer(GL_SHADER_STORAGE_BUFFER, _ID);
-			glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, _nElements * sizeof(T), nullptr);
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, _nElements * sizeof(GpuT), nullptr);
 		}
 
 		/// Gets data from the GPU.
 		/// Offset is in number of elements
-		void GetData(std::vector<T>& data, size_t nSubElements = -1, size_t offset = 0) {
-			if (nSubElements == -1) {
+		void GetData(std::vector<GpuT>& data, size_t nSubElements = -1, size_t offset = 0) {
+			if (nSubElements == -1)
 				nSubElements = _nElements;
-			}
+
 			if (!_dataSet) {
 				Log.error("Trying to get data from SSBO whose data has not yet been set");
 				return;
 			}
-			if (sizeof(data) < nSubElements * sizeof(T)) {
+			if (data.size() < nSubElements) {
 				Log.error("Trying to get data from SSBO into array smaller than the data");
 				return;
 			}
-			glGetNamedBufferSubData(_ID, offset * sizeof(T), nSubElements * sizeof(T), &data);
+			glGetNamedBufferSubData(_ID, offset * sizeof(GpuT), nSubElements * sizeof(GpuT), data.data());
 		}
 
 		void Reserve(size_t nElements) {
 			_nElements = nElements;
+			_gpuObjects.resize(_nElements);
 			glBindBuffer(GL_SHADER_STORAGE_BUFFER, _ID);
-			glBufferData(GL_SHADER_STORAGE_BUFFER, _nElements * sizeof(T), nullptr, GL_DYNAMIC_READ);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, _nElements * sizeof(GpuT), nullptr, GL_DYNAMIC_READ);
 			_dataSet = true;
 		}
 
@@ -100,6 +123,8 @@ export namespace Vega {
 		GLuint _ID = 0;
 		bool _dataSet = false;
 		size_t _nElements = 0;
+
+		std::vector<GpuT> _gpuObjects;
 	};
 
 }

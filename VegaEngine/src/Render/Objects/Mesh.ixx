@@ -1,6 +1,6 @@
 module;
 #include "OpenGL.h"
-export module Core:Mesh;
+export module Render:Mesh;
 import :Shader;
 import std;
 
