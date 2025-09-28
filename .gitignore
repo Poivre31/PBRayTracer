@@ -45,6 +45,9 @@
 
 /python
 /Legacy
+/PBRT
 
 */bin
 */obj
+/PBRT/PBRT.vcxproj
+/PBRT/PBRT.vcxproj.filters
