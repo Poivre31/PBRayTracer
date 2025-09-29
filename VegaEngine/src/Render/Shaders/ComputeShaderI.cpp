@@ -7,16 +7,19 @@ import :ShaderCompiler;
 namespace Vega {
 
 	ComputeShader::ComputeShader(const std::string& path) {
-		_pathList = { path };
+		_pathList = { "res/" + path };
 		SetID(CreateComputeProgram(_pathList));
 	}
 
 	ComputeShader::ComputeShader(const std::vector<std::string>& pathList) : _pathList(pathList) {
+		for (auto& path : _pathList) {
+			path = "res/" + path;
+		}
 		SetID(CreateComputeProgram(_pathList));
 	}
 
 	ComputeShader::ComputeShader(const std::string& directory, const std::string& extension) {
-		for (const auto& file : std::filesystem::directory_iterator(directory)) {
+		for (const auto& file : std::filesystem::directory_iterator("res/" + directory)) {
 			//if (std::any_of(begin(extensions), end(extensions), [file](std::string a) {return a == file.path().extension(); })) {
 			if (extension == file.path().extension()) {
 				_pathList.push_back(file.path().string());
@@ -31,22 +34,22 @@ namespace Vega {
 		SetID(CreateComputeProgram(_pathList));
 	}
 
-	void ComputeShader::Attach(std::string path) {
-		Use();
-		std::ifstream stream(path);
-		std::stringstream source;
-		std::string line;
+	//void ComputeShader::Attach(std::string path) {
+	//	Use();
+	//	std::ifstream stream("res/" + path);
+	//	std::stringstream source;
+	//	std::string line;
 
-		while (getline(stream, line)) {
-			source << line << "\n";
-		}
-		unsigned int shader = CompileShader(GL_COMPUTE_SHADER, source.str());
-		glAttachShader(GetID(), shader);
-		glLinkProgram(GetID());
-		glValidateProgram(GetID());
+	//	while (getline(stream, line)) {
+	//		source << line << "\n";
+	//	}
+	//	unsigned int shader = CompileShader(GL_COMPUTE_SHADER, source.str());
+	//	glAttachShader(GetID(), shader);
+	//	glLinkProgram(GetID());
+	//	glValidateProgram(GetID());
 
-		glDeleteShader(shader);
-	}
+	//	glDeleteShader(shader);
+	//}
 
 	void ComputeShader::Dispatch1D(GLuint res, GLuint numThread) {
 		Use();

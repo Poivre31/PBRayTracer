@@ -17,12 +17,12 @@ public:
 	}
 
 	void Random() override {
-		_rb.SetPosition(Random::RandVec3d(0., 1.));
-		_rb.SetVelocity(.01 * Random::RandVec3d(-1., 1.));
-		_rb.SetMass(Random::RandDouble(1., .2));
+		_rb.SetPosition(Random::Rand3f(0., 1.));
+		_rb.SetVelocity(.01 * Random::Rand3f(-1., 1.));
+		_rb.SetMass(Random::Randf(1., .2));
 	}
 
-	void OnPhysicsUpdate(double deltaTime) override {
+	void OnUpdate(double deltaTime) override {
 		Vec3<double> position = _rb.GetPosition();
 		Vec3<double> velocity = _rb.GetVelocity();
 
@@ -77,21 +77,19 @@ private:
 class BoidsLayer : public Vega::Layer {
 public:
 
-	BoidsLayer() {
-		_app = Vega::Application::Get();
-	};
+	BoidsLayer() {};
 
 	void OnAttach() override {
-		_boids.RandomCollection(1000);
+		_boids.Random(1000);
 
 		_boidsBuffer.Reserve(_boids.Size());
 		_boidsBuffer.Bind(7);
 
-		_compute = std::make_unique<Vega::ComputeShader>("res/boids/boids.comp");
+		_compute = std::make_unique<Vega::ComputeShader>("boids/boids.comp");
 		_compute->SetInt("nBoids", (int)_boids.Size());
 
-		_width = _app->GetWindow()->GetWidth();
-		_height = _app->GetWindow()->GetHeight();
+		_width = Vega::Systems::Window()->Width();
+		_height = Vega::Systems::Window()->Height();
 
 		_image = Vega::Texture({ _width, _height, Vega::Formats::RGBA32F });
 
@@ -99,8 +97,8 @@ public:
 		_compute->SetInt("image", 0);
 	}
 
-	void OnPhysicsUpdate(double deltaTime) override {
-		_boids.UpdateCollection(deltaTime);
+	void OnUpdate(double deltaTime) override {
+		_boids.Update(deltaTime);
 		double energy = 0;
 		for (auto& boid1 : _boids.Data()) {
 			for (auto& boid2 : _boids.Data()) {
@@ -116,13 +114,12 @@ public:
 			boid1.GetRB().Update(deltaTime);
 			energy += .5 * boid1.GetRB().GetMass() * boid1.GetRB().GetVelocity().Norm2();
 		}
-		if (Vega::Timer::GetFrameCount() % 200 == 0) {
-			OrionLog.debug(std::format("Energy = {}", energy));
+		if (Vega::Timer::FrameCount() % 200 == 0) {
+			OrionLog.debug("Energy = {}", energy);
 		}
 		_boidsBuffer.UpdateData(_boids.Data(), _boids.Size(), 0);
-	}
 
-	void OnUpdate() override {
+
 		if (ImGui::IsKeyPressed(ImGuiKey_R)) {
 			_compute->Reload();
 			_compute->SetInt("nBoids", (int)_boids.Size());
@@ -141,7 +138,6 @@ private:
 	GLuint _height = 0;
 	Vega::Texture _image;
 
-	Vega::Application* _app = nullptr;
 	std::unique_ptr<Vega::ComputeShader> _compute;
 	Vega::Collection<Boid> _boids;
 	Vega::LinkedSSBO<Boid, GPUBoid> _boidsBuffer;

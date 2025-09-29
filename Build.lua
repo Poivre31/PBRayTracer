@@ -1,12 +1,12 @@
 workspace "OrionRayTracer"
-   configurations {"Debug", "Release", "Dist"}
-   architecture "x64"
-   startproject "OrionRayTracer"
-   systemversion "latest"
-   clangtidy "On"
-   buildoptions { "/Zc:__cplusplus" }
-   include "vendor/premake-vscode/vscode.lua"
+configurations {"Debug", "Release", "Dist"}
+architecture "x64"
+startproject "OrionRayTracer"
+systemversion "latest"
+clangtidy "On"
+buildoptions { "/Zc:__cplusplus" }
 
+include "SampleProject/Build-Project.lua"
 include "VegaEngine/Build-Vega.lua"
 include "OrionRayTracer/Build-Orion.lua"
 include "PBRT/Build-PBRT.lua"

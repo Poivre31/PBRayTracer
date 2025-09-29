@@ -174,17 +174,21 @@
     <ClCompile Include="src\Core\Application.ixx" />
     <ClCompile Include="src\Core\ApplicationI.cpp" />
     <ClCompile Include="src\Core\Core.ixx" />
-    <ClCompile Include="src\Core\Layer.ixx" />
-    <ClCompile Include="src\Core\LayerStack.ixx" />
-    <ClCompile Include="src\Core\LayerStackI.cpp" />
-    <ClCompile Include="src\Core\Window.ixx" />
-    <ClCompile Include="src\Core\WindowI.cpp" />
-    <ClCompile Include="src\IO\IO.ixx" />
-    <ClCompile Include="src\Core\Layers\IOLayer.ixx" />
-    <ClCompile Include="src\IO\Keys.ixx" />
     <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx" />
     <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx" />
     <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp" />
+    <ClCompile Include="src\Core\Layer.ixx" />
+    <ClCompile Include="src\Core\LayerStack.ixx" />
+    <ClCompile Include="src\Core\LayerStackI.cpp" />
+    <ClCompile Include="src\Core\Layers\IOLayer.ixx" />
+    <ClCompile Include="src\Core\Window.ixx" />
+    <ClCompile Include="src\Core\WindowI.cpp" />
+    <ClCompile Include="src\DataContainer.ixx" />
+    <ClCompile Include="src\Gui\Gui.ixx" />
+    <ClCompile Include="src\Gui\GuiCanvas.ixx" />
+    <ClCompile Include="src\Gui\GuiInput.ixx" />
+    <ClCompile Include="src\Io\Io.ixx" />
+    <ClCompile Include="src\Io\Keys.ixx" />
     <ClCompile Include="src\Math\Mat3x3.ixx" />
     <ClCompile Include="src\Math\Mat3x3f.ixx" />
     <ClCompile Include="src\Math\Math.ixx" />
@@ -193,23 +197,23 @@
     <ClCompile Include="src\Math\Vec3Math.ixx" />
     <ClCompile Include="src\Math\VecTypes.ixx" />
     <ClCompile Include="src\Render\Data\Buffer.ixx" />
-    <ClCompile Include="src\Render\Render.ixx" />
-    <ClCompile Include="src\Render\Shaders\ComputeShader.ixx" />
-    <ClCompile Include="src\Render\Shaders\ComputeShaderI.cpp" />
     <ClCompile Include="src\Render\Data\ImageFormats.ixx" />
     <ClCompile Include="src\Render\Data\LinkedSSBO.ixx" />
-    <ClCompile Include="src\Render\Objects\Mesh.ixx" />
-    <ClCompile Include="src\Render\Objects\Mesh2D.ixx" />
-    <ClCompile Include="src\Render\Objects\ScreenQuad.ixx" />
-    <ClCompile Include="src\Render\Shaders\Shader.ixx" />
-    <ClCompile Include="src\Render\Shaders\ShaderCompiler.ixx" />
-    <ClCompile Include="src\Render\Shaders\ShaderCompilerI.cpp" />
-    <ClCompile Include="src\Render\Shaders\ShaderI.cpp" />
     <ClCompile Include="src\Render\Data\Texture.ixx" />
     <ClCompile Include="src\Render\Data\TextureManager.cpp" />
     <ClCompile Include="src\Render\Data\TextureManager.ixx">
       <ObjectFileName>$(IntDir)\TextureManager1.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="src\Render\Objects\Mesh.ixx" />
+    <ClCompile Include="src\Render\Objects\Mesh2D.ixx" />
+    <ClCompile Include="src\Render\Objects\ScreenQuad.ixx" />
+    <ClCompile Include="src\Render\Render.ixx" />
+    <ClCompile Include="src\Render\Shaders\ComputeShader.ixx" />
+    <ClCompile Include="src\Render\Shaders\ComputeShaderI.cpp" />
+    <ClCompile Include="src\Render\Shaders\Shader.ixx" />
+    <ClCompile Include="src\Render\Shaders\ShaderCompiler.ixx" />
+    <ClCompile Include="src\Render\Shaders\ShaderCompilerI.cpp" />
+    <ClCompile Include="src\Render\Shaders\ShaderI.cpp" />
     <ClCompile Include="src\Render\Shaders\ShaderManager.ixx" />
     <ClCompile Include="src\Scene\Collection.ixx" />
     <ClCompile Include="src\Scene\Components\Camera.ixx" />
@@ -227,18 +231,23 @@
     <ClCompile Include="src\Vega.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\res\defaults\exp.frag" />
-    <None Include="bin\Debug\res\defaults\fullScreenQuad.frag" />
-    <None Include="bin\Debug\res\defaults\fullScreenQuad.vert" />
-    <None Include="bin\Release\res\defaults\exp.frag" />
-    <None Include="bin\Release\res\defaults\fullScreenQuad.frag" />
-    <None Include="bin\Release\res\defaults\fullScreenQuad.vert" />
+    <None Include="bin\Debug\res\exp.frag" />
+    <None Include="bin\Debug\res\fullScreenQuad.frag" />
+    <None Include="bin\Debug\res\fullScreenQuad.vert" />
+    <None Include="bin\Dist\res\exp.frag" />
+    <None Include="bin\Dist\res\fullScreenQuad.frag" />
+    <None Include="bin\Dist\res\fullScreenQuad.vert" />
+    <None Include="bin\Release\res\default.comp" />
+    <None Include="bin\Release\res\default.frag" />
+    <None Include="bin\Release\res\default.vert" />
     <None Include="bin\Release\res\exp.frag" />
     <None Include="bin\Release\res\fullScreenQuad.frag" />
     <None Include="bin\Release\res\fullScreenQuad.vert" />
-    <None Include="res\exp.frag" />
-    <None Include="res\fullScreenQuad.frag" />
-    <None Include="res\fullScreenQuad.vert" />
+    <None Include="bin\Release\res\screenQuad.frag" />
+    <None Include="res\default.comp" />
+    <None Include="res\default.frag" />
+    <None Include="res\default.vert" />
+    <None Include="res\screenQuad.frag" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">

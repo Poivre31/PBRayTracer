@@ -10,17 +10,17 @@
     <Filter Include="bin\Debug\res">
       <UniqueIdentifier>{ED3416A6-59F5-91DC-2230-DB598EAFD6B8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="bin\Debug\res\defaults">
-      <UniqueIdentifier>{F46A6EC2-E064-9714-C9D1-2D25B56AFD80}</UniqueIdentifier>
+    <Filter Include="bin\Dist">
+      <UniqueIdentifier>{E1BF9A83-CD8C-F58E-F6A5-E336E2D12A1D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bin\Dist\res">
+      <UniqueIdentifier>{9A80E550-86E3-74F5-2F69-ADAB1BAB4078}</UniqueIdentifier>
     </Filter>
     <Filter Include="bin\Release">
       <UniqueIdentifier>{EE3667AA-5AEC-DF9F-E3E0-D9764F95D6A3}</UniqueIdentifier>
     </Filter>
     <Filter Include="bin\Release\res">
       <UniqueIdentifier>{27B60068-9341-6E2C-9C52-F120085DCA2C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Release\res\defaults">
-      <UniqueIdentifier>{6EED1E89-5A12-6E09-835D-53996FE16C27}</UniqueIdentifier>
     </Filter>
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
@@ -31,17 +31,32 @@
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\IO">
-      <UniqueIdentifier>{B449661C-A0EB-90F2-89A6-A44675E71743}</UniqueIdentifier>
+    <Filter Include="src\Core\ImGui">
+      <UniqueIdentifier>{8FB08004-7B7E-740A-6412-E530507F506F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ImGui">
-      <UniqueIdentifier>{170E22B3-8378-D629-CCB6-87CF3860B47E}</UniqueIdentifier>
+    <Filter Include="src\Core\Layers">
+      <UniqueIdentifier>{C43ED89A-30CA-455F-39DB-C853A5E5A15F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Gui">
+      <UniqueIdentifier>{017D2FA9-6D5C-AE44-7674-391BE2D214A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Io">
+      <UniqueIdentifier>{D449661C-C0EB-90F2-A9A6-A44695E71743}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Math">
       <UniqueIdentifier>{261422CF-12E1-7CDA-3BFA-6A822726B268}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Render">
       <UniqueIdentifier>{FC94E62B-E84C-2879-5154-01D53D2BC369}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Render\Data">
+      <UniqueIdentifier>{E5877016-5113-DEDA-5A24-61CFC62E3ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Render\Objects">
+      <UniqueIdentifier>{B56F595B-A153-1AB1-0AB4-1404F6B60433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Render\Shaders">
+      <UniqueIdentifier>{D5F59D9C-C1D9-5EF2-2A3A-5945163D4974}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
@@ -68,6 +83,15 @@
     <ClCompile Include="src\Core\Core.ixx">
       <Filter>src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx">
+      <Filter>src\Core\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx">
+      <Filter>src\Core\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp">
+      <Filter>src\Core\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Layer.ixx">
       <Filter>src\Core</Filter>
     </ClCompile>
@@ -77,26 +101,32 @@
     <ClCompile Include="src\Core\LayerStackI.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Layers\IOLayer.ixx">
+      <Filter>src\Core\Layers</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Window.ixx">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\WindowI.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Layers\IOLayer.ixx">
-      <Filter>src\IO</Filter>
+    <ClCompile Include="src\DataContainer.ixx">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\IO\Keys.ixx">
-      <Filter>src\IO</Filter>
+    <ClCompile Include="src\Gui\Gui.ixx">
+      <Filter>src\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx">
-      <Filter>src\ImGui</Filter>
+    <ClCompile Include="src\Gui\GuiCanvas.ixx">
+      <Filter>src\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx">
-      <Filter>src\ImGui</Filter>
+    <ClCompile Include="src\Gui\GuiInput.ixx">
+      <Filter>src\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp">
-      <Filter>src\ImGui</Filter>
+    <ClCompile Include="src\Io\Io.ixx">
+      <Filter>src\Io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Io\Keys.ixx">
+      <Filter>src\Io</Filter>
     </ClCompile>
     <ClCompile Include="src\Math\Mat3x3.ixx">
       <Filter>src\Math</Filter>
@@ -120,49 +150,55 @@
       <Filter>src\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Data\Buffer.ixx">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Data\ImageFormats.ixx">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Data\LinkedSSBO.ixx">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Data\Texture.ixx">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Data\TextureManager.cpp">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Data\TextureManager.ixx">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Objects\Mesh.ixx">
+      <Filter>src\Render\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Objects\Mesh2D.ixx">
+      <Filter>src\Render\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Objects\ScreenQuad.ixx">
+      <Filter>src\Render\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Render.ixx">
       <Filter>src\Render</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shaders\ComputeShader.ixx">
-      <Filter>src\Render</Filter>
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shaders\ComputeShaderI.cpp">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Data\ImageFormats.ixx">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Data\LinkedSSBO.ixx">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Objects\Mesh.ixx">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Objects\Mesh2D.ixx">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Objects\ScreenQuad.ixx">
-      <Filter>src\Render</Filter>
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shaders\Shader.ixx">
-      <Filter>src\Render</Filter>
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shaders\ShaderCompiler.ixx">
-      <Filter>src\Render</Filter>
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shaders\ShaderCompilerI.cpp">
-      <Filter>src\Render</Filter>
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Shaders\ShaderI.cpp">
-      <Filter>src\Render</Filter>
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="src\Render\Data\Texture.ixx">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Data\TextureManager.cpp">
-      <Filter>src\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Render\Data\TextureManager.ixx">
-      <Filter>src\Render</Filter>
+    <ClCompile Include="src\Render\Shaders\ShaderManager.ixx">
+      <Filter>src\Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Collection.ixx">
       <Filter>src\Scene</Filter>
@@ -185,6 +221,9 @@
     <ClCompile Include="src\Scene\DefaultEntityTypes.ixx">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Entities.ixx">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Entity.ixx">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -197,33 +236,40 @@
     <ClCompile Include="src\Utility\Timer.ixx">
       <Filter>src\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\Utility.ixx">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
     <ClCompile Include="src\Vega.ixx">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Render\Shaders\ShaderManager.ixx" />
-    <ClCompile Include="src\Render\Render.ixx" />
-    <ClCompile Include="src\Utility\Utility.ixx" />
-    <ClCompile Include="src\Scene\Entities.ixx" />
-    <ClCompile Include="src\IO\IO.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\res\defaults\exp.frag">
-      <Filter>bin\Debug\res\defaults</Filter>
+    <None Include="bin\Debug\res\exp.frag">
+      <Filter>bin\Debug\res</Filter>
     </None>
-    <None Include="bin\Debug\res\defaults\fullScreenQuad.frag">
-      <Filter>bin\Debug\res\defaults</Filter>
+    <None Include="bin\Debug\res\fullScreenQuad.frag">
+      <Filter>bin\Debug\res</Filter>
     </None>
-    <None Include="bin\Debug\res\defaults\fullScreenQuad.vert">
-      <Filter>bin\Debug\res\defaults</Filter>
+    <None Include="bin\Debug\res\fullScreenQuad.vert">
+      <Filter>bin\Debug\res</Filter>
     </None>
-    <None Include="bin\Release\res\defaults\exp.frag">
-      <Filter>bin\Release\res\defaults</Filter>
+    <None Include="bin\Dist\res\exp.frag">
+      <Filter>bin\Dist\res</Filter>
     </None>
-    <None Include="bin\Release\res\defaults\fullScreenQuad.frag">
-      <Filter>bin\Release\res\defaults</Filter>
+    <None Include="bin\Dist\res\fullScreenQuad.frag">
+      <Filter>bin\Dist\res</Filter>
     </None>
-    <None Include="bin\Release\res\defaults\fullScreenQuad.vert">
-      <Filter>bin\Release\res\defaults</Filter>
+    <None Include="bin\Dist\res\fullScreenQuad.vert">
+      <Filter>bin\Dist\res</Filter>
+    </None>
+    <None Include="bin\Release\res\default.comp">
+      <Filter>bin\Release\res</Filter>
+    </None>
+    <None Include="bin\Release\res\default.frag">
+      <Filter>bin\Release\res</Filter>
+    </None>
+    <None Include="bin\Release\res\default.vert">
+      <Filter>bin\Release\res</Filter>
     </None>
     <None Include="bin\Release\res\exp.frag">
       <Filter>bin\Release\res</Filter>
@@ -234,13 +280,19 @@
     <None Include="bin\Release\res\fullScreenQuad.vert">
       <Filter>bin\Release\res</Filter>
     </None>
-    <None Include="res\exp.frag">
+    <None Include="bin\Release\res\screenQuad.frag">
+      <Filter>bin\Release\res</Filter>
+    </None>
+    <None Include="res\default.comp">
       <Filter>res</Filter>
     </None>
-    <None Include="res\fullScreenQuad.frag">
+    <None Include="res\default.frag">
       <Filter>res</Filter>
     </None>
-    <None Include="res\fullScreenQuad.vert">
+    <None Include="res\default.vert">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\screenQuad.frag">
       <Filter>res</Filter>
     </None>
   </ItemGroup>

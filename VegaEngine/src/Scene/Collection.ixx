@@ -3,6 +3,7 @@ import :Components.RigidBody;
 import :Entity;
 import Utility;
 import Math;
+import std;
 
 using namespace Vega::Math;
 
@@ -16,6 +17,10 @@ export namespace Vega {
 
 		Collection(std::vector<T>& entities) : _entities(entities) {};
 
+		~Collection() {
+			Clear();
+		}
+
 		std::vector<T>& Data() {
 			return _entities;
 		}
@@ -24,11 +29,11 @@ export namespace Vega {
 			return _entities.size();
 		}
 
-		void AddEntity(T& entity) {
+		void Add(T& entity) {
 			_entities.push_back(entity);
 		}
 
-		void AddEntities(std::vector<T>& entities) {
+		void Add(std::vector<T>& entities) {
 			_entities.insert(_entities.end(), entities.begin(), entities.end());
 		}
 
@@ -41,7 +46,7 @@ export namespace Vega {
 			}
 		}
 
-		void ClearEntities() {
+		void Clear() {
 			for (auto entity : _entities)
 			{
 				entity.OnDestroy();
@@ -49,20 +54,21 @@ export namespace Vega {
 			_entities.clear();
 		}
 
-		void RandomCollection(size_t size) {
-			ClearEntities();
+		void Random(size_t size) {
+			Clear();
 			_entities.reserve(size);
 			for (size_t i = 0; i < size; i++)
 			{
-				_entities.push_back(RandomEntity<T>());
+				auto e = RandomEntity<T>();
+				e.OnCreate();
+				_entities.push_back(e);
 			}
 		}
 
-		void UpdateCollection(double deltaTime) {
+		void Update(double deltaTime) {
 			for (int i = 0; i < _entities.size(); i++)
 			{
-				_entities[i].OnPhysicsUpdate(deltaTime);
-				_entities[i].OnUpdate();
+				_entities[i].OnUpdate(deltaTime);
 			}
 		}
 

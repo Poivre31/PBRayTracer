@@ -3,11 +3,14 @@ module;
 module Render;
 import :Shader;
 import :ShaderCompiler;
+import Math;
+
+using namespace Vega::Math;
 
 namespace Vega {
 
-	Shader::Shader(const char* pathVertex, const char* pathFrag) : _pathVertex(pathVertex), _pathFrag(pathFrag) {
-		SetID(CreateProgram(pathVertex, pathFrag));
+	Shader::Shader(std::string pathVertex, std::string pathFrag) : _pathVertex("res/" + pathVertex), _pathFrag("res/" + pathFrag) {
+		SetID(CreateProgram(_pathVertex, _pathFrag));
 	}
 
 	Shader::~Shader() {
@@ -31,63 +34,85 @@ namespace Vega {
 		_ID = ID;
 	}
 
-	void Shader::SetInt(const char* variable, int value) {
+	void Shader::SetVariable(std::string name, int value) {
 		Use();
-		glUniform1i(glGetUniformLocation(_ID, variable), value);
+		glUniform1i(glGetUniformLocation(_ID, name.data()), value);
+	}
+	void Shader::SetVariable(std::string name, int2& value) {
+		Use();
+		glUniform2i(glGetUniformLocation(_ID, name.data()), value[0], value[1]);
+	}
+	void Shader::SetVariable(std::string name, int3& value) {
+		Use();
+		glUniform3i(glGetUniformLocation(_ID, name.data()), value[0], value[1], value[2]);
+	}
+	void Shader::SetVariable(std::string name, int4& value) {
+		Use();
+		glUniform4i(glGetUniformLocation(_ID, name.data()), value[0], value[1], value[2], value[3]);
 	}
 
-	void Shader::SetInt2(const char* variable, int a, int b) {
+	void Shader::SetVariable(std::string name, float value) {
 		Use();
-		glUniform2i(glGetUniformLocation(_ID, variable), a, b);
+		glUniform1f(glGetUniformLocation(_ID, name.data()), value);
 	}
-	void Shader::SetInt2(const char* variable, std::array<int,2> vec) {
+	void Shader::SetVariable(std::string name, float2& value) {
 		Use();
-		glUniform2i(glGetUniformLocation(_ID, variable), vec[0], vec[1]);
+		glUniform2f(glGetUniformLocation(_ID, name.data()), value[0], value[1]);
 	}
-
-	void Shader::SetInt3(const char* variable, int a, int b, int c) {
+	void Shader::SetVariable(std::string name, float3& value) {
 		Use();
-		glUniform3i(glGetUniformLocation(_ID, variable), a, b, c);
+		glUniform3f(glGetUniformLocation(_ID, name.data()), value[0], value[1], value[2]);
 	}
-	void Shader::SetInt3(const char* variable, std::array<int, 3> vec) {
+	void Shader::SetVariable(std::string name, float4& value) {
 		Use();
-		glUniform3i(glGetUniformLocation(_ID, variable), vec[0], vec[1], vec[2]);
-	}
-
-	void Shader::SetFloat(const char* variable, float value) {
-		Use();
-		glUniform1f(glGetUniformLocation(_ID, variable), value);
+		glUniform4f(glGetUniformLocation(_ID, name.data()), value[0], value[1], value[2], value[3]);
 	}
 
-	void Shader::SetFloat2(const char* variable, float a, float b) {
+	void Shader::SetInt(std::string variable, int value) {
 		Use();
-		glUniform2f(glGetUniformLocation(_ID, variable), a, b);
+		glUniform1i(glGetUniformLocation(_ID, variable.data()), value);
 	}
-	void Shader::SetFloat2(const char* variable, std::array<float, 2> vec) {
+	void Shader::SetInt2(std::string variable, int2 vec) {
 		Use();
-		glUniform2f(glGetUniformLocation(_ID, variable), vec[0], vec[1]);
+		glUniform2i(glGetUniformLocation(_ID, variable.data()), vec[0], vec[1]);
 	}
-
-	void Shader::SetFloat3(const char* variable, float a, float b, float c) {
+	void Shader::SetInt3(std::string variable, int3 vec) {
 		Use();
-		glUniform3f(glGetUniformLocation(_ID, variable), a, b, c);
+		glUniform3i(glGetUniformLocation(_ID, variable.data()), vec[0], vec[1], vec[2]);
 	}
-	void Shader::SetFloat3(const char* variable, std::array<float, 3> vec) {
+	void Shader::SetInt4(std::string variable, int4 vec) {
 		Use();
-		glUniform3f(glGetUniformLocation(_ID, variable), vec[0], vec[1], vec[2]);
-	}
-
-	void Shader::SetMat3x3(const char* variable, const Math::Mat3x3f& matrix, bool transpose) {
-		Use();
-		glUniformMatrix3fv(glGetUniformLocation(_ID, variable), 1, GL_TRUE, &matrix.a1);
+		glUniform4i(glGetUniformLocation(_ID, variable.data()), vec[0], vec[1], vec[2], vec[4] );
 	}
 
+	void Shader::SetFloat(std::string variable, float value) {
+		Use();
+		glUniform1f(glGetUniformLocation(_ID, variable.data()), value);
+	}
+	void Shader::SetFloat2(std::string variable, float2 vec) {
+		Use();
+		glUniform2f(glGetUniformLocation(_ID, variable.data()), vec[0], vec[1]);
+	}
+	void Shader::SetFloat3(std::string variable, float3 vec) {
+		Use();
+		glUniform3f(glGetUniformLocation(_ID, variable.data()), vec[0], vec[1], vec[2]);
+	}
+	void Shader::SetFloat4(std::string variable, float4 vec) {
+		Use();
+		glUniform4f(glGetUniformLocation(_ID, variable.data()), vec[0], vec[1], vec[2], vec[3]);
+	}
 
-	//void Shader::AttachFloatRef(const char* variable, float* data, int count) {
+	void Shader::SetMat3x3(std::string variable, const Math::Mat3x3f& matrix, bool transpose) {
+		Use();
+		glUniformMatrix3fv(glGetUniformLocation(_ID, variable.data()), 1, GL_TRUE, &matrix.a1);
+	}
+
+
+	//void Shader::AttachFloatRef(std::string& variable, float* data, int count) {
 	//	_floatVariables.push_back({ variable, count, data });
 	//}
 
-	//void Shader::AttachIntRef(const char* variable, int* data, int count) {
+	//void Shader::AttachIntRef(std::string& variable, int* data, int count) {
 	//	_intVariables.push_back({ variable, count, data });
 	//}
 

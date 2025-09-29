@@ -14,15 +14,15 @@ namespace Vega {
 	public:
 
 		Timer() {
-			_watchTime = GetTimeS();
+			_watchTime = TimeS();
 		}
 
 		void ResetWatch() {
-			_watchTime = GetTimeS();
+			_watchTime = TimeS();
 		}
 
-		double GetWatchTimeS() const {
-			return GetTimeS() - _watchTime;
+		double WatchTimeS() const {
+			return TimeS() - _watchTime;
 		}
 
 		static void Init() {
@@ -31,37 +31,37 @@ namespace Vega {
 			_frameCount = 0;
 		}
 
-		static double GetTimeS() {
+		static double TimeS() {
 			return double((steady_clock::now().time_since_epoch() - _epoch).count()) / 1000000000;
 		}
 
-		static double GetTimeMS() {
+		static double TimeMS() {
 			return double((steady_clock::now().time_since_epoch() - _epoch).count()) / 1000000;
 		}
 
-		static double GetTimeUS() {
+		static double TimeUS() {
 			return double((steady_clock::now().time_since_epoch() - _epoch).count()) / 1000;
 		}
 
-		static double GetTimeSinceStartup() {
-			return GetTimeS() - _startTime;
+		static double TimeSinceStartup() {
+			return TimeS() - _startTime;
 		}
 
-        static auto GetZoneTime() {
+        static auto ZoneTime() {
 			return zoned_time<seconds>{ current_zone(), time_point_cast<seconds>(system_clock::now()) };
         }
 
 		static void OnUpdate() {
 			_prevTime = _currTime;
-			_currTime = GetTimeS();
+			_currTime = TimeS();
 			_frameCount++;
 		}
 
-		static double GetDeltaTime() {
+		static double DeltaTime() {
 			return _currTime - _prevTime;
 		}
 
-		static size_t GetFrameCount() {
+		static size_t FrameCount() {
 			return _frameCount;
 		}
 

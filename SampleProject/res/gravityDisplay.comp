@@ -1,0 +1,44 @@
+#version 460 core
+
+layout(local_size_x = 16,local_size_y = 16,local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D image;
+
+struct Particle {
+	vec3 position;
+	vec3 velocity;
+};
+
+layout(std430, binding = 0) readonly restrict buffer ParticleBuffer
+{
+	Particle _Particles[]; // Buffer sent from the cpu to the gpu. Here vec3 and vec4 are equivalent
+};
+
+uniform int nBody; // Variable set by the cpu
+uniform float L;
+float pi = 3.1459;
+
+void main()
+{
+	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+	vec2 uv = vec2(pixelCoords)/imageSize(image);
+
+	vec3 pos = 2 * (2 * vec3(uv, L) - 1);
+
+	vec3 phi = vec3(0);
+	for(int i = 0; i < nBody; i++) {
+		float dist = length(_Particles[i].position.xy - pos.xy)  + 0.001;
+		//float z = clamp((_Particles[i].position.z),0,1);
+		vec3 color = .05 * abs(_Particles[i].velocity);
+		//color = vec3(1);
+
+		phi += color / (dist*dist);
+	}
+	phi /= nBody;
+
+	vec3 I = phi;
+
+	I = I/(1+I);
+	I = sqrt(I);
+
+	imageStore(image, pixelCoords, vec4(I,1));
+}

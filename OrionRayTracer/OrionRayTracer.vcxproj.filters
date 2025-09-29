@@ -10,6 +10,12 @@
     <Filter Include="res\defaults">
       <UniqueIdentifier>{9669AA93-82CC-3938-2B52-72EE179405BB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res\mathTest">
+      <UniqueIdentifier>{68A026CF-5403-B673-FD88-EE29E9CA81F6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\rayTracing">
+      <UniqueIdentifier>{F213EB26-DEE1-DE2C-C775-4F53B3E2BA91}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -27,14 +33,18 @@
     <ClInclude Include="src\DebugWindow.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Math.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MathInput.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Orion.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\OrionLogger.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Math.h" />
-    <ClInclude Include="src\MathInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -45,22 +55,7 @@
     <None Include="res\boids\boids.comp">
       <Filter>res\boids</Filter>
     </None>
-    <None Include="res\circle.comp">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\compTest.comp">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\cone.comp">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\cube.comp">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\cylinder.comp">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\mathTest\sphericalSources.frag">
+    <None Include="res\defaults\exp.frag">
       <Filter>res\defaults</Filter>
     </None>
     <None Include="res\defaults\fullScreenQuad.frag">
@@ -69,38 +64,59 @@
     <None Include="res\defaults\fullScreenQuad.vert">
       <Filter>res\defaults</Filter>
     </None>
-    <None Include="res\fullScreenQuad.frag">
-      <Filter>res</Filter>
+    <None Include="res\mathTest\planes.frag">
+      <Filter>res\mathTest</Filter>
     </None>
-    <None Include="res\fullScreenQuad.vert">
-      <Filter>res</Filter>
+    <None Include="res\mathTest\sphericalSources.frag">
+      <Filter>res\mathTest</Filter>
     </None>
-    <None Include="res\intersectPrimitives.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\circle.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\plane.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\compTest.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\primitiveNormals.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\cone.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\pyramid.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\cube.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\rayGeneration.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\cylinder.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\rotations.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\fullScreenQuad.frag">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\skyShader.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\fullScreenQuad.vert">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\sphere.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\intersectPrimitives.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
-    <None Include="res\transform.comp">
-      <Filter>res</Filter>
+    <None Include="res\rayTracing\plane.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\primitiveNormals.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\pyramid.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\rayGeneration.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\rotations.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\skyShader.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\sphere.comp">
+      <Filter>res\rayTracing</Filter>
+    </None>
+    <None Include="res\rayTracing\transform.comp">
+      <Filter>res\rayTracing</Filter>
     </None>
     <None Include="trash\accumulateFrames.comp">
       <Filter>trash</Filter>
@@ -141,6 +157,5 @@
     <None Include="trash\varianceEstimatorCopy.comp">
       <Filter>trash</Filter>
     </None>
-    <None Include="res\mathTest\planes.frag" />
   </ItemGroup>
 </Project>

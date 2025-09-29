@@ -31,8 +31,8 @@ namespace Vega {
 		{
 			int length = 0;
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-			std::unique_ptr<char> message = std::make_unique<char>(length);
-			glGetShaderInfoLog(id, length, &length, message.get());
+			char* message = new char[length];
+			glGetShaderInfoLog(id, length, &length, message);
 
 			switch (type) {
 			case(GL_VERTEX_SHADER):
@@ -48,8 +48,9 @@ namespace Vega {
 				Log.error("Failed to compile 'unknown type' shader");
 			}
 
-			Log.info(message.get());
+			Log.info(message);
 			glDeleteShader(id);
+
 			return id;
 		}
 
@@ -67,6 +68,10 @@ namespace Vega {
 		for (std::string path : pathList)
 		{
 			stream = std::ifstream(path);
+			if (!stream) {
+				Vega::Log.error(std::format("Invalid compute shader file path: {}, aborting program creation", path));
+				return 0;
+			}
 			while (getline(stream, line)) {
 				source << line << "\n";
 			}
@@ -97,7 +102,7 @@ namespace Vega {
 
 		stream = std::ifstream(vertPath);
 		if (!stream) {
-			Vega::Log.error("Invalid vertex shader file path, aborting program creation");
+			Vega::Log.error(std::format("Invalid vertex shader file path: {}, aborting program creation", vertPath));
 			return 0;
 		}
 		while (getline(stream, line)) {
@@ -109,7 +114,7 @@ namespace Vega {
 
 		stream = std::ifstream(fragPath);
 		if (!stream) {
-			Vega::Log.error("Invalid fragment shader file path, aborting program creation");
+			Vega::Log.error(std::format("Invalid fragment shader file path: {}, aborting program creation", fragPath));
 			return 0;
 		}
 		while (getline(stream, line)) {

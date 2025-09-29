@@ -3,37 +3,37 @@
 #include "MathInput.h"
 
 import Vega;
+using namespace Vega::Math;
+
 
 class MathLayer : public Vega::Layer {
 public:
 	void OnAttach() {
 
-		_shader = new Vega::Shader("res/defaults/fullScreenQuad.vert", "res/mathTest/sphericalSources.frag");
-		Vega::Application::Get()->AttachLayer<Vega::ScreenQuad>(_shader);
+		_shader = new Vega::Shader("defaults/fullScreenQuad.vert", "mathTest/sphericalSources.frag");
+		Vega::Systems::Application()->AttachLayer<Vega::ScreenQuad>(_shader);
 
-		_canvas = Vega::Application::Get()->GetGUI()->AttachCanvas<InputCanvas>();
-		_data = _canvas->GetData();
+		_canvas = Vega::Systems::Gui()->AttachCanvas<InputCanvas>("Ole", &_data);
 
 	}
 
 	void OnUpdate() {
 
-		if (ImGui::IsKeyPressed(ImGuiKey_R))
+		if (Vega::Keys::KeyPressed(Vega::Key::R, Vega::KeyMod::ModCtrl))
 			_shader->Reload();
-		_data = _canvas->GetData();
-		_shader->SetFloat2("range", _data->range);
-		_shader->SetFloat("a", _data->a);
-		_shader->SetFloat("wavelength", _data->wl);
-		_shader->SetFloat("intensity", _data->intensity);
-		_shader->SetFloat("gamma", _data->gamma);
-		_shader->SetFloat("L", _data->L);
-		_shader->SetInt("n", _data->n);
-		_shader->SetFloat("time", (float)Vega::Timer::GetTimeS());
 
+		_shader->SetVariable("range", _data.range);
+		_shader->SetVariable("a", _data.a);
+		_shader->SetVariable("wavelength", _data.wl);
+		_shader->SetVariable("intensity", _data.intensity);
+		_shader->SetVariable("gamma", _data.gamma);
+		_shader->SetVariable("L", _data.L);
+		_shader->SetVariable("n", _data.n);
+		_shader->SetVariable("time", (float)Vega::Timer::TimeS());
 	}
 
 private:
-	MathData* _data;
+	MathData _data{};
 	InputCanvas* _canvas;
 	Vega::Shader* _shader;
 };

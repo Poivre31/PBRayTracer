@@ -1,6 +1,6 @@
 module;
 #include "imgui.h"
-export module IO:Keys;
+export module Io:Keys;
 import std;
 import Utility;
 
@@ -59,7 +59,7 @@ export namespace Vega {
 	public:
 		Keys() = default;
 
-		void SetKey(char& key, ImGuiKey imguiKey) {
+		static void SetKey(char& key, ImGuiKey imguiKey) {
 			key = (char)KeyEvent::None;
 			if (ImGui::IsKeyReleased(imguiKey)) {
 				key |= (char)KeyEvent::Released;
@@ -76,7 +76,7 @@ export namespace Vega {
 		}
 
 
-		void Update() {
+		static void Update() {
 			for (size_t i = 0; i <= (int)Key::Z; i++)
 			{
 				SetKey(keys[i], (ImGuiKey)(ImGuiKey_A + i));
@@ -89,30 +89,30 @@ export namespace Vega {
 		}
 
 
-		bool KeyStatus(Key key, KeyEvent eventType) const {
+		static bool KeyStatus(Key key, KeyEvent eventType) {
 			return keys[(int)key] & (int)eventType;
 		}
-		bool KeyStatus(Key key, KeyEvent eventType, KeyMod mod) const {
+		static bool KeyStatus(Key key, KeyEvent eventType, KeyMod mod) {
 			return keys[(int)key] & (int)eventType && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
 
-		bool KeyPressed(Key key) const {
+		static bool KeyPressed(Key key) {
 			return keys[(int)key] & (int)KeyEvent::Pressed;
 		}
-		bool KeyPressed(Key key, KeyMod mod) const {
+		static bool KeyPressed(Key key, KeyMod mod) {
 			return keys[(int)key] & (int)KeyEvent::Pressed && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
 
-		bool KeyDown(Key key) const {
+		static bool KeyDown(Key key) {
 			return keys[(int)key] & (int)KeyEvent::Down;
 		}
-		bool KeyDown(Key key, KeyMod mod) const {
+		static bool KeyDown(Key key, KeyMod mod) {
 			return keys[(int)key] & (int)KeyEvent::Down && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
 
 
 	private:
-		std::array<char, 32> keys;
+		static inline std::array<char, 32> keys;
 	};
 
 }

@@ -6,7 +6,7 @@ module;
 export module Core:ImGuiLayer;
 import :Window;
 import :Layer;
-import :GuiCanvas;
+import Gui;
 import Utility;
 import std;
 
@@ -45,14 +45,17 @@ export namespace Vega {
             ImGui::DestroyContext();
         }
 
-        void OnUpdate() final {
+        void OnUpdate(double) final {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            for (GuiCanvas* window : _imguiCanvasStack)
+      
+            for (size_t i = 0; i < _canvasStack.size(); i++)
             {
-                window->Draw();
+                ImGui::Begin(_canvasNames[i].data());
+                _canvasStack[i]->Draw();
+                ImGui::End();
             }
 
             ImGui::Render();
@@ -60,10 +63,11 @@ export namespace Vega {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
-        template <std::derived_from<GuiCanvas> T>
-        T* AttachCanvas() {
-            auto* canvas = new T();
-            _imguiCanvasStack.push_back(canvas);
+        template <std::derived_from<GuiCanvas> T, typename ...Args>
+        T* AttachCanvas(const char* name, Args... args) {
+            auto* canvas = new T(args...);
+            _canvasStack.push_back(canvas);
+            _canvasNames.push_back(name);
             Log.debug("Attached canvas");
             return canvas;
         }
@@ -71,7 +75,8 @@ export namespace Vega {
     private:
         ImGuiLayer() = delete;
 
-        std::vector<GuiCanvas*> _imguiCanvasStack;
+        std::vector<GuiCanvas*> _canvasStack;
+        std::vector<std::string> _canvasNames;
         Window* _window = nullptr;
     };
 

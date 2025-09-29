@@ -2,6 +2,7 @@ module;
 #include "OpenGL.h"
 module Core;
 import :Application;
+import Utility;
 
 namespace Vega {
 	//static void OnLayerDestruction(Layer* layer) {
@@ -42,7 +43,7 @@ namespace Vega {
 			Log.error("Application already initialised, shutdown before new call to Init");
 			return;
 		}
-		Log.trace("### LAUNCHING ###\n", Color::Yellow);
+		Log.trace<Color::Yellow>("### LAUNCHING ###\n");
 		_instance = this;
 		_window = std::make_unique<Window>();
 		_window->Create(spec.windowData);
@@ -66,7 +67,7 @@ namespace Vega {
 		}
 
 		std::println();
-		Log.trace("### RUNNING ###\n", Color::Yellow);
+		Log.trace<Color::Yellow>("### RUNNING ###\n");
 		while (_running) {
 			if (_shouldClose) {
 				Shutdown();
@@ -75,19 +76,12 @@ namespace Vega {
 
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			for (Layer* layer : _layerStack)
-			{
-				layer->OnUpdate();
-			}
-
 			Timer::OnUpdate();
-
-
 			//TO FIX: UNUSUALLY LONG FRAME TIME AT STARTUP CAUSING LARGE ERRORS
-			double deltaTime = std::min(Timer::GetDeltaTime(), 1. / 60);;
+			double deltaTime = std::min(Timer::DeltaTime(), 1. / 60);
 			for (Layer* layer : _layerStack)
 			{
-				layer->OnPhysicsUpdate(deltaTime);
+				layer->OnUpdate(deltaTime);
 			}
 
 			_window->OnUpdate();
@@ -102,7 +96,7 @@ namespace Vega {
 		}
 
 		std::println();
-		Log.trace("### SHUTTING DOWN ###\n", Color::Yellow);
+		Log.trace<Color::Yellow>("### SHUTTING DOWN ###\n");
 
 		_running = false;
 

@@ -12,9 +12,9 @@ namespace Vega {
 	export void ResizeEvent(GLFWwindow* window, int width, int height);
 
 	export struct WindowData {
-		GLuint height = 720;
-		GLuint width = 1280;
 		const char* name = "Application";
+		GLuint width = 1280;
+		GLuint height = 720;
 		bool vsync = true;
 	};
 
@@ -34,8 +34,8 @@ namespace Vega {
 
 		void CenterCursor(bool enable);
 
-		GLuint GetWidth() const;
-		GLuint GetHeight() const;
+		GLuint Width() const;
+		GLuint Height() const;
 		bool IsVsync() const;
 		void SetVsync(bool enable);
 

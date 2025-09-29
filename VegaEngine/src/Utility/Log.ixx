@@ -88,34 +88,44 @@ namespace Vega {
 			std::ranges::fill(_logLevel, true);
 		}
 
-		void trace(const std::string& message, Color color = Color::White) {
+		template <Color color = Color::White, class... Args>
+		void trace(std::string_view message, Args&&... args) {
 			if (!_logLevel[(int)LogLevel::Trace])
 				return;
-			PrintMessage(message, color);
+			std::string fmt = std::vformat(message, std::make_format_args(args...));
+			PrintMessage(fmt, color);
 		}
 
-		void info(const std::string& message, Color color = Color::GreenLight) {
+		template <Color color = Color::GreenLight, class... Args>
+		void info(std::string_view message, Args&&... args) {
 			if (!_logLevel[(int)LogLevel::Info])
 				return;
-			PrintMessage(message, color);
+			std::string fmt = std::vformat(message, std::make_format_args(args...));
+			PrintMessage(fmt, color);
 		}
 
-		void debug(const std::string& message, Color color = Color::CyanLight) {
+		template <Color color = Color::CyanLight, class... Args>
+		void debug(std::string_view message, Args&&... args) {
 			if (!_logLevel[(int)LogLevel::Debug])
 				return;
-			PrintMessage(message, color);
+			std::string fmt = std::vformat(message, std::make_format_args(args...));
+			PrintMessage(fmt, color);
 		}
 
-		void warn(const std::string& message, Color color = Color::YellowLight) {
+		template <Color color = Color::YellowLight, class... Args>
+		void warn(std::string_view message, Args&&... args) {
 			if (!_logLevel[(int)LogLevel::Warn])
 				return;
-			PrintMessage(message, color);
+			std::string fmt = std::vformat(message, std::make_format_args(args...));
+			PrintMessage(fmt, color);
 		}
 
-		void error(const std::string& message, Color color = Color::RedLight) {
+		template <Color color = Color::RedLight, class... Args>
+		void error(std::string_view message, Args&&... args) {
 			if (!_logLevel[(int)LogLevel::Error])
 				return;
-			PrintMessage(message, color);
+			std::string fmt = std::vformat(message, std::make_format_args(args...));
+			PrintMessage(fmt, color);
 		}
 		
 		
@@ -125,10 +135,15 @@ namespace Vega {
 
 
 	private:
+		//template <class... _Types>
+		//	_NODISCARD string format(const format_string<_Types...> _Fmt, _Types&&... _Args) {
+		//	return _STD vformat(_Fmt.get(), _STD make_format_args(_Args...));
+		//}
+
 		void PrintMessage(const std::string& message, Color color) {
 			std::println(
 				"{}{:%d-%m-%y %H:%M:%S}\033[0m [{}{}\033[0m] {}{}\033[0m",
-				GetAnsiCode(Color::BlackLight), Timer::GetZoneTime(),
+				GetAnsiCode(Color::BlackLight), Timer::ZoneTime(),
 				GetAnsiCode(_desColor), _designator,
 				GetAnsiCode(color), message
 			);
@@ -151,7 +166,7 @@ namespace Vega {
 		const void* userParam
 	) {
 		if (type == GL_DEBUG_TYPE_ERROR) {
-			Log.error(std::format("[GL ERROR]: {}", message));
+			Log.error("[GL ERROR]: {}", message);
 		}
 	}
 }

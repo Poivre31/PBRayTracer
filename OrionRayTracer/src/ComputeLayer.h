@@ -1,4 +1,5 @@
 #pragma once
+#include "imgui.h"
 import Vega;
 
 using namespace Vega::Math;
@@ -7,17 +8,17 @@ class ComputeLayer : public Vega::Layer {
 public:
 
 	ComputeLayer() {
-		_app = Vega::Application::Get();
+		_app = Vega::Systems::Application();
 	}
 
 	void OnAttach() override {
-		_width = _app->GetWindow()->GetWidth();
-		_height = _app->GetWindow()->GetHeight();
+		_width = _app->GetWindow()->Width();
+		_height = _app->GetWindow()->Height();
 
 		_image = Vega::Texture(Vega::TextureData{ _width, _height, Vega::Formats::RGBA32F });
 
 		_scene = _app->GetScene();
-		_shader = std::make_unique<Vega::ComputeShader>("res/", ".comp");
+		_shader = std::make_unique<Vega::ComputeShader>("rayTracing/", ".comp");
 		Vega::TextureManager::BindTextureSlot(_image, { Vega::TextureReadMode::Image,0 });
 		_shader->SetInt("image", 0);
 		Vega::TextureManager::BindTextureSlot(_image, { Vega::TextureReadMode::Sampler,0 });
@@ -36,7 +37,9 @@ public:
 		Vega::TextureManager::UpdateTexture(_image, width, height);
 	}
 
-	void OnUpdate() override {
+	void OnUpdate(double deltaTime) override {
+		_camera.Update(deltaTime, _app->GetIOData().inputs);
+
 		if (ImGui::IsKeyPressed(ImGuiKey_R)) {
 			_shader->Reload();
 		}
@@ -44,19 +47,13 @@ public:
 		_scene->ParseTransforms(_shader.get());
 		_scene->BindSSBO(0, 1);
 
-		_shader->SetInt("frameIndex", (int)Vega::Timer::GetFrameCount());
+		_shader->SetInt("frameIndex", (int)Vega::Timer::FrameCount());
 
 		_shader->SetFloat3("camera.position", Vec3<float>(_camera.camera.GetPosition()).ToArray());
 		_shader->SetMat3x3("camera.base", Mat3x3f(_camera.camera.GetTransformationMatrix()));
 		_shader->SetFloat("camera.vFov", _camera.camera.GetFov());
 
 		_shader->Dispatch2D(_width, _height, _threadSizeX, _threadSizeY);
-	}
-
-	void OnPhysicsUpdate(double timeStep) override {
-		Vega::Keys controls = _app->GetIOData().inputs;
-
-		_camera.Update(timeStep, controls);
 	}
 
 private:

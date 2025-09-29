@@ -14,12 +14,12 @@ namespace Vega {
 			_velocity += _acceleration * timeStep;
 			_acceleration = Vec3<double>(0);
 
-			Vec3<double> rtp = cart2sphr1(GetRotation());
-			rtp.y += _angularVelocity.x * timeStep;
-			rtp.z += _angularVelocity.y * timeStep;
-			SetRotation(sph2cartr1(rtp));
-			_angularVelocity += _torque * timeStep;
-			_torque = Vec3<double>(0);
+			//Vec3<double> rtp = cart2sphr1(GetRotation());
+			//rtp.y += _angularVelocity.x * timeStep;
+			//rtp.z += _angularVelocity.y * timeStep;
+			//SetRotation(sph2cartr1(rtp));
+			//_angularVelocity += _torque * timeStep;
+			//_torque = Vec3<double>(0);
 
 		}
 

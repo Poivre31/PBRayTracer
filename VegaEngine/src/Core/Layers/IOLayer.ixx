@@ -1,12 +1,12 @@
 export module Core:IOLayer;
 import :Window;
 import :Layer;
-import IO;
+import Io;
 import Utility;
 
 using enum Vega::KeyEvent;
 
-namespace Vega {
+export namespace Vega {
 
 	class IOData {
 	public:
@@ -17,7 +17,7 @@ namespace Vega {
 	public:
 		IOLayer(Window* window) : _window(window) {}
 
-		void OnUpdate() override {
+		void OnUpdate(double) override {
 			_data.inputs.Update();
 
 			_window->CenterCursor(_data.inputs.KeyStatus(Key::MouseRight, Down));

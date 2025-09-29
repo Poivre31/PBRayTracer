@@ -11,6 +11,7 @@ uniform float L;
 uniform float intensity;
 uniform float gamma;
 uniform int n;
+uniform vec3 Parameter;
 
 
 float v = .2;

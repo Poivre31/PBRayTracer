@@ -4,19 +4,13 @@ import std;
 
 export namespace Vega::Math {
 
-	struct float4 {
-		float x;
-		float y;
-		float z;
-		float w;
-	};
+	typedef std::array<float, 2> float2;
+	typedef std::array<float, 3> float3;
+	typedef std::array<float, 4> float4;
 
-	struct int4 {
-		int x; 
-		int y;
-		int z;
-		int w;
-	};
+	typedef std::array<int, 2> int2;
+	typedef std::array<int, 3> int3;
+	typedef std::array<int, 4> int4;
 
 	template<std::floating_point T>
 	float4 toFloat4(Vec3<T> v) {

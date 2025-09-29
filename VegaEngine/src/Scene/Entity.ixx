@@ -9,8 +9,12 @@ import std;
 export namespace Vega {
 
 	class Entity {
-
 	public:
+		Entity() {
+			_ID = _counter;
+			_counter++;
+		}
+
 		size_t GetID() const {
 			return _ID;
 		}
@@ -23,11 +27,7 @@ export namespace Vega {
 
 		}
 
-		virtual void OnUpdate() {
-
-		}
-
-		virtual void OnPhysicsUpdate(double deltaTime) {
+		virtual void OnUpdate(double deltaTime) {
 
 		}
 
@@ -37,6 +37,7 @@ export namespace Vega {
 
 	private:
 		size_t _ID;
+		static inline size_t _counter = 0;
 	};
 
 	template<std::derived_from<Entity> T>

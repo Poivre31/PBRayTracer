@@ -26,11 +26,7 @@ namespace Vega {
 		CRigidBody rigidBody;
 		CRTPrimitive rtobject;
 
-		void OnUpdate() {
-
-		}
-
-		void OnPhysicsUpdate(double timeStep) {
+		void OnUpdate(double timeStep) {
 			rigidBody.AddForce(Vec3(0., 0., -.0098 * 0));
 			rigidBody.AddForce(-.3 * rigidBody.GetVelocity());
 			rigidBody.Update(timeStep);
@@ -45,7 +41,7 @@ namespace Vega {
 
 	template <typename T>
 	static float4 Vec3ToFloat4(Vec3<T> u) {
-		return float4((float)u.x, (float)u.y, (float)u.z, 0.f);
+		return float4{ (float)u.x, (float)u.y, (float)u.z, 0.f };
 	}
 
 	export class Scene : public Layer {
@@ -56,10 +52,10 @@ namespace Vega {
 			_colorsBuffer.Bind(slotColor);
 		}
 
-		void OnPhysicsUpdate(double timeStep) override {
+		void OnUpdate(double timeStep) override {
 			for (auto& body : _entities)
 			{
-				body.OnPhysicsUpdate(timeStep);
+				body.OnUpdate(timeStep);
 			}
 		}
 
@@ -124,12 +120,12 @@ namespace Vega {
 			for (size_t i = 0; i < nEntities; i++)
 			{
 				Object entity;
-				entity.rigidBody.SetPosition(Random::RandVec3f(-1.f, 1.f));
-				entity.rigidBody.SetScale(Random::RandVec3f(0.06f, 0.12f));
-				entity.rigidBody.SetRotation(sph2cart(Vec3<double>(1., Random::RandDouble(0, std::numbers::pi), Random::RandDouble(0, 2 * std::numbers::pi))));
-				entity.rigidBody.SetMass(Random::RandDouble(0.1, 10.));
-				entity.rtobject.SetColor(Random::RandVec3f(0.f, 1.f));
-				entity.rtobject.SetPrimitiveType(PrimitiveType(Random::RandInt(0, 6)));
+				entity.rigidBody.SetPosition(Random::Rand3f(-1.f, 1.f));
+				entity.rigidBody.SetScale(Random::Rand3f(0.06f, 0.12f));
+				entity.rigidBody.SetRotation(sph2cart(Vec3<double>(1., Random::Randf(0., std::numbers::pi), Random::Randf(0., 2 * std::numbers::pi))));
+				entity.rigidBody.SetMass(Random::Randf(0.1, 10.));
+				entity.rtobject.SetColor(Random::Rand3f(0.f, 1.f));
+				entity.rtobject.SetPrimitiveType(PrimitiveType(Random::Randi(0, 6)));
 				entities.push_back(entity);
 			}
 			scene->AddEntities(entities);

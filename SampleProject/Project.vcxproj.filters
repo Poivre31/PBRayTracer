@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\defaults">
+      <UniqueIdentifier>{9669AA93-82CC-3938-2B52-72EE179405BB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\App.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wave\Wave.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wave\LampI.h" />
+    <ClInclude Include="src\GraphicSettings.h" />
+    <ClInclude Include="src\Wave\LampWindow.h" />
+    <ClInclude Include="src\Gravity\Gravity.h" />
+    <ClInclude Include="src\Gravity\GravityWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\defaults\default.comp">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\default.frag">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\default.vert">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\screenQuad.frag">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\gravityDisplay.comp">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\wave.frag">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\gravity.comp" />
+  </ItemGroup>
+</Project>

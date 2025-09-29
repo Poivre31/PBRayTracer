@@ -5,8 +5,8 @@ export module Render:Texture;
 export namespace Vega {
 
 	struct TextureData {
-		GLuint width;
 		GLuint height;
+		GLuint width;
 		GLenum type;
 	};
 

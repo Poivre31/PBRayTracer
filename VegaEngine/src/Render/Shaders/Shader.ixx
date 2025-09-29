@@ -4,31 +4,19 @@ export module Render:Shader;
 import :ShaderCompiler;
 import std;
 import Math;
-#pragma once
+
+using namespace Vega::Math;
 
 export namespace Vega {
 
-	enum VegaType {
-		VegaInt,
-		VegaFloat,
-	};
-
 	struct ShaderVariable {
-		const char* variableName;
+		std::string& variableName;
 		int count;
-	};
-
-	struct ShaderFloat : public ShaderVariable {
-		float* adress;
-	};
-
-	struct ShaderInt : public ShaderVariable {
-		int* adress;
 	};
 
 	class Shader {
 	public:
-		Shader(const char* pathVertex, const char* pathFrag);
+		Shader(std::string pathVertex, std::string pathFrag);
 		~Shader();
 
 		virtual void Reload();
@@ -37,22 +25,30 @@ export namespace Vega {
 		GLuint GetID();
 		void SetID(GLuint ID);
 
-		void SetInt(const char* variable, int value);
-		void SetInt2(const char* variable, int a, int b);
-		void SetInt2(const char* variable, std::array<int,2> vec);
-		void SetInt3(const char* variable, int a, int b, int c);
-		void SetInt3(const char* variable, std::array<int, 3> vec);
+		void SetVariable(std::string name, int value);
+		void SetVariable(std::string name, int2& value);
+		void SetVariable(std::string name, int3& value);
+		void SetVariable(std::string name, int4& value);
 
-		void SetFloat(const char* variable, float value);
-		void SetFloat2(const char* variable, float a, float b);
-		void SetFloat2(const char* variable, std::array<float, 2> vec);
-		void SetFloat3(const char* variable, float a, float b, float c);
-		void SetFloat3(const char* variable, std::array<float, 3> vec);
+		void SetVariable(std::string name, float value);
+		void SetVariable(std::string name, float2& value);
+		void SetVariable(std::string name, float3& value);
+		void SetVariable(std::string name, float4& value);
 
-		void SetMat3x3(const char* variable, const Math::Mat3x3f& matrix, bool transpose = GL_TRUE);
-		//void AttachFloatRef(const char* variable, float* data, int count);
+		void SetInt(std::string name, int value);
+		void SetInt2(std::string name, int2 vec);
+		void SetInt3(std::string name, int3 vec);
+		void SetInt4(std::string name, int4 vec);
 
-		//void AttachIntRef(const char* variable, int* data, int count);
+		void SetFloat(std::string name, float value);
+		void SetFloat2(std::string name, float2 vec);
+		void SetFloat3(std::string name, float3 vec);
+		void SetFloat4(std::string name, float4 vec);
+
+		void SetMat3x3(std::string name, const Math::Mat3x3f& matrix, bool transpose = GL_TRUE);
+		//void AttachFloatRef(std::string& name, float* data, int count);
+
+		//void AttachIntRef(std::string& name, int* data, int count);
 
 		//void UpdateUniforms();
 
@@ -61,10 +57,8 @@ export namespace Vega {
 
 	private:
 		GLuint _ID = 0;
-		const char* _pathVertex = nullptr;
-		const char* _pathFrag = nullptr;
-		std::vector<ShaderFloat> _floatVariables;
-		std::vector<ShaderInt> _intVariables;
+		std::string _pathVertex;
+		std::string _pathFrag;
 	};
 
 }

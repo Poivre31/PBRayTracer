@@ -19,7 +19,7 @@ export namespace Vega {
 			_shader = shader;
 		}
 
-		void OnUpdate() override {
+		void OnUpdate(double) override {
 			if (!_shader) {
 				Log.error("No shader set for screen quad");
 				return;

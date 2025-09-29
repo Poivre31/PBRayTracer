@@ -3,6 +3,7 @@ module;
 #include <GLFW/glfw3.h>
 
 module Core;
+import Utility;
 
 namespace Vega {
 
@@ -38,6 +39,9 @@ namespace Vega {
 			_GLFWinitialized = true;
 		}
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef DEBUG
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
@@ -120,10 +124,10 @@ namespace Vega {
 	}
 
 
-	GLuint Window::GetWidth() const {
+	GLuint Window::Width() const {
 		return _data.width;
 	}
-	GLuint Window::GetHeight() const {
+	GLuint Window::Height() const {
 		return _data.height;
 	}
 	bool Window::IsVsync() const {
