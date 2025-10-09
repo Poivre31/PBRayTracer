@@ -10,6 +10,9 @@ and sample projects.
 
 ![Example of ray traced global illumination using Orion](/assets/images/orion_ray_tracer.jpg)
 
+
+<img src="/assets/images/optique_2.jpg" width="48">
+
 ### Controls:
 
 ZQSD + A for up, E for down. \
