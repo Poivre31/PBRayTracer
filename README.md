@@ -9,10 +9,7 @@ A ray tracer tracing primitives. Work stopped for now, focusing on main engine
 and sample projects.
 
 <!-- ![Example of ray traced global illumination using Orion](/assets/images/orion_ray_tracer.jpg) -->
-<img src="/assets/images/orion_ray_tracer.jpg" width="480">
-
-
-<img src="/assets/images/optique_2.jpg" width="720">
+<img src="/assets/images/orion_ray_tracer.jpg" width="720">
 
 ### Controls:
 
