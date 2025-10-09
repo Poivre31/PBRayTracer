@@ -253,8 +253,8 @@ public:
 			_ruler.endpoint = position;
 			drawStack->Add(_ruler);
 			if (Vega::Keys::KeyStatus(Vega::Key::MouseRight, Vega::KeyEvent::Released)) {
-				//_settings.status = None;
-				//axis = 0;
+				_settings.status = None;
+				axis = 0;
 			}
 			_settings.measuredDistance = (_ruler.endpoint - _ruler.origin).Norm();
 		}
