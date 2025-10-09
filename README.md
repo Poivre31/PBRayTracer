@@ -8,7 +8,8 @@ engine I'm making as a way to simulate pretty stuff and practice lessons
 A ray tracer tracing primitives. Work stopped for now, focusing on main engine
 and sample projects.
 
-![Example of ray traced global illumination using Orion](/assets/images/orion_ray_tracer.jpg)
+<!-- ![Example of ray traced global illumination using Orion](/assets/images/orion_ray_tracer.jpg) -->
+<img src="/assets/images/orion_ray_tracer.jpg" width="480">
 
 ### Controls:
 
@@ -28,9 +29,12 @@ folders in the same folder)
 A simulation of wave interference. Two types of waves available: spherical and
 plane wave.
 
-![Interference of two point sources and a plane](/assets/images/optique_2.jpg)
+<!-- ![Interference of two point sources and a plane](/assets/images/optique_2.jpg) -->
+<img src="/assets/images/optique_2.jpg" width="480">
 
-![Measure of interference of two point sources](/assets/images/optique_3.jpg)
+<!-- ![Measure of interference of two point sources](/assets/images/optique_3.jpg) -->
+
+<img src="/assets/images/optique_3.jpg" width="480">
 
 ### Controls:
 
