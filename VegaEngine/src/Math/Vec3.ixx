@@ -60,6 +60,13 @@ export namespace Vega::Math {
 			return x + y + z;
 		}
 
+		Vec3<T> Round() {
+			x = (T)round(x);
+			y = (T)round(y);
+			z = (T)round(z);
+			return *this;
+		}
+
 		void Print() const {
 			std::printf("x: %.4f, y: %.4f, z: %.4f \n", x, y, z);
 		}

@@ -38,7 +38,7 @@ namespace Vega {
 			return _nElements;
 		}
 
-		void SetData(const std::vector<CpuT>& data, size_t nElements = -1) {
+		void SetData(std::vector<CpuT>& data, size_t nElements = -1) {
 			if (nElements == -1)
 				_nElements = data.size();
 			else

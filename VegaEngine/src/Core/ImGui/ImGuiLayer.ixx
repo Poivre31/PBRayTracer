@@ -9,6 +9,7 @@ import :Layer;
 import Gui;
 import Utility;
 import std;
+import Io;
 
 export namespace Vega {
 
@@ -36,6 +37,7 @@ export namespace Vega {
             ImGui_ImplOpenGL3_Init("#version 460");
 
             Log.trace("Created ImGui layer");
+            Vega::Keys::SetIo(&ImGui::GetIO());
 
         }
 
@@ -50,7 +52,11 @@ export namespace Vega {
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-      
+            Vega::Keys::SetIo(&ImGui::GetIO());
+            Vega::Keys::SetMouseWheel(ImGui::GetIO().MouseWheel);
+            Vega::Keys::SetMouseDelta(ImGui::GetIO().MouseDelta.x, ImGui::GetIO().MouseDelta.y);
+            Vega::Keys::KillMe(ImGui::GetIO().WantCaptureMouse);
+
             for (size_t i = 0; i < _canvasStack.size(); i++)
             {
                 ImGui::Begin(_canvasNames[i].data());

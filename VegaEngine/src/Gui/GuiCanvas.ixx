@@ -40,6 +40,10 @@ export namespace Vega {
 		return ImGui::Button(name.data());
 	}
 
+	bool ColorPicker(std::string name, Vega::Math::Vec3<float> &color) {
+		return ImGui::ColorEdit3(name.data(), &color.x);
+	}
+
 	bool Combo(const char* name, std::vector<const char*> options, int& result) {
 		static const char* item = options[0];
 		bool clicked = false;
@@ -62,6 +66,14 @@ export namespace Vega {
 			ImGui::EndCombo();
 		}
 		return false;
+	}
+
+	void Separator() {
+		ImGui::Separator();
+	}
+
+	void Separator(const char* title) {
+		ImGui::SeparatorText(title);
 	}
 
 	void ImGuiDemo() {

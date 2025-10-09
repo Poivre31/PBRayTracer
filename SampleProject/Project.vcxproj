@@ -171,8 +171,8 @@ xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist\res"</Command>
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\DebugWindow.h" />
     <ClInclude Include="src\GraphicSettings.h" />
-    <ClInclude Include="src\Gravity\GravityWindow.h" />
     <ClInclude Include="src\Gravity\Gravity.h" />
+    <ClInclude Include="src\Gravity\GravityWindow.h" />
     <ClInclude Include="src\Wave\LampI.h" />
     <ClInclude Include="src\Wave\LampWindow.h" />
     <ClInclude Include="src\Wave\Wave.h" />

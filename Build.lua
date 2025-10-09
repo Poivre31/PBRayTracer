@@ -7,6 +7,7 @@ clangtidy "On"
 buildoptions { "/Zc:__cplusplus" }
 
 include "SampleProject/Build-Project.lua"
+include "OptiqueOndulatoire/Build-Project.lua"
 include "VegaEngine/Build-Vega.lua"
 include "OrionRayTracer/Build-Orion.lua"
 include "PBRT/Build-PBRT.lua"

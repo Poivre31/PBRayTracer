@@ -15,27 +15,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}</ProjectGuid>
+    <ProjectGuid>{CCC1A8D2-38A1-276E-41B9-B244AD178ECF}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>VegaEngine</RootNamespace>
+    <RootNamespace>Optique</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
@@ -54,32 +54,35 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)bin\Debug\</OutDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)..\bin\Debug\</OutDir>
     <IntDir>$(ProjectDir)obj\Debug\</IntDir>
-    <TargetName>VegaEngine</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <TargetName>Optique</TargetName>
+    <TargetExt>.exe</TargetExt>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)bin\Release\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\bin\Release\</OutDir>
     <IntDir>$(ProjectDir)obj\Release\</IntDir>
-    <TargetName>VegaEngine</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <TargetName>Optique</TargetName>
+    <TargetExt>.exe</TargetExt>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <OutDir>$(ProjectDir)bin\Dist\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\bin\Dist\</OutDir>
     <IntDir>$(ProjectDir)obj\Dist\</IntDir>
-    <TargetName>VegaEngine</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <TargetName>Optique</TargetName>
+    <TargetExt>.exe</TargetExt>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CONSOLE;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\spdlog\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -90,23 +93,22 @@
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-    <Lib>
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
-    <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "bin\Debug\res"</Command>
-    </PostBuildEvent>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy /Q /E /Y /I "..\VegaEngine\res" "$(ProjectDir)\res\defaults"
+xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Debug\res"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CONSOLE;RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\spdlog\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -121,25 +123,24 @@
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-    </Link>
-    <Lib>
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
-    <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "bin\Release\res"</Command>
-    </PostBuildEvent>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy /Q /E /Y /I "..\VegaEngine\res" "$(ProjectDir)\res\defaults"
+xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Release\res"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINDOWS;DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\spdlog\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -158,111 +159,42 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-    </Link>
-    <Lib>
       <AdditionalDependencies>Glad.lib;glfw3_mt.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\vendor\GLFW\lib;..\vendor\Glad\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
-    <PostBuildEvent>
-      <Command>xcopy /Q /E /Y /I "$(ProjectDir)\res" "bin\Dist\res"</Command>
-    </PostBuildEvent>
+    </Link>
+    <PreBuildEvent>
+      <Command>xcopy /Q /E /Y /I "..\VegaEngine\res" "$(ProjectDir)\res\defaults"
+xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist\res"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\OpenGL.h" />
+    <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\DebugWindow.h" />
+    <ClInclude Include="src\GraphicSettings.h" />
+    <ClInclude Include="src\Wave\LampI.h" />
+    <ClInclude Include="src\Wave\SourceWindow.h" />
+    <ClInclude Include="src\Wave\Wave.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Application.ixx" />
-    <ClCompile Include="src\Core\ApplicationI.cpp" />
-    <ClCompile Include="src\Core\Core.ixx" />
-    <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx" />
-    <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx" />
-    <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp" />
-    <ClCompile Include="src\Core\Layer.ixx" />
-    <ClCompile Include="src\Core\LayerStack.ixx" />
-    <ClCompile Include="src\Core\LayerStackI.cpp" />
-    <ClCompile Include="src\Core\Layers\DrawingLayer.ixx" />
-    <ClCompile Include="src\Core\Layers\IOLayer.ixx" />
-    <ClCompile Include="src\Core\Window.ixx" />
-    <ClCompile Include="src\Core\WindowI.cpp" />
-    <ClCompile Include="src\DataContainer.ixx" />
-    <ClCompile Include="src\Gui\Gui.ixx" />
-    <ClCompile Include="src\Gui\GuiCanvas.ixx" />
-    <ClCompile Include="src\Gui\GuiInput.ixx" />
-    <ClCompile Include="src\Io\Io.ixx" />
-    <ClCompile Include="src\Io\Keys.ixx" />
-    <ClCompile Include="src\Math\Mat3x3.ixx" />
-    <ClCompile Include="src\Math\Mat3x3f.ixx" />
-    <ClCompile Include="src\Math\Math.ixx" />
-    <ClCompile Include="src\Math\Random.ixx" />
-    <ClCompile Include="src\Math\Vec3.ixx" />
-    <ClCompile Include="src\Math\Vec3Math.ixx" />
-    <ClCompile Include="src\Math\VecTypes.ixx" />
-    <ClCompile Include="src\Render\Data\Buffer.ixx" />
-    <ClCompile Include="src\Render\Data\ImageFormats.ixx" />
-    <ClCompile Include="src\Render\Data\LinkedSSBO.ixx" />
-    <ClCompile Include="src\Render\Data\Texture.ixx" />
-    <ClCompile Include="src\Render\Data\TextureManager.cpp" />
-    <ClCompile Include="src\Render\Data\TextureManager.ixx">
-      <ObjectFileName>$(IntDir)\TextureManager1.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Drawing\Primitives.ixx" />
-    <ClCompile Include="src\Render\Objects\Mesh.ixx" />
-    <ClCompile Include="src\Render\Objects\Mesh2D.ixx" />
-    <ClCompile Include="src\Render\Objects\ScreenQuad.ixx" />
-    <ClCompile Include="src\Render\Render.ixx" />
-    <ClCompile Include="src\Render\Shaders\ComputeShader.ixx" />
-    <ClCompile Include="src\Render\Shaders\ComputeShaderI.cpp" />
-    <ClCompile Include="src\Render\Shaders\Shader.ixx" />
-    <ClCompile Include="src\Render\Shaders\ShaderCompiler.ixx" />
-    <ClCompile Include="src\Render\Shaders\ShaderCompilerI.cpp" />
-    <ClCompile Include="src\Render\Shaders\ShaderI.cpp" />
-    <ClCompile Include="src\Render\Shaders\ShaderManager.ixx" />
-    <ClCompile Include="src\Scene\Collection.ixx" />
-    <ClCompile Include="src\Scene\Components\Camera.ixx" />
-    <ClCompile Include="src\Scene\Components\Controller.ixx" />
-    <ClCompile Include="src\Scene\Components\RTPrimitive.ixx" />
-    <ClCompile Include="src\Scene\Components\RigidBody.ixx" />
-    <ClCompile Include="src\Scene\Components\Transform.ixx" />
-    <ClCompile Include="src\Scene\DefaultEntityTypes.ixx" />
-    <ClCompile Include="src\Scene\Entities.ixx" />
-    <ClCompile Include="src\Scene\Entity.ixx" />
-    <ClCompile Include="src\Scene\Scene.ixx" />
-    <ClCompile Include="src\Utility\Log.ixx" />
-    <ClCompile Include="src\Utility\Timer.ixx" />
-    <ClCompile Include="src\Utility\Utility.ixx" />
-    <ClCompile Include="src\Vega.ixx" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\res\default.comp" />
-    <None Include="bin\Debug\res\default.frag" />
-    <None Include="bin\Debug\res\default.vert" />
-    <None Include="bin\Debug\res\exp.frag" />
-    <None Include="bin\Debug\res\fullScreenQuad.frag" />
-    <None Include="bin\Debug\res\fullScreenQuad.vert" />
-    <None Include="bin\Debug\res\screenQuad.frag" />
-    <None Include="bin\Dist\res\default.comp" />
-    <None Include="bin\Dist\res\default.frag" />
-    <None Include="bin\Dist\res\default.vert" />
-    <None Include="bin\Dist\res\exp.frag" />
-    <None Include="bin\Dist\res\fullScreenQuad.frag" />
-    <None Include="bin\Dist\res\fullScreenQuad.vert" />
-    <None Include="bin\Dist\res\screenQuad.frag" />
-    <None Include="bin\Release\res\default.comp" />
-    <None Include="bin\Release\res\default.frag" />
-    <None Include="bin\Release\res\default.vert" />
-    <None Include="bin\Release\res\exp.frag" />
-    <None Include="bin\Release\res\fullScreenQuad.frag" />
-    <None Include="bin\Release\res\fullScreenQuad.vert" />
-    <None Include="bin\Release\res\screenQuad.frag" />
-    <None Include="res\default.comp" />
-    <None Include="res\default.frag" />
-    <None Include="res\default.vert" />
+    <None Include="res\defaults\default.comp" />
+    <None Include="res\defaults\default.frag" />
+    <None Include="res\defaults\default.vert" />
+    <None Include="res\defaults\proceduralPrimitive.frag" />
+    <None Include="res\defaults\screenQuad.frag" />
+    <None Include="res\gravity.comp" />
+    <None Include="res\gravityDisplay.comp" />
     <None Include="res\proceduralPrimitive.frag" />
-    <None Include="res\screenQuad.frag" />
+    <None Include="res\wave.frag" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\VegaEngine\VegaEngine.vcxproj">
+      <Project>{7EA49568-6A5C-D7B5-D363-B011BF3A72A6}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

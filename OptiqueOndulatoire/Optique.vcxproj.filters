@@ -27,16 +27,10 @@
     <ClInclude Include="src\GraphicSettings.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gravity\Gravity.h">
-      <Filter>src\Gravity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Gravity\GravityWindow.h">
-      <Filter>src\Gravity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Wave\LampI.h">
       <Filter>src\Wave</Filter>
     </ClInclude>
-    <ClInclude Include="src\Wave\LampWindow.h">
+    <ClInclude Include="src\Wave\SourceWindow.h">
       <Filter>src\Wave</Filter>
     </ClInclude>
     <ClInclude Include="src\Wave\Wave.h">
@@ -70,5 +64,7 @@
     <None Include="res\wave.frag">
       <Filter>res</Filter>
     </None>
+    <None Include="res\defaults\proceduralPrimitive.frag" />
+    <None Include="res\proceduralPrimitive.frag" />
   </ItemGroup>
 </Project>

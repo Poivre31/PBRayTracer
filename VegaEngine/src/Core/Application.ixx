@@ -8,6 +8,7 @@ import :Layer;
 import :Window;
 import :ImGuiLayer;
 import :IOLayer;
+import :DrawingLayer;
 import Utility;
 import std;
 
@@ -31,6 +32,7 @@ namespace Vega {
 
 		static Application* Get();
 		Window* GetWindow();
+		DrawingLayer* GetDrawStack();
 		ImGuiLayer* GetGUI();
 		Scene* GetScene();
 		IOData GetIOData();
@@ -60,10 +62,9 @@ namespace Vega {
 		ImGuiLayer* _guiLayer;
 		IOLayer* _IO;
 		Scene* _scene;
+		DrawingLayer* _drawingLayer;
 		std::unique_ptr<Window> _window;
 	};
-
-	export std::unique_ptr<Application> CreateApplication();
 
 	export void CloseEvent(GLFWwindow* window);
 	export void ResizeEvent(GLFWwindow* window, int width, int height);

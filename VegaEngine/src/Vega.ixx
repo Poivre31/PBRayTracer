@@ -25,6 +25,9 @@ namespace Vega {
 		static IOData IoData() {
 			return Application::Get()->GetIOData();
 		}
+		static DrawingLayer* DrawStack() {
+			return Application::Get()->GetDrawStack();
+		}
 	};
 
 }

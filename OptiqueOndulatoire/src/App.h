@@ -2,7 +2,6 @@
 #include "DebugWindow.h"
 #include "Wave/Wave.h"
 #include "GraphicSettings.h"
-#include "Gravity/Gravity.h"
 
 import Vega;
 
@@ -16,9 +15,7 @@ public:
 		Log.debug("Welcome to my project! ");
 		auto* _app = Vega::Systems::Application();
 
-		_app->AttachLayer<DebugLayer>("My constructor message");
-		_app->AttachLayer<GravityDisplay>();
-		_app->AttachLayer<GraphicSystem>();
-		//_app->AttachLayer<WaveDiplay>();
+		_app->AttachLayer<DebugLayer>("Hey");
+		_app->AttachLayer<WaveDisplay>();
 	}
 };

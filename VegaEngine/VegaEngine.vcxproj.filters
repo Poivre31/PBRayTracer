@@ -242,8 +242,19 @@
     <ClCompile Include="src\Vega.ixx">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Drawing\Primitives.ixx" />
+    <ClCompile Include="src\Core\Layers\DrawingLayer.ixx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\Debug\res\default.comp">
+      <Filter>bin\Debug\res</Filter>
+    </None>
+    <None Include="bin\Debug\res\default.frag">
+      <Filter>bin\Debug\res</Filter>
+    </None>
+    <None Include="bin\Debug\res\default.vert">
+      <Filter>bin\Debug\res</Filter>
+    </None>
     <None Include="bin\Debug\res\exp.frag">
       <Filter>bin\Debug\res</Filter>
     </None>
@@ -253,6 +264,18 @@
     <None Include="bin\Debug\res\fullScreenQuad.vert">
       <Filter>bin\Debug\res</Filter>
     </None>
+    <None Include="bin\Debug\res\screenQuad.frag">
+      <Filter>bin\Debug\res</Filter>
+    </None>
+    <None Include="bin\Dist\res\default.comp">
+      <Filter>bin\Dist\res</Filter>
+    </None>
+    <None Include="bin\Dist\res\default.frag">
+      <Filter>bin\Dist\res</Filter>
+    </None>
+    <None Include="bin\Dist\res\default.vert">
+      <Filter>bin\Dist\res</Filter>
+    </None>
     <None Include="bin\Dist\res\exp.frag">
       <Filter>bin\Dist\res</Filter>
     </None>
@@ -260,6 +283,9 @@
       <Filter>bin\Dist\res</Filter>
     </None>
     <None Include="bin\Dist\res\fullScreenQuad.vert">
+      <Filter>bin\Dist\res</Filter>
+    </None>
+    <None Include="bin\Dist\res\screenQuad.frag">
       <Filter>bin\Dist\res</Filter>
     </None>
     <None Include="bin\Release\res\default.comp">
@@ -295,5 +321,6 @@
     <None Include="res\screenQuad.frag">
       <Filter>res</Filter>
     </None>
+    <None Include="res\proceduralPrimitive.frag" />
   </ItemGroup>
 </Project>

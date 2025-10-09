@@ -49,6 +49,8 @@ namespace Vega {
 		_window->Create(spec.windowData);
 
 		_guiLayer = AttachLayer<ImGuiLayer>(_window.get());
+		_drawingLayer = AttachLayer<DrawingLayer>(_window.get());
+		AttachLayer<Vega::ScreenQuad>(_drawingLayer->GetShader());
 		_IO = AttachLayer<IOLayer>(_window.get());
 		_scene = AttachLayer<Scene>();
 
@@ -129,6 +131,11 @@ namespace Vega {
 		}
 		return _window.get();
 	}
+
+	DrawingLayer* Application::GetDrawStack() {
+		return _drawingLayer;
+	}
+
 
 	ImGuiLayer* Application::GetGUI() {
 		return _guiLayer;

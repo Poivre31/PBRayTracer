@@ -181,9 +181,13 @@ xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist\res"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\boids\boids.comp" />
+    <None Include="res\defaults\default.comp" />
+    <None Include="res\defaults\default.frag" />
+    <None Include="res\defaults\default.vert" />
     <None Include="res\defaults\exp.frag" />
     <None Include="res\defaults\fullScreenQuad.frag" />
     <None Include="res\defaults\fullScreenQuad.vert" />
+    <None Include="res\defaults\screenQuad.frag" />
     <None Include="res\mathTest\planes.frag" />
     <None Include="res\mathTest\sphericalSources.frag" />
     <None Include="res\rayTracing\circle.comp" />

@@ -55,6 +55,15 @@
     <None Include="res\boids\boids.comp">
       <Filter>res\boids</Filter>
     </None>
+    <None Include="res\defaults\default.comp">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\default.frag">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\default.vert">
+      <Filter>res\defaults</Filter>
+    </None>
     <None Include="res\defaults\exp.frag">
       <Filter>res\defaults</Filter>
     </None>
@@ -62,6 +71,9 @@
       <Filter>res\defaults</Filter>
     </None>
     <None Include="res\defaults\fullScreenQuad.vert">
+      <Filter>res\defaults</Filter>
+    </None>
+    <None Include="res\defaults\screenQuad.frag">
       <Filter>res\defaults</Filter>
     </None>
     <None Include="res\mathTest\planes.frag">
