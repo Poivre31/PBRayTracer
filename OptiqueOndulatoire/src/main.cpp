@@ -7,8 +7,8 @@ import std;
 auto appSpec = Vega::ApplicationSpec{
 	.windowData = {
 		.name = "Wave optics",
-		.width = 720,
-		.height = 720,
+		.width = 1080,
+		.height = 1080,
 		.vsync = true,
 	}
 };
