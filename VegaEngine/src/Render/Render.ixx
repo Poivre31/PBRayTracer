@@ -5,7 +5,7 @@ export import :ImageFormats;
 export import :LinkedSSBO;
 export import :Texture;
 export import :TextureManager;
-
+export import :FrameBuffer;
 
 export import :Mesh;
 export import :Mesh2D;

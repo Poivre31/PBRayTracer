@@ -84,7 +84,7 @@ namespace Vega {
 
 	export class Logger {
 	public:
-		Logger(const std::string& designator, Color color) : _designator(designator), _desColor(color) {
+		Logger(const char* designator, Color color) : _designator(designator), _desColor(color) {
 			std::ranges::fill(_logLevel, true);
 		}
 
@@ -140,7 +140,7 @@ namespace Vega {
 		//	return _STD vformat(_Fmt.get(), _STD make_format_args(_Args...));
 		//}
 
-		void PrintMessage(const std::string& message, Color color) {
+		void PrintMessage(std::string message, Color color) {
 			std::println(
 				"{}{:%d-%m-%y %H:%M:%S}\033[0m [{}{}\033[0m] {}{}\033[0m",
 				GetAnsiCode(Color::BlackLight), Timer::ZoneTime(),

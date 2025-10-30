@@ -1,5 +1,5 @@
 export module Core:DrawingLayer;
-import Entities;
+import Gui;
 import Render;
 import Io;
 import std;
@@ -7,7 +7,7 @@ import Math;
 import :Window;
 import :Layer;
 
-using namespace Vega::Math;
+
 
 static const auto screenVert = "defaults/default.vert";
 //static const auto screenFrag = "defaults/proceduralPrimitive.frag";
@@ -57,15 +57,15 @@ export namespace Vega {
 		}
 
 		void OnUpdate(double) {
-			if (Vega::Keys::KeyPressed(Vega::Key::R, Vega::KeyMod::ModCtrl)) {
+			if (Vega::Keys::Pressed(Vega::Key::R, Vega::KeyMod::ModCtrl)) {
 				_shader->Reload();
 			}
 
-			GLuint width = _window->Width();
-			GLuint height = _window->Height();
-			_shader->SetInt("width", width);
-			_shader->SetInt("height", height);
-			_shader->SetInt("nPrimitives", primitives.size());
+			auto width = _window->Width();
+			auto height = _window->Height();
+			//_shader->SetInt("width", width);
+			//_shader->SetInt("height", height);
+			_shader->SetInt("nPrimitives", (int)primitives.size());
 
 			primitivesBuffer.SetData(primitives);
 			primitives.clear();

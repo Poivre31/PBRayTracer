@@ -16,7 +16,7 @@ namespace Vega {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnResize(GLuint width, GLuint height) {}
+		virtual void OnResize(int width, int height) {}
 		virtual void OnUpdate(double deltaTime) {}
 	};
 

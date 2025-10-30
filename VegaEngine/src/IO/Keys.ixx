@@ -5,6 +5,7 @@ module;
 export module Io:Keys;
 import std;
 import Utility;
+import Math;
 
 export namespace Vega {
 
@@ -49,6 +50,8 @@ export namespace Vega {
 		MouseRight,
 		Esc,
 		KeyNumber,
+		Plus,
+		Minus,
 	};
 
 	enum class KeyEvent : char {
@@ -96,40 +99,56 @@ export namespace Vega {
 			SetKey(keys[(int)Key::MouseLeft], ImGuiKey_MouseLeft);
 			SetKey(keys[(int)Key::MouseRight], ImGuiKey_MouseRight);
 			SetKey(keys[(int)Key::Esc], ImGuiKey_Escape);
+			SetKey(keys[(int)Key::Plus], ImGuiKey_KeypadAdd);
+			SetKey(keys[(int)Key::Minus], ImGuiKey_KeypadSubtract);
+			if (Pressed(Key::MouseLeft))
+				_lastClickTime = Timer::TimeS();
 		}
 
 
-		static bool KeyStatus(Key key, KeyEvent eventType) {
+		static bool Status(Key key, KeyEvent eventType) {
 			return keys[(int)key] & (int)eventType;
 		}
-		static bool KeyStatus(Key key, KeyEvent eventType, KeyMod mod) {
+		static bool Status(Key key, KeyEvent eventType, KeyMod mod) {
 			return keys[(int)key] & (int)eventType && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
 
-		static bool KeyPressed(Key key) {
+		static bool Pressed(Key key) {
 			return keys[(int)key] & (int)KeyEvent::Pressed;
 		}
-		static bool KeyPressed(Key key, KeyMod mod) {
+		static bool Pressed(Key key, KeyMod mod) {
 			return keys[(int)key] & (int)KeyEvent::Pressed && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
 
-		static bool KeyReleased(Key key) {
+		static bool Released(Key key) {
 			return keys[(int)key] & (int)KeyEvent::Released;
 		}
-		static bool KeyReleased(Key key, KeyMod mod) {
+		static bool Released(Key key, KeyMod mod) {
 			return keys[(int)key] & (int)KeyEvent::Released && ImGui::IsKeyDown((ImGuiKey)mod);
 		}
 
-		static bool KeyDown(Key key) {
+		static bool Down(Key key) {
 			return keys[(int)key] & (int)KeyEvent::Down;
 		}
-		static bool KeyDown(Key key, KeyMod mod) {
+		static bool Down(Key key, KeyMod mod) {
 			return keys[(int)key] & (int)KeyEvent::Down && ImGui::IsKeyDown((ImGuiKey)mod);
+		}
+
+		static double LastClickTimeS() {
+			return _lastClickTime;
 		}
 
 		static std::tuple<int, int> MousePos() {
 			auto pos = ImGui::GetMousePos();
 			return { (int)pos.x,(int)pos.y };
+		}
+
+		static std::tuple<int, int> MousePosViewport() {
+			return { (int)_mousePosViewport.x,(int)_mousePosViewport.y };
+		}
+
+		static void SetMousePosViewport(Vec2<int> pos) {
+			_mousePosViewport = pos;
 		}
 
 		static void SetMouseWheel(float value) {
@@ -158,9 +177,11 @@ export namespace Vega {
 			killMe = schrodinger;
 		}
 
-		static bool HoveringWindow() {
+		static bool HoveringViewport() {
 			return killMe;
 		}
+
+
 
 
 	private:
@@ -170,6 +191,8 @@ export namespace Vega {
 		static inline int _dx = 0;
 		static inline int _dy = 0;
 		static inline bool killMe = false;
+		static inline Vec2<int> _mousePosViewport;
+		static inline double _lastClickTime = Timer::TimeS();
 	};
 
 }

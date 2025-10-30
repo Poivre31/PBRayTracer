@@ -10,5 +10,5 @@ export import :DrawingLayer;
 export import :Scene;
 export import :ScreenQuad;
 
-export import :ImGuiLayer;
+export import :GuiLayer;
 import :LayerStack;

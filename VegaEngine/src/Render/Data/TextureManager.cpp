@@ -6,15 +6,20 @@ import Utility;
 
 namespace Vega {
 
-	void TextureManager::BindTextureSlot(Texture& image, GLSlot slot) {
-		TextureData data = image.GetData();
-		glBindImageTexture(slot.index, image.GetID(), 0, GL_FALSE, 0, GL_READ_WRITE, data.type);
+	void TextureManager::BindTextureSlot(Texture* image, GLSlot slot) {
+		TextureData data = image->GetData();
+		if(slot.readMode == TextureReadMode::Image)
+			glBindImageTexture(slot.index, image->GetID(), 0, GL_FALSE, 0, GL_READ_WRITE, data.type);
+		else {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, image->GetID());
+		}
 		if (_slots.find(slot) == _slots.end()) {
-			_slots.insert({ slot, &image });
+			_slots.insert({ slot, image });
 		}
 		else {
-			Log.warn("Texture bound to already used slot, try to unbind used slot before binding new texture");
-			_slots.at(slot) = &image;
+			//Log.warn("Texture bound to already used slot, try to unbind used slot before binding new texture");
+			_slots.at(slot) = image;
 		}
 	}
 
@@ -27,20 +32,20 @@ namespace Vega {
 		}
 	}
 
-	void TextureManager::UpdateTexture(Texture& texture, GLuint width, GLuint height) {
-		TextureData data = texture.GetData();
+	void TextureManager::UpdateTexture(Texture* texture, int width, int height) {
+		TextureData data = texture->GetData();
 		if (width == data.width && height == data.height) return;
-		texture.Update(width, height);
+		texture->Update(width, height);
 		for (const auto& slot : _slots)
 		{
-			if (slot.second == &texture) {
+			if (slot.second == texture) {
 				switch (slot.first.readMode) {
 				case(TextureReadMode::Image): {
-					glBindImageTexture(slot.first.index, texture.GetID(), 0, GL_FALSE, 0, GL_READ_WRITE, data.type);
+					glBindImageTexture(slot.first.index, texture->GetID(), 0, GL_FALSE, 0, GL_READ_WRITE, data.type);
 					break;
 				}
 				case(TextureReadMode::Sampler): {
-					glBindTextureUnit(slot.first.index, texture.GetID());
+					glBindTextureUnit(slot.first.index, texture->GetID());
 					break;
 				}
 				}
@@ -48,23 +53,23 @@ namespace Vega {
 		}
 	}
 
-	void TextureManager::DeleteTexture(Texture& texture) {
-		texture.Delete();
+	void TextureManager::DeleteTexture(Texture* texture) {
+		texture->Delete();
 		for (auto it = _slots.begin(); it != _slots.end();)
 		{
-			if (it->second == &texture) {
+			if (it->second == texture) {
 				it = _slots.erase(it);
 			}
 			else it++;
 		}
 	}
 
-	GLSlot TextureManager::FindTextureSlot(Texture& image) {
+	GLSlot TextureManager::FindTextureSlot(Texture* image) {
 		bool foundOne = false;
-		GLSlot result = { TextureReadMode::Image, GLuint(-1) };
+		GLSlot result = { TextureReadMode::Image, int(-1) };
 		for (const auto& slot : _slots)
 		{
-			if (slot.second == &image) {
+			if (slot.second == image) {
 				result = slot.first;
 				if (foundOne) {
 					Log.warn("Multiple slots use texture when trying to find one slot, returning last one");
@@ -72,7 +77,7 @@ namespace Vega {
 				foundOne = true;
 			}
 		}
-		if (result.index == GLuint(-1)) {
+		if (result.index == int(-1)) {
 			Log.info("No slot using texture was found");
 			return result;
 		}

@@ -1,27 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="bin">
-      <UniqueIdentifier>{BE61880B-2A6B-887C-B3E6-9E7C1FEF937C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Debug">
-      <UniqueIdentifier>{B442F0F6-20AD-A46D-69EB-5513D59482C2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Debug\res">
-      <UniqueIdentifier>{ED3416A6-59F5-91DC-2230-DB598EAFD6B8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Dist">
-      <UniqueIdentifier>{E1BF9A83-CD8C-F58E-F6A5-E336E2D12A1D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Dist\res">
-      <UniqueIdentifier>{9A80E550-86E3-74F5-2F69-ADAB1BAB4078}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Release">
-      <UniqueIdentifier>{EE3667AA-5AEC-DF9F-E3E0-D9764F95D6A3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="bin\Release\res">
-      <UniqueIdentifier>{27B60068-9341-6E2C-9C52-F120085DCA2C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
@@ -39,6 +18,9 @@
     </Filter>
     <Filter Include="src\Gui">
       <UniqueIdentifier>{017D2FA9-6D5C-AE44-7674-391BE2D214A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Gui\Drawing">
+      <UniqueIdentifier>{7C957183-E820-DF47-F131-623C5D3C3B48}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Io">
       <UniqueIdentifier>{D449661C-C0EB-90F2-A9A6-A44695E71743}</UniqueIdentifier>
@@ -83,13 +65,10 @@
     <ClCompile Include="src\Core\Core.ixx">
       <Filter>src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\ImGui\GuiLayer.ixx">
+      <Filter>src\Core\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx">
-      <Filter>src\Core\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx">
-      <Filter>src\Core\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp">
       <Filter>src\Core\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Layer.ixx">
@@ -100,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\LayerStackI.cpp">
       <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Layers\DrawingLayer.ixx">
+      <Filter>src\Core\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Layers\IOLayer.ixx">
       <Filter>src\Core\Layers</Filter>
@@ -113,6 +95,15 @@
     <ClCompile Include="src\DataContainer.ixx">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Gui\Drawing\Grid.ixx">
+      <Filter>src\Gui\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gui\Drawing\Primitives.ixx">
+      <Filter>src\Gui\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gui\Drawing\Widgets.ixx">
+      <Filter>src\Gui\Drawing</Filter>
+    </ClCompile>
     <ClCompile Include="src\Gui\Gui.ixx">
       <Filter>src\Gui</Filter>
     </ClCompile>
@@ -120,6 +111,9 @@
       <Filter>src\Gui</Filter>
     </ClCompile>
     <ClCompile Include="src\Gui\GuiInput.ixx">
+      <Filter>src\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gui\Drawing\Viewport.ixx">
       <Filter>src\Gui</Filter>
     </ClCompile>
     <ClCompile Include="src\Io\Io.ixx">
@@ -140,6 +134,9 @@
     <ClCompile Include="src\Math\Random.ixx">
       <Filter>src\Math</Filter>
     </ClCompile>
+    <ClCompile Include="src\Math\Vec2.ixx">
+      <Filter>src\Math</Filter>
+    </ClCompile>
     <ClCompile Include="src\Math\Vec3.ixx">
       <Filter>src\Math</Filter>
     </ClCompile>
@@ -150,6 +147,9 @@
       <Filter>src\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Data\Buffer.ixx">
+      <Filter>src\Render\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Render\Data\FrameBuffer.ixx">
       <Filter>src\Render\Data</Filter>
     </ClCompile>
     <ClCompile Include="src\Render\Data\ImageFormats.ixx">
@@ -242,73 +242,9 @@
     <ClCompile Include="src\Vega.ixx">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Drawing\Primitives.ixx" />
-    <ClCompile Include="src\Core\Layers\DrawingLayer.ixx" />
+    <ClCompile Include="src\Gui\Drawing\WidgetsManager.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\res\default.comp">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Debug\res\default.frag">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Debug\res\default.vert">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Debug\res\exp.frag">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Debug\res\fullScreenQuad.frag">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Debug\res\fullScreenQuad.vert">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Debug\res\screenQuad.frag">
-      <Filter>bin\Debug\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\default.comp">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\default.frag">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\default.vert">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\exp.frag">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\fullScreenQuad.frag">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\fullScreenQuad.vert">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Dist\res\screenQuad.frag">
-      <Filter>bin\Dist\res</Filter>
-    </None>
-    <None Include="bin\Release\res\default.comp">
-      <Filter>bin\Release\res</Filter>
-    </None>
-    <None Include="bin\Release\res\default.frag">
-      <Filter>bin\Release\res</Filter>
-    </None>
-    <None Include="bin\Release\res\default.vert">
-      <Filter>bin\Release\res</Filter>
-    </None>
-    <None Include="bin\Release\res\exp.frag">
-      <Filter>bin\Release\res</Filter>
-    </None>
-    <None Include="bin\Release\res\fullScreenQuad.frag">
-      <Filter>bin\Release\res</Filter>
-    </None>
-    <None Include="bin\Release\res\fullScreenQuad.vert">
-      <Filter>bin\Release\res</Filter>
-    </None>
-    <None Include="bin\Release\res\screenQuad.frag">
-      <Filter>bin\Release\res</Filter>
-    </None>
     <None Include="res\default.comp">
       <Filter>res</Filter>
     </None>
@@ -318,9 +254,12 @@
     <None Include="res\default.vert">
       <Filter>res</Filter>
     </None>
+    <None Include="res\proceduralPrimitive.frag">
+      <Filter>res</Filter>
+    </None>
     <None Include="res\screenQuad.frag">
       <Filter>res</Filter>
     </None>
-    <None Include="res\proceduralPrimitive.frag" />
+    <None Include="res\postProcess.frag" />
   </ItemGroup>
 </Project>

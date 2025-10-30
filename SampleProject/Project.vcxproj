@@ -82,7 +82,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CONSOLE;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\spdlog\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -108,7 +108,7 @@ xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Debug\res"</Command>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CONSOLE;RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\spdlog\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -140,7 +140,7 @@ xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Release\res"</Command>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WINDOWS;DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\spdlog\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\VegaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -184,6 +184,7 @@ xcopy /Q /E /Y /I "$(ProjectDir)\res" "..\bin\Dist\res"</Command>
     <None Include="res\defaults\default.comp" />
     <None Include="res\defaults\default.frag" />
     <None Include="res\defaults\default.vert" />
+    <None Include="res\defaults\proceduralPrimitive.frag" />
     <None Include="res\defaults\screenQuad.frag" />
     <None Include="res\gravity.comp" />
     <None Include="res\gravityDisplay.comp" />

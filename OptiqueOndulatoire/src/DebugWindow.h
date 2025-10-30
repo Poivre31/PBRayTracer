@@ -12,8 +12,11 @@ void OnButtonClick() {
 class DebugWindow : public Vega::GuiCanvas {
 public:
 	void Draw() override {
+		Vega::ImGuiDemo();
 		float fps = 1.f / (float)std::max(Vega::Timer::DeltaTime(),.0001);
 		float avg = 0.f;
+		int sizex = Vega::Systems::Window()->Height();
+		int sizey = Vega::Systems::Window()->Width();
 
 		if (Vega::Timer::FrameCount() < 2) {
 			avg = fps;
@@ -31,6 +34,8 @@ public:
 
 
 		Vega::Text(std::format("FPS: {:.0f}", avg));
+		Vega::Text(std::format("Height width: {}, {}", sizex,sizey));
+
 		if (Vega::Button("Click me")) {
 			OnButtonClick();
 		}

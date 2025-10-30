@@ -3,7 +3,7 @@
 #include "MathInput.h"
 
 import Vega;
-using namespace Vega::Math;
+
 
 
 class MathLayer : public Vega::Layer {
@@ -19,7 +19,7 @@ public:
 
 	void OnUpdate() {
 
-		if (Vega::Keys::KeyPressed(Vega::Key::R, Vega::KeyMod::ModCtrl))
+		if (Vega::Keys::Pressed(Vega::Key::R, Vega::KeyMod::ModCtrl))
 			_shader->Reload();
 
 		_shader->SetVariable("range", _data.range);

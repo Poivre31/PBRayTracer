@@ -13,7 +13,7 @@ export namespace Vega {
 
 	struct GLSlot {
 		TextureReadMode readMode;
-		GLuint index;
+		int index;
 
 		bool operator <(const GLSlot& rhs) const
 		{
@@ -31,15 +31,15 @@ export namespace Vega {
 			_slots.clear();
 		}
 
-		static void BindTextureSlot(Texture& image, GLSlot slot);
+		static void BindTextureSlot(Texture* image, GLSlot slot);
 
 		static void UnbindTextureSlot(GLSlot slot);
 
-		static void UpdateTexture(Texture& texture, GLuint width, GLuint height);
+		static void UpdateTexture(Texture* texture, int width, int height);
 
-		static void DeleteTexture(Texture& texture);
+		static void DeleteTexture(Texture* texture);
 
-		static GLSlot FindTextureSlot(Texture& image);
+		static GLSlot FindTextureSlot(Texture* image);
 
 	private:
 		static inline std::map<GLSlot, Texture*> _slots;

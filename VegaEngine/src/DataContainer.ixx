@@ -4,7 +4,7 @@ import Math;
 import Gui;
 import Render;
 
-using namespace Vega::Math;
+
 
 export namespace Vega {
 
@@ -23,7 +23,7 @@ export namespace Vega {
 	class DataContainer {
 	public:
 		using U = array_type<T>::type;
-		DataContainer(std::string name, T data, U min, U max) : _name(name), _data(data), _min(min), _max(max) {};
+		DataContainer(const char* name, T data, U min, U max) : _name(name), _data(data), _min(min), _max(max) {};
 
 		void AddGuiInput() {
 			Slider(_name, _data, _min, _max);
@@ -42,7 +42,7 @@ export namespace Vega {
 		}
 
 	private:
-		const std::string _name;
+		const char* _name;
 		T _data;
 		U _min;
 		U _max;

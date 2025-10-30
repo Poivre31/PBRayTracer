@@ -2,7 +2,7 @@
 import Vega;
 import std;
 
-using namespace Vega::Math;
+
 
 struct GPUBoid {
 	float4 position;

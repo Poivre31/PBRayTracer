@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\vendor\stb;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -106,7 +106,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\vendor\stb;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -139,7 +139,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vendor\GLFW\include;..\vendor\Glad\include;..\vendor\ImGui;..\vendor\ImGui\backends;..\vendor\ImGui\misc\cpp;..\vendor\stb;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -174,9 +174,8 @@
     <ClCompile Include="src\Core\Application.ixx" />
     <ClCompile Include="src\Core\ApplicationI.cpp" />
     <ClCompile Include="src\Core\Core.ixx" />
+    <ClCompile Include="src\Core\ImGui\GuiLayer.ixx" />
     <ClCompile Include="src\Core\ImGui\ImGuiCanvas.ixx" />
-    <ClCompile Include="src\Core\ImGui\ImGuiLayer.ixx" />
-    <ClCompile Include="src\Core\ImGui\ImGuiLayerI.cpp" />
     <ClCompile Include="src\Core\Layer.ixx" />
     <ClCompile Include="src\Core\LayerStack.ixx" />
     <ClCompile Include="src\Core\LayerStackI.cpp" />
@@ -185,19 +184,26 @@
     <ClCompile Include="src\Core\Window.ixx" />
     <ClCompile Include="src\Core\WindowI.cpp" />
     <ClCompile Include="src\DataContainer.ixx" />
+    <ClCompile Include="src\Gui\Drawing\Grid.ixx" />
+    <ClCompile Include="src\Gui\Drawing\Primitives.ixx" />
+    <ClCompile Include="src\Gui\Drawing\Widgets.ixx" />
+    <ClCompile Include="src\Gui\Drawing\WidgetsManager.ixx" />
     <ClCompile Include="src\Gui\Gui.ixx" />
     <ClCompile Include="src\Gui\GuiCanvas.ixx" />
     <ClCompile Include="src\Gui\GuiInput.ixx" />
+    <ClCompile Include="src\Gui\Drawing\Viewport.ixx" />
     <ClCompile Include="src\Io\Io.ixx" />
     <ClCompile Include="src\Io\Keys.ixx" />
     <ClCompile Include="src\Math\Mat3x3.ixx" />
     <ClCompile Include="src\Math\Mat3x3f.ixx" />
     <ClCompile Include="src\Math\Math.ixx" />
     <ClCompile Include="src\Math\Random.ixx" />
+    <ClCompile Include="src\Math\Vec2.ixx" />
     <ClCompile Include="src\Math\Vec3.ixx" />
     <ClCompile Include="src\Math\Vec3Math.ixx" />
     <ClCompile Include="src\Math\VecTypes.ixx" />
     <ClCompile Include="src\Render\Data\Buffer.ixx" />
+    <ClCompile Include="src\Render\Data\FrameBuffer.ixx" />
     <ClCompile Include="src\Render\Data\ImageFormats.ixx" />
     <ClCompile Include="src\Render\Data\LinkedSSBO.ixx" />
     <ClCompile Include="src\Render\Data\Texture.ixx" />
@@ -205,7 +211,6 @@
     <ClCompile Include="src\Render\Data\TextureManager.ixx">
       <ObjectFileName>$(IntDir)\TextureManager1.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="src\Scene\Drawing\Primitives.ixx" />
     <ClCompile Include="src\Render\Objects\Mesh.ixx" />
     <ClCompile Include="src\Render\Objects\Mesh2D.ixx" />
     <ClCompile Include="src\Render\Objects\ScreenQuad.ixx" />
@@ -233,32 +238,12 @@
     <ClCompile Include="src\Vega.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\res\default.comp" />
-    <None Include="bin\Debug\res\default.frag" />
-    <None Include="bin\Debug\res\default.vert" />
-    <None Include="bin\Debug\res\exp.frag" />
-    <None Include="bin\Debug\res\fullScreenQuad.frag" />
-    <None Include="bin\Debug\res\fullScreenQuad.vert" />
-    <None Include="bin\Debug\res\screenQuad.frag" />
-    <None Include="bin\Dist\res\default.comp" />
-    <None Include="bin\Dist\res\default.frag" />
-    <None Include="bin\Dist\res\default.vert" />
-    <None Include="bin\Dist\res\exp.frag" />
-    <None Include="bin\Dist\res\fullScreenQuad.frag" />
-    <None Include="bin\Dist\res\fullScreenQuad.vert" />
-    <None Include="bin\Dist\res\screenQuad.frag" />
-    <None Include="bin\Release\res\default.comp" />
-    <None Include="bin\Release\res\default.frag" />
-    <None Include="bin\Release\res\default.vert" />
-    <None Include="bin\Release\res\exp.frag" />
-    <None Include="bin\Release\res\fullScreenQuad.frag" />
-    <None Include="bin\Release\res\fullScreenQuad.vert" />
-    <None Include="bin\Release\res\screenQuad.frag" />
     <None Include="res\default.comp" />
     <None Include="res\default.frag" />
     <None Include="res\default.vert" />
     <None Include="res\proceduralPrimitive.frag" />
     <None Include="res\screenQuad.frag" />
+    <None Include="res\postProcess.frag" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vendor\ImGui\ImGui.vcxproj">

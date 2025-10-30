@@ -19,7 +19,7 @@ namespace Vega {
 		static Window* Window() {
 			return Application::Get()->GetWindow();
 		}
-		static ImGuiLayer* Gui() {
+		static GuiLayer* Gui() {
 			return Application::Get()->GetGUI();
 		}
 		static IOData IoData() {

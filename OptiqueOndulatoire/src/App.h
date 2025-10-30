@@ -1,6 +1,6 @@
 #pragma once
 #include "DebugWindow.h"
-#include "Wave/Wave.h"
+#include "Wave/Wave2.h"
 #include "GraphicSettings.h"
 
 import Vega;

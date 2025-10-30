@@ -2,7 +2,7 @@ export module Entities:Components.Camera;
 import Math;
 import :Components.Transform;
 
-using namespace Vega::Math;
+
 
 namespace Vega {
 

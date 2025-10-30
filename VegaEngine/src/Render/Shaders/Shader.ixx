@@ -5,18 +5,18 @@ import :ShaderCompiler;
 import std;
 import Math;
 
-using namespace Vega::Math;
+
 
 export namespace Vega {
 
 	struct ShaderVariable {
-		std::string& variableName;
+		const char*& variableName;
 		int count;
 	};
 
 	class Shader {
 	public:
-		Shader(std::string pathVertex, std::string pathFrag);
+		Shader(const char* pathVertex, const char* pathFrag);
 		~Shader();
 
 		virtual void Reload();
@@ -25,30 +25,32 @@ export namespace Vega {
 		GLuint GetID();
 		void SetID(GLuint ID);
 
-		void SetVariable(std::string name, int value);
-		void SetVariable(std::string name, int2& value);
-		void SetVariable(std::string name, int3& value);
-		void SetVariable(std::string name, int4& value);
+		void SetVariable(const char* name, int value);
+		void SetVariable(const char* name, int2& value);
+		void SetVariable(const char* name, int3& value);
+		void SetVariable(const char* name, int4& value);
 
-		void SetVariable(std::string name, float value);
-		void SetVariable(std::string name, float2& value);
-		void SetVariable(std::string name, float3& value);
-		void SetVariable(std::string name, float4& value);
+		void SetVariable(const char* name, float value);
+		void SetVariable(const char* name, float2& value);
+		void SetVariable(const char* name, float3& value);
+		void SetVariable(const char* name, float4& value);
 
-		void SetInt(std::string name, int value);
-		void SetInt2(std::string name, int2 vec);
-		void SetInt3(std::string name, int3 vec);
-		void SetInt4(std::string name, int4 vec);
+		void SetVariable(const char* name, double value);
 
-		void SetFloat(std::string name, float value);
-		void SetFloat2(std::string name, float2 vec);
-		void SetFloat3(std::string name, float3 vec);
-		void SetFloat4(std::string name, float4 vec);
+		void SetInt(const char* name, int value);
+		void SetInt2(const char* name, int2 vec);
+		void SetInt3(const char* name, int3 vec);
+		void SetInt4(const char* name, int4 vec);
 
-		void SetMat3x3(std::string name, const Math::Mat3x3f& matrix, bool transpose = GL_TRUE);
-		//void AttachFloatRef(std::string& name, float* data, int count);
+		void SetFloat(const char* name, float value);
+		void SetFloat2(const char* name, float2 vec);
+		void SetFloat3(const char* name, float3 vec);
+		void SetFloat4(const char* name, float4 vec);
 
-		//void AttachIntRef(std::string& name, int* data, int count);
+		void SetMat3x3(const char* name, const Mat3x3f& matrix, bool transpose = GL_TRUE);
+		//void AttachFloatRef(const char*& name, float* data, int count);
+
+		//void AttachIntRef(const char*& name, int* data, int count);
 
 		//void UpdateUniforms();
 

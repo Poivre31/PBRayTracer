@@ -2,7 +2,7 @@
 #include "imgui.h"
 import Vega;
 
-using namespace Vega::Math;
+
 
 class ComputeLayer : public Vega::Layer {
 public:

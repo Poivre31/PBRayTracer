@@ -10,9 +10,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Gravity">
-      <UniqueIdentifier>{625A6A77-CE0F-E36C-5704-DD43C3B8D970}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Wave">
       <UniqueIdentifier>{2F9027CF-1B5D-82DA-4476-708230A2B768}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,7 @@
     <ClInclude Include="src\Wave\Wave.h">
       <Filter>src\Wave</Filter>
     </ClInclude>
+    <ClInclude Include="src\Wave\Wave2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -52,6 +50,9 @@
     <None Include="res\defaults\default.vert">
       <Filter>res\defaults</Filter>
     </None>
+    <None Include="res\defaults\proceduralPrimitive.frag">
+      <Filter>res\defaults</Filter>
+    </None>
     <None Include="res\defaults\screenQuad.frag">
       <Filter>res\defaults</Filter>
     </None>
@@ -61,10 +62,14 @@
     <None Include="res\gravityDisplay.comp">
       <Filter>res</Filter>
     </None>
+    <None Include="res\proceduralPrimitive.frag">
+      <Filter>res</Filter>
+    </None>
     <None Include="res\wave.frag">
       <Filter>res</Filter>
     </None>
-    <None Include="res\defaults\proceduralPrimitive.frag" />
-    <None Include="res\proceduralPrimitive.frag" />
+    <None Include="res\defaults\postProcess.frag" />
+    <None Include="res\defaults\viewport\grid.frag" />
+    <None Include="res\defaults\viewport\widgets.frag" />
   </ItemGroup>
 </Project>

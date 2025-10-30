@@ -2,7 +2,7 @@
 
 import Vega;
 
-using namespace Vega::Math;
+
 
 struct GpuSource {
 	float4 position;
@@ -49,7 +49,7 @@ public:
 	GpuSource Parse() {
 		Vec3 dir = direction;
 		dir.Normalize();
-		float phi0 = std::fmodf(dot(dir, origin), 2 * std::numbers::pi);
+		float phi0 = (float)std::fmod(dot(dir, origin), 2. * std::numbers::pi);
 		phi0 = 0.;
 		return GpuSource{
 			{dir.x, dir.y,dir.z},
@@ -78,8 +78,8 @@ enum Display {
 
 struct SourceSettings {
 	float size = 1.f;
-	float intensity = 5;
-	float gamma = 1.8;
+	float intensity = 1.f;
+	float gamma = 1.8f;
 	float wavelength = 10.f;
 	EditingStatus status = None;
 	size_t targetIndex = -1;
@@ -90,7 +90,8 @@ struct SourceSettings {
 	int displayType = Intensity;
 	int editingType = 0;
 	Vec3<float> targetColor{ 1.f,1.f,1.f };
-	float targetAlpha = 1.;
+	float targetAlpha = 1.f;
+	float gridAlpha = .25f;
 };
 
 Source CreateSource(float posX, float posY, Vec3<float> color = { 1.f,1.f,1.f }) {
@@ -108,11 +109,12 @@ public:
 		Vega::Combo("Mode d'affichage", { "Intensite", "Partie reelle", "Partie imaginaire" }, _settings->displayType);
 		Vega::Slider("Taille des widgets", _settings->size, .5f, 3.f);
 		Vega::Separator("Parametres d'affichage");
-		Vega::Slider("Intensite", _settings->intensity, 0, 100);
+		Vega::Slider("Intensite", _settings->intensity, 0, 2);
 		Vega::Slider("Gamma", _settings->gamma, .5, 3);
+		Vega::Slider("Grid alpha", _settings->gridAlpha, .0f, 1.f);
 
 		Vega::Separator("Parametres des sources");
-		if (Vega::Button("Ajouter une source spherique")) {
+		if (Vega::Button("Ajouter une source spherique") or Vega::Keys::Pressed(Vega::Key::Space) and _settings->status != Adding) {
 			_settings->status = Adding;
 			_settings->editingType = 0;
 		}

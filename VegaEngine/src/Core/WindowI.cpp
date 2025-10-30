@@ -109,7 +109,7 @@ namespace Vega {
 		Log.debug(std::format("Closed window '{}'", _data.name));
 	}
 
-	void Window::Resize(GLuint width, GLuint height) {
+	void Window::Resize(int width, int height) {
 		_data.width = width;
 		_data.height = height;
 	}
@@ -123,11 +123,10 @@ namespace Vega {
 		}
 	}
 
-
-	GLuint Window::Width() const {
+	int Window::Width() const {
 		return _data.width;
 	}
-	GLuint Window::Height() const {
+	int Window::Height() const {
 		return _data.height;
 	}
 	bool Window::IsVsync() const {

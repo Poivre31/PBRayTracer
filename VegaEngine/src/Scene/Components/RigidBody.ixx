@@ -2,7 +2,7 @@ export module Entities:Components.RigidBody;
 import :Components.Transform;
 import Utility;
 import Math;
-using namespace Vega::Math;
+
 
 namespace Vega {
 

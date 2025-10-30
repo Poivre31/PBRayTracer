@@ -2,7 +2,7 @@ export module Math:VecTypes;
 import :Vec3;
 import std;
 
-export namespace Vega::Math {
+export {
 
 	typedef std::array<float, 2> float2;
 	typedef std::array<float, 3> float3;

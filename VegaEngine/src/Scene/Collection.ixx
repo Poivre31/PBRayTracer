@@ -5,7 +5,7 @@ import Utility;
 import Math;
 import std;
 
-using namespace Vega::Math;
+
 
 export namespace Vega {
 

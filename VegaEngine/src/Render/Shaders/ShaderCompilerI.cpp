@@ -19,10 +19,9 @@ namespace Vega {
 		}
 	}
 
-	GLuint CompileShader(unsigned int type, const std::string& source) {
+	GLuint CompileShader(unsigned int type, const char* source) {
 		GLuint id = glCreateShader(type);
-		const char* src = source.c_str();
-		glShaderSource(id, 1, &src, nullptr);
+		glShaderSource(id, 1, &source, nullptr);
 		glCompileShader(id);
 
 		int success = 0;
@@ -75,7 +74,7 @@ namespace Vega {
 			while (getline(stream, line)) {
 				source << line << "\n";
 			}
-			shaderList[i] = CompileShader(GL_COMPUTE_SHADER, source.str());
+			shaderList[i] = CompileShader(GL_COMPUTE_SHADER, source.str().data());
 			glAttachShader(program, shaderList[i]);
 			source.str("");
 			i++;
@@ -94,7 +93,7 @@ namespace Vega {
 		return program;
 	}
 
-	GLuint CreateProgram(const std::string& vertPath, const std::string& fragPath) {
+	GLuint CreateProgram(const char* vertPath, const char* fragPath) {
 		std::ifstream stream;
 		std::stringstream source;
 		std::string line;
@@ -108,7 +107,7 @@ namespace Vega {
 		while (getline(stream, line)) {
 			source << line << "\n";
 		}
-		GLuint vertShader = CompileShader(GL_VERTEX_SHADER, source.str());
+		GLuint vertShader = CompileShader(GL_VERTEX_SHADER, source.str().data());
 		glAttachShader(program, vertShader);
 		source.str("");
 
@@ -120,7 +119,7 @@ namespace Vega {
 		while (getline(stream, line)) {
 			source << line << "\n";
 		}
-		GLuint fragShader = CompileShader(GL_FRAGMENT_SHADER, source.str());
+		GLuint fragShader = CompileShader(GL_FRAGMENT_SHADER, source.str().data());
 		glAttachShader(program, fragShader);
 
 		glLinkProgram(program);

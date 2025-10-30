@@ -1,12 +1,9 @@
-export module Entities:Primitives;
-import :Entity;
+export module Gui:Primitives;
+import Entities;
 import Math;
 import Render;
 import std;
 import Io;
-
-using namespace Vega::Math;
-
 
 export namespace Vega {
 
@@ -15,7 +12,7 @@ export namespace Vega {
 		int pad1;
 		int pad2;
 		int pad3;
-		float4 color = { 1,1,1,0 };
+		float4 color = { 1,1,1,1 };
 		float4 position = { 0,0,0,0 };
 		float4 scale = { 1,1,1,0 };
 		float4 A = { 0,0,0,0 };

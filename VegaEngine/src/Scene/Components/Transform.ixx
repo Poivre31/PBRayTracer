@@ -2,7 +2,7 @@ export module Entities:Components.Transform;
 import std;
 import Math;
 
-using namespace Vega::Math;
+
 
 namespace Vega {
 

@@ -48,7 +48,7 @@ namespace Vega {
 		_window = std::make_unique<Window>();
 		_window->Create(spec.windowData);
 
-		_guiLayer = AttachLayer<ImGuiLayer>(_window.get());
+		_guiLayer = AttachLayer<GuiLayer>(_window.get());
 		_drawingLayer = AttachLayer<DrawingLayer>(_window.get());
 		AttachLayer<Vega::ScreenQuad>(_drawingLayer->GetShader());
 		_IO = AttachLayer<IOLayer>(_window.get());
@@ -137,7 +137,7 @@ namespace Vega {
 	}
 
 
-	ImGuiLayer* Application::GetGUI() {
+	GuiLayer* Application::GetGUI() {
 		return _guiLayer;
 	}
 	

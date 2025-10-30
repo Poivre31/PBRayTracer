@@ -13,8 +13,8 @@ namespace Vega {
 
 	export struct WindowData {
 		const char* name = "Application";
-		GLuint width = 1280;
-		GLuint height = 720;
+		int width = 1280;
+		int height = 720;
 		bool vsync = true;
 	};
 
@@ -30,12 +30,12 @@ namespace Vega {
 		void OnUpdate();
 		void Shutdown();
 
-		void Resize(GLuint width, GLuint height);
+		void Resize(int width, int height);
 
 		void CenterCursor(bool enable);
 
-		GLuint Width() const;
-		GLuint Height() const;
+		int Width() const;
+		int Height() const;
 		bool IsVsync() const;
 		void SetVsync(bool enable);
 

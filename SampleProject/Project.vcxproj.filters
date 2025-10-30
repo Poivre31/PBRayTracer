@@ -58,6 +58,9 @@
     <None Include="res\defaults\default.vert">
       <Filter>res\defaults</Filter>
     </None>
+    <None Include="res\defaults\proceduralPrimitive.frag">
+      <Filter>res\defaults</Filter>
+    </None>
     <None Include="res\defaults\screenQuad.frag">
       <Filter>res\defaults</Filter>
     </None>

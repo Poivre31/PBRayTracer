@@ -7,7 +7,7 @@ import Io;
 import std;
 
 
-using namespace Vega::Math;
+
 
 const double fac = .5 * std::log(2. * std::exp(1.) - 1.);
 
@@ -40,27 +40,27 @@ namespace Vega {
 
 			Vec3<double> forceDirection = Vec3(0.);
 			Vec3<bool> moving = Vec3(false);
-			if (keys.KeyDown(Key::Z)) {
+			if (keys.Down(Key::Z)) {
 				forceDirection.x += 1.;
 				moving.x = true;
 			}
-			if (keys.KeyDown(Key::S)) {
+			if (keys.Down(Key::S)) {
 				forceDirection.x -= 1.;
 				moving.x = !moving.x;
 			}
-			if (keys.KeyDown(Key::Q)) {
+			if (keys.Down(Key::Q)) {
 				forceDirection.y += 1.;
 				moving.y = true;
 			}
-			if (keys.KeyDown(Key::D)) {
+			if (keys.Down(Key::D)) {
 				forceDirection.y -= 1.;
 				moving.y = !moving.y;
 			}
-			if (keys.KeyDown(Key::A)) {
+			if (keys.Down(Key::A)) {
 				forceDirection.z += 1.;
 				moving.z = true;
 			}
-			if (keys.KeyDown(Key::E)) {
+			if (keys.Down(Key::E)) {
 				forceDirection.z -= 1.;
 				moving.z = !moving.z;
 			}
@@ -90,7 +90,7 @@ namespace Vega {
 		}
 
 		void Rotate(Keys keys, float mouseSpeed = 1.) {
-			if (keys.KeyDown(Key::MouseRight) && !keys.KeyPressed(Key::MouseRight)) {
+			if (keys.Down(Key::MouseRight) && !keys.Pressed(Key::MouseRight)) {
 				double speedTheta = mouseSpeed * ImGui::GetIO().MouseDelta.y / 640;
 				double speedPhi = -mouseSpeed * ImGui::GetIO().MouseDelta.x / 640;
 

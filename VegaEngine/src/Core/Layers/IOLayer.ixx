@@ -20,7 +20,7 @@ export namespace Vega {
 		void OnUpdate(double) override {
 			_data.inputs.Update();
 
-			//_window->CenterCursor(_data.inputs.KeyStatus(Key::MouseRight, Down));
+			//_window->CenterCursor(_data.inputs.Status(Key::MouseRight, Down));
 		}
 
 		IOData GetData() const {

@@ -6,7 +6,7 @@
 import Vega;
 import std;
 
-using namespace Vega::Math;
+
 
 static const auto screenVert = "defaults/default.vert";
 static const auto screenFrag = "defaults/screenQuad.frag";
@@ -45,7 +45,7 @@ public:
 	}
 
 	void OnUpdate(double deltaTime) override {
-		if (Vega::Keys::KeyPressed(Vega::Key::R, Vega::KeyMod::ModCtrl)) {
+		if (Vega::Keys::Pressed(Vega::Key::R, Vega::KeyMod::ModCtrl)) {
 			_classicShader->Reload();
 			_screenShader->Reload();
 			_computeShader->Reload();

@@ -1,7 +1,7 @@
 export module Entities:Components.RTPrimitive;
 import Math;
 
-using namespace Vega::Math;
+
 
 export namespace Vega {
 

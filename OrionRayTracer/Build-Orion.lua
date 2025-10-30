@@ -18,13 +18,6 @@ project "OrionRayTracer"
 
 
    includedirs{
-      "../vendor/GLFW/include",
-      "../vendor/spdlog/include",
-      "../vendor/Glad/include",
-      "../vendor/ImGui",
-      "../vendor/ImGui/backends",
-      "../vendor/ImGui/misc/cpp",
-      -- "../vendor/gsl",
       "../VegaEngine/src",
    }
 

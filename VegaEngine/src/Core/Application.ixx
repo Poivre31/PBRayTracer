@@ -6,7 +6,7 @@ import :Scene;
 import :LayerStack;
 import :Layer;
 import :Window;
-import :ImGuiLayer;
+import :GuiLayer;
 import :IOLayer;
 import :DrawingLayer;
 import Utility;
@@ -33,7 +33,8 @@ namespace Vega {
 		static Application* Get();
 		Window* GetWindow();
 		DrawingLayer* GetDrawStack();
-		ImGuiLayer* GetGUI();
+		
+		GuiLayer* GetGUI();
 		Scene* GetScene();
 		IOData GetIOData();
 
@@ -59,7 +60,7 @@ namespace Vega {
 		bool _shouldClose = false;
 		LayerStack _layerStack;
 
-		ImGuiLayer* _guiLayer;
+		GuiLayer* _guiLayer;
 		IOLayer* _IO;
 		Scene* _scene;
 		DrawingLayer* _drawingLayer;

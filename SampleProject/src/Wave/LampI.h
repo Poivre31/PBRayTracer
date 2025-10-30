@@ -3,7 +3,7 @@
 
 import Vega;
 
-using namespace Vega::Math;
+
 
 struct GpuLamp {
 	float4 position; // Always use float4/int4 for vector types, for alignement issues

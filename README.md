@@ -3,6 +3,18 @@
 This is a terrible readme anyways so I'll just say it's a barely working physics
 engine I'm making as a way to simulate pretty stuff and practice lessons
 
+### Viewport Controls
+
+- ZQSD or mouse drag to move across the screen
+- Numpad +- or mouse wheel to zoom in/out
+- When editing, press ctrl to snap to the grid and x/y to constrain to horizontal/vertical movement
+- Space or click buttons to add a light source, left click to place it
+- Click a source's widget to move an already placed light source
+- Double click a source to delete it
+- Right click and drag to measure a distance with the ruler
+- Click on the colored box to pop up a color picker
+- Ctrl + R to reload shaders
+
 ## Project 1 - Primitive Based Ray Tracer
 
 A ray tracer tracing primitives. Work stopped for now, focusing on main engine

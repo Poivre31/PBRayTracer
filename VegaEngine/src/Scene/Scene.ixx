@@ -5,7 +5,7 @@ import Render;
 import Math;
 import std;
 
-using namespace Vega::Math;
+
 
 namespace Vega {
 
@@ -47,7 +47,7 @@ namespace Vega {
 	export class Scene : public Layer {
 	public:
 
-		void BindSSBO(GLuint slotTransform, GLuint slotColor) {
+		void BindSSBO(int slotTransform, int slotColor) {
 			_transformsBuffer.Bind(slotTransform);
 			_colorsBuffer.Bind(slotColor);
 		}

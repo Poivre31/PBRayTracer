@@ -5,38 +5,41 @@
 import Vega;
 import std;
 
-using namespace Vega::Math;
+
 
 static const auto screenVert = "defaults/default.vert";
 static const auto screenFrag = "proceduralPrimitive.frag";
 static const auto waveFrag = "wave.frag";
 
+class Ah : public Vega::GuiCanvas {
+public:
+	void Draw() override {
+	}
+
+};
+
 class WaveDisplay : public Vega::Layer {
 public:
 
 	void OnAttach() override {
-		_height = Vega::Systems::Window()->Height();
-		_width = Vega::Systems::Window()->Width();
-
 		_sourcesBuffer.Reserve(1);
 		_sourcesBuffer.Bind(0);
 		_planesBuffer.Reserve(1);
 		_planesBuffer.Bind(1);
 
 		Vega::Systems::Gui()->AttachCanvas<SourceWindow>("Parametres", &_settings);
-	}
-
-	void OnResize(GLuint width, GLuint height) override {
-		_width = width;
-		_height = height;
+		Vega::Systems::Gui()->AttachCanvas<Ah>("Ah");
 	}
 
 	void OnUpdate(double deltaTime) override {
+		_size = Vega::Systems::Gui()->ViewportSize();
+		_width = _size.x;
+		_height = _size.y;
+
 		auto* drawStack = Vega::Systems::DrawStack();
 		Vega::Shader* shader = drawStack->GetShader();
 
-		auto [mosX, mosY] = Vega::Keys::MousePos();
-		mosY = _height - mosY;
+		auto [mosX, mosY] = Vega::Keys::MousePosViewport();
 
 		Vec3 origin = { _width / 2.f, _height / 2.f,0.f };
 
@@ -58,9 +61,9 @@ public:
 			if (_settings.editingType == 1) {
 				objectPosition = _planes[_settings.targetIndex].origin;
 			}
-			if (Vega::Keys::KeyPressed(Vega::Key::MouseLeft) && !Vega::Keys::HoveringWindow()) {
+			if (Vega::Keys::Pressed(Vega::Key::MouseLeft) && Vega::Keys::HoveringViewport()) {
 
-				float d = (objectPosition - position).Norm();
+				auto d = (objectPosition - position).Norm();
 				if (d > 10.f * _settings.size) {
 					_settings.status = None;
 					_settings.targetIndex = -1;
@@ -68,29 +71,29 @@ public:
 			}
 		}
 
-		float scrollSpeed = 1.07f;
+		float scrollSpeed = 1.05f;
 		if (Vega::Keys::MouseWheel() > 0) {
 			_settings.scale /= scrollSpeed;
 		}
 		else if (Vega::Keys::MouseWheel() < 0) {
 			_settings.scale *= scrollSpeed;
 		}
-		if (Vega::Keys::KeyDown(Vega::Key::Z) > 0) {
-			_settings.origin.y += 2 * _settings.scale;
-		}
-		if (Vega::Keys::KeyDown(Vega::Key::S) > 0) {
+		if (Vega::Keys::Down(Vega::Key::Z)) {
 			_settings.origin.y -= 2 * _settings.scale;
 		}
-		if (Vega::Keys::KeyDown(Vega::Key::Q) > 0) {
+		if (Vega::Keys::Down(Vega::Key::S)) {
+			_settings.origin.y += 2 * _settings.scale;
+		}
+		if (Vega::Keys::Down(Vega::Key::Q)) {
 			_settings.origin.x -= 2 * _settings.scale;
 		}
-		if (Vega::Keys::KeyDown(Vega::Key::D) > 0) {
+		if (Vega::Keys::Down(Vega::Key::D)) {
 			_settings.origin.x += 2 * _settings.scale;
 		}
-		if (Vega::Keys::KeyPressed(Vega::Key::Space)) {
+		if (Vega::Keys::Pressed(Vega::Key::Space)) {
 			_settings.status = Adding;
 		}
-		if (_settings.status == None && !Vega::Keys::HoveringWindow()) {
+		if (_settings.status == None && Vega::Keys::HoveringViewport()) {
 
 			Vec3 position = { (float)mosX,(float)mosY,0.f };
 			position = ((position - origin) * _settings.scale + _settings.origin);
@@ -98,9 +101,9 @@ public:
 			_settings.hoveredIndex = -1;
 			for (auto& o : _sources)
 			{
-				float d = (o.position - position).Norm();
+				auto d = (o.position - position).Norm();
 				if (d < 10.f * _settings.size * _settings.scale) {
-					if (Vega::Keys::KeyPressed(Vega::Key::MouseLeft) && !Vega::Keys::MouseDoubleClicked()) {
+					if (Vega::Keys::Pressed(Vega::Key::MouseLeft) && !Vega::Keys::MouseDoubleClicked()) {
 						_settings.status = Moving;
 						_settings.targetIndex = i;
 						_settings.targetColor = o.color;
@@ -119,9 +122,9 @@ public:
 			i = 0;
 			for (auto& o : _planes)
 			{
-				float d = (o.origin - position).Norm();
+				auto d = (o.origin - position).Norm();
 				if (d < 8.f * _settings.size * _settings.scale) {
-					if (Vega::Keys::KeyPressed(Vega::Key::MouseLeft) && !Vega::Keys::MouseDoubleClicked()) {
+					if (Vega::Keys::Pressed(Vega::Key::MouseLeft) && !Vega::Keys::MouseDoubleClicked()) {
 						_settings.status = Moving;
 						_settings.targetIndex = i;
 						_settings.targetColor = o.color;
@@ -136,7 +139,7 @@ public:
 				}
 				d = (o.origin + o.direction - position).Norm();
 				if (d < 6.f * _settings.size * _settings.scale) {
-					if (Vega::Keys::KeyPressed(Vega::Key::MouseLeft) && !Vega::Keys::MouseDoubleClicked()) {
+					if (Vega::Keys::Pressed(Vega::Key::MouseLeft) && !Vega::Keys::MouseDoubleClicked()) {
 						_settings.status = Direction;
 						_settings.targetIndex = i;
 						_settings.targetColor = o.color;
@@ -160,7 +163,7 @@ public:
 			position = ((position - origin) * _settings.scale + _settings.origin);
 			for (auto& o : _sources)
 			{
-				float d = (o.position - position).Norm();
+				auto d = (o.position - position).Norm();
 				if (d < 10.f * _settings.size * _settings.scale) {
 					_settings.status = Deleting;
 					_settings.targetIndex = i;
@@ -170,7 +173,7 @@ public:
 			i = 0;
 			for (auto& o : _planes)
 			{
-				float d = (o.origin - position).Norm();
+				auto d = (o.origin - position).Norm();
 				if (d < 8.f * _settings.size * _settings.scale) {
 					_settings.status = Deleting;
 					_settings.targetIndex = i;
@@ -179,19 +182,18 @@ public:
 			}
 		}
 
-		static int mosOriginX = 0, mosOriginY = 0;
 		auto [dx, dy] = Vega::Keys::MouseDelta();
-		if (_settings.status == None && !Vega::Keys::HoveringWindow()) {
-			if (Vega::Keys::KeyDown(Vega::Key::MouseLeft)) {
+		if (_settings.status == None && Vega::Keys::HoveringViewport()) {
+			if (Vega::Keys::Down(Vega::Key::MouseLeft)) {
 				_settings.origin.x -= dx * _settings.scale;
-				_settings.origin.y += dy * _settings.scale;
+				_settings.origin.y -= dy * _settings.scale;
 			}
-			if (Vega::Keys::KeyReleased(Vega::Key::MouseLeft)) {
+			if (Vega::Keys::Released(Vega::Key::MouseLeft)) {
 				dx = 0; dy = 0;
 			}
 		}
-		if (_settings.status == None || _settings.status == Editing  && !Vega::Keys::HoveringWindow()) {
-			if (Vega::Keys::KeyPressed(Vega::Key::MouseRight)) {
+		if (_settings.status == None || _settings.status == Editing  && Vega::Keys::HoveringViewport()) {
+			if (Vega::Keys::Pressed(Vega::Key::MouseRight)) {
 				if (_settings.status == Editing) {
 					_settings.status = None;
 					_settings.targetIndex = -1;
@@ -200,14 +202,14 @@ public:
 
 				position = ((position - origin) * _settings.scale + _settings.origin);
 
-				if (Vega::Keys::KeyDown(Vega::Key::Ctrl)) {
-					position = (position / 100).Round() * 100;
+				if (Vega::Keys::Down(Vega::Key::Ctrl)) {
+					position = (position / 100.f).Round() * 100;
 				}
 
-				if (Vega::Keys::KeyDown(Vega::Key::Shift)) {
+				if (Vega::Keys::Down(Vega::Key::Shift)) {
 					for (auto& o : _sources)
 					{
-						float d = (o.position - position).Norm();
+						auto d = (o.position - position).Norm();
 						if (d < 10.f * _settings.size) {
 							position = o.position;
 						}
@@ -222,16 +224,16 @@ public:
 		if (_settings.status == Measuring) {
 			Vec3 position = { (float)mosX,(float)mosY,0.f };
 			position = ((position - origin) * _settings.scale + _settings.origin);
-			if (Vega::Keys::KeyDown(Vega::Key::Ctrl)) {
+			if (Vega::Keys::Down(Vega::Key::Ctrl)) {
 				position = (position / 100).Round() * 100;
 			}
 			static int axis = 0;
-			if (Vega::Keys::KeyPressed(Vega::Key::X)) {
+			if (Vega::Keys::Pressed(Vega::Key::X)) {
 				if (axis == 1)
 					axis = 0;
 				else axis = 1;
 			}
-			if (Vega::Keys::KeyPressed(Vega::Key::Y)) {
+			if (Vega::Keys::Pressed(Vega::Key::Y)) {
 				if (axis == 2)
 					axis = 0;
 				else axis = 2;
@@ -241,10 +243,10 @@ public:
 			if (axis == 2)
 				position.x = _ruler.origin.x;
 
-			if (Vega::Keys::KeyDown(Vega::Key::Shift)) {
+			if (Vega::Keys::Down(Vega::Key::Shift)) {
 				for (auto& o : _sources)
 				{
-					float d = (o.position - position).Norm();
+					auto d = (o.position - position).Norm();
 					if (d < 10.f * _settings.size) {
 						position = o.position;
 					}
@@ -252,17 +254,17 @@ public:
 			}
 			_ruler.endpoint = position;
 			drawStack->Add(_ruler);
-			if (Vega::Keys::KeyStatus(Vega::Key::MouseRight, Vega::KeyEvent::Released)) {
+			if (Vega::Keys::Status(Vega::Key::MouseRight, Vega::KeyEvent::Released)) {
 				_settings.status = None;
 				axis = 0;
 			}
-			_settings.measuredDistance = (_ruler.endpoint - _ruler.origin).Norm();
+			_settings.measuredDistance = (float)(_ruler.endpoint - _ruler.origin).Norm();
 		}
 
 		if (_settings.status == Adding) {
 			Vec3 position = { (float)mosX,(float)(mosY),0.f };
 			position = ((position - origin) * _settings.scale + _settings.origin);
-			if (Vega::Keys::KeyDown(Vega::Key::Ctrl)) {
+			if (Vega::Keys::Down(Vega::Key::Ctrl)) {
 				position = (position / 100).Round() * 100;
 			}
 
@@ -277,7 +279,7 @@ public:
 				drawStack->Add(Vega::Circle{ position,6.f * _settings.size }, Vec3{ 1.f }, .8f);
 			}
 
-			if (Vega::Keys::KeyPressed(Vega::Key::MouseLeft)) {
+			if (Vega::Keys::Pressed(Vega::Key::MouseLeft)) {
 				if (_settings.editingType == 0) {
 					_sources.push_back(CreateSource(position.x, position.y));
 					_settings.targetIndex = _sources.size() - 1;
@@ -289,7 +291,7 @@ public:
 				_settings.status = Editing;
 			}
 
-			if (Vega::Keys::KeyDown(Vega::Key::Esc)) {
+			if (Vega::Keys::Down(Vega::Key::Esc)) {
 				_settings.status = None;
 			}
 		}
@@ -298,12 +300,12 @@ public:
 			Vec3 position = Vec3{ (float)mosX,(float)(mosY),0.f };
 			position = offset + ((position - origin) * _settings.scale + _settings.origin);
 			static int axis = 0;
-			if (Vega::Keys::KeyPressed(Vega::Key::X)) {
+			if (Vega::Keys::Pressed(Vega::Key::X)) {
 				if (axis == 1)
 					axis = 0;
 				else axis = 1;
 			}
-			if (Vega::Keys::KeyPressed(Vega::Key::Y)) {
+			if (Vega::Keys::Pressed(Vega::Key::Y)) {
 				if (axis == 2)
 					axis = 0;
 				else axis = 2;
@@ -312,7 +314,7 @@ public:
 				position.y = editingOrigin.y;
 			if (axis == 2)
 				position.x = editingOrigin.x;
-			if (Vega::Keys::KeyDown(Vega::Key::Ctrl)) {
+			if (Vega::Keys::Down(Vega::Key::Ctrl)) {
 				position = (position / 100.f).Round() * 100.f;
 				offset = 0;
 			}
@@ -323,7 +325,7 @@ public:
 			if (_settings.editingType == 1) {
 				_planes[_settings.targetIndex].origin = position;
 			}
-			if (Vega::Keys::KeyStatus(Vega::Key::MouseLeft, Vega::KeyEvent::Released)) {
+			if (Vega::Keys::Status(Vega::Key::MouseLeft, Vega::KeyEvent::Released)) {
 				_settings.status = Editing;
 				axis = 0;
 			}
@@ -341,9 +343,9 @@ public:
 				_planes[_settings.targetIndex].color = _settings.targetColor;
 				objectPosition = _planes[_settings.targetIndex].origin;
 			}
-			if (Vega::Keys::KeyPressed(Vega::Key::MouseLeft) && !Vega::Keys::HoveringWindow()) {
+			if (Vega::Keys::Pressed(Vega::Key::MouseLeft) && Vega::Keys::HoveringViewport()) {
 
-				float d = (objectPosition - position).Norm();
+				auto d = (objectPosition - position).Norm();
 				if (d < 10.f * _settings.size) {
 					_settings.status = Moving;
 					offset = objectPosition - position;
@@ -355,16 +357,16 @@ public:
 		else if (_settings.status == Direction) {
 			Vec3 position = Vec3{ (float)mosX,(float)(mosY),0.f };
 			position = offset + ((position - origin) * _settings.scale + _settings.origin);
-			if (Vega::Keys::KeyDown(Vega::Key::Ctrl)) {
+			if (Vega::Keys::Down(Vega::Key::Ctrl)) {
 				position = (position / 100).Round() * 100;
 			}
 			static int axis = 0;
-			if (Vega::Keys::KeyPressed(Vega::Key::X)) {
+			if (Vega::Keys::Pressed(Vega::Key::X)) {
 				if (axis == 1)
 					axis = 0;
 				else axis = 1;
 			}
-			if (Vega::Keys::KeyPressed(Vega::Key::Y)) {
+			if (Vega::Keys::Pressed(Vega::Key::Y)) {
 				if (axis == 2)
 					axis = 0;
 				else axis = 2;
@@ -374,7 +376,7 @@ public:
 			if (axis == 2)
 				position.x = _ruler.origin.x;
 			_planes[_settings.targetIndex].direction = position- _planes[_settings.targetIndex].origin;
-			if (Vega::Keys::KeyStatus(Vega::Key::MouseLeft, Vega::KeyEvent::Released)) {
+			if (Vega::Keys::Status(Vega::Key::MouseLeft, Vega::KeyEvent::Released)) {
 				_settings.status = Editing;
 				axis = 0;
 			}
@@ -423,20 +425,22 @@ public:
 		}
 		_sourcesBuffer.SetData(_sources);
 		_planesBuffer.SetData(_planes);
-		shader->SetInt("nSources", _sources.size());
-		shader->SetInt("nPlanes", _planes.size());
+		shader->SetInt("nSources", (int)_sources.size());
+		shader->SetInt("nPlanes", (int)_planes.size());
 		shader->SetInt("displayType", _settings.displayType);
+		shader->SetInt2("size", { (int)_width,(int)_height });
 		shader->SetFloat("gamma", _settings.gamma);
 		shader->SetFloat("intensity", _settings.intensity);
 		shader->SetFloat("wavelength", _settings.wavelength);
 		shader->SetFloat("scale", _settings.scale);
 		shader->SetFloat2("origin", { _settings.origin.x, _settings.origin.y });
+		Vega::Systems::Gui()->SetScreenShader(shader);
 	}
 
 private:
-	Vega::Texture _image;
 	GLuint _height;
 	GLuint _width;
+	Vec2<GLuint> _size;
 
 	SourceSettings _settings;
 

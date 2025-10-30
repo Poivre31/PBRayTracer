@@ -4,9 +4,8 @@ out vec4 color;
 layout(location = 0) in vec2 uv;
 
 float pi = 3.14159265358;
-uniform int width;
+uniform ivec2 size;
 uniform int height;
-vec2 size = vec2(width,height);
 
 uniform float wavelength;
 uniform float intensity;

@@ -6,20 +6,20 @@ import :ShaderCompiler;
 
 namespace Vega {
 
-	ComputeShader::ComputeShader(const std::string& path) {
-		_pathList = { "res/" + path };
+	ComputeShader::ComputeShader(const char* path) {
+		_pathList = { "res/" + std::string(path) };
 		SetID(CreateComputeProgram(_pathList));
 	}
 
-	ComputeShader::ComputeShader(const std::vector<std::string>& pathList) : _pathList(pathList) {
+	ComputeShader::ComputeShader(std::vector<std::string> pathList) : _pathList(pathList) {
 		for (auto& path : _pathList) {
 			path = "res/" + path;
 		}
 		SetID(CreateComputeProgram(_pathList));
 	}
 
-	ComputeShader::ComputeShader(const std::string& directory, const std::string& extension) {
-		for (const auto& file : std::filesystem::directory_iterator("res/" + directory)) {
+	ComputeShader::ComputeShader(const char* directory, const char* extension) {
+		for (const auto& file : std::filesystem::directory_iterator("res/" + std::string(directory))) {
 			//if (std::any_of(begin(extensions), end(extensions), [file](std::string a) {return a == file.path().extension(); })) {
 			if (extension == file.path().extension()) {
 				_pathList.push_back(file.path().string());
@@ -51,19 +51,19 @@ namespace Vega {
 	//	glDeleteShader(shader);
 	//}
 
-	void ComputeShader::Dispatch1D(GLuint res, GLuint numThread) {
+	void ComputeShader::Dispatch1D(int res, int numThread) {
 		Use();
 		glDispatchCompute((res + numThread - 1) / numThread, 1, 1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}
 
-	void ComputeShader::Dispatch2D(GLuint resX, GLuint resY, GLuint numThreadX, GLuint numThreadY) {
+	void ComputeShader::Dispatch2D(int resX, int resY, int numThreadX, int numThreadY) {
 		Use();
 		glDispatchCompute((resX + numThreadX - 1) / numThreadX, (resY + numThreadY - 1) / numThreadY, 1);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);
 	}
 
-	void ComputeShader::Dispatch3D(GLuint resX, GLuint resY, GLuint resZ, GLuint numThreadX, GLuint numThreadY, GLuint numThreadZ) {
+	void ComputeShader::Dispatch3D(int resX, int resY, int resZ, int numThreadX, int numThreadY, int numThreadZ) {
 		Use();
 		glDispatchCompute((resX + numThreadX - 1) / numThreadX, (resY + numThreadY - 1) / numThreadY, (resZ + numThreadZ - 1) / numThreadZ);
 		glMemoryBarrier(GL_ALL_BARRIER_BITS);

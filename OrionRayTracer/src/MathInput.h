@@ -4,7 +4,7 @@
 import Vega;
 import std;
 
-using namespace Vega::Math;
+
 
 struct MathData {
 	float2 range{ 1.,1. };

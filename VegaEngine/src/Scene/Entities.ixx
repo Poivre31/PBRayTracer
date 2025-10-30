@@ -11,5 +11,3 @@ export import :Components.Transform;
 
 export import :DefaultEntityTypes;
 export import :Entity;
-
-export import :Primitives;

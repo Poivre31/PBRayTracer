@@ -6,42 +6,45 @@ import Math;
 
 export namespace Vega {
 
-	bool Slider(std::string name, float& data, float min, float max) {
-		return ImGui::SliderFloat(name.data(), &data, min, max);
+	bool Slider(const char* name, float& data, float min, float max) {
+		return ImGui::SliderFloat(name, &data, min, max);
 	}
-	bool Slider(std::string name, Math::float2& data, float min, float max) {
-		return ImGui::SliderFloat2(name.data(), data.data(), min, max);
+	bool Slider(const char* name, float2& data, float min, float max) {
+		return ImGui::SliderFloat2(name, data.data(), min, max);
 	}
-	bool Slider(std::string name, Math::float3& data, float min, float max) {
-		return ImGui::SliderFloat3(name.data(), data.data(), min, max);
+	bool Slider(const char* name, float3& data, float min, float max) {
+		return ImGui::SliderFloat3(name, data.data(), min, max);
 	}
-	bool Slider(std::string name, Math::float4& data, float min, float max) {
-		return ImGui::SliderFloat4(name.data(), data.data(), min, max);
+	bool Slider(const char* name, float4& data, float min, float max) {
+		return ImGui::SliderFloat4(name, data.data(), min, max);
 	}
 
-	bool Slider(std::string name, int& data, int min, int max) {
-		return ImGui::SliderInt(name.data(), &data, min, max);
+	bool Slider(const char* name, int& data, int min, int max) {
+		return ImGui::SliderInt(name, &data, min, max);
 	}
-	bool Slider(std::string name, Math::int2& data, int min, int max) {
-		return ImGui::SliderInt2(name.data(), data.data(), min, max);
+	bool Slider(const char* name, int2& data, int min, int max) {
+		return ImGui::SliderInt2(name, data.data(), min, max);
 	}
-	bool Slider(std::string name, Math::int3& data, int min, int max) {
-		return ImGui::SliderInt3(name.data(), data.data(), min, max);
+	bool Slider(const char* name, int3& data, int min, int max) {
+		return ImGui::SliderInt3(name, data.data(), min, max);
 	}
-	bool Slider(std::string name, Math::int4& data, int min, int max) {
-		return ImGui::SliderInt4(name.data(), data.data(), min, max);
+	bool Slider(const char* name, int4& data, int min, int max) {
+		return ImGui::SliderInt4(name, data.data(), min, max);
 	}
 
 	void Text(std::string text) {
 		ImGui::Text(text.data());
 	}
-
-	bool Button(std::string name) {
-		return ImGui::Button(name.data());
+	void Text(const char* text) {
+		ImGui::Text(text);
 	}
 
-	bool ColorPicker(std::string name, Vega::Math::Vec3<float> &color) {
-		return ImGui::ColorEdit3(name.data(), &color.x);
+	bool Button(const char* name) {
+		return ImGui::Button(name);
+	}
+
+	bool ColorPicker(const char* name, Vec3<float> &color) {
+		return ImGui::ColorEdit3(name, &color.x);
 	}
 
 	bool Combo(const char* name, std::vector<const char*> options, int& result) {
@@ -77,6 +80,10 @@ export namespace Vega {
 	}
 
 	void ImGuiDemo() {
+#ifdef DIST
+		return;
+#endif // DIST
+
 		ImGui::ShowDemoWindow();
 	}
 
@@ -90,7 +97,6 @@ export namespace Vega {
 		//void AddElement(Args... args) {
 		//	_elements.push_back(new T(args...));
 		//}
-
 		virtual void Draw() = 0;
 
 	};
